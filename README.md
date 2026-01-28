@@ -778,15 +778,15 @@ moltbot cron add --schedule "30 5 * * *" --text "Summarize yesterday, write to m
 
 **AI makes mistakes.** These systems give your AI significant autonomy — running scripts, modifying files, monitoring your system. AI models can and will occasionally do unexpected things. Always review changes before deploying to production. The SECURITY.md template exists for a reason — use it.
 
-**No liability for data loss, security breaches, or damages.** The authors of this starter kit are not responsible for any data loss, unauthorized access, system damage, financial loss, or any other damages resulting from the use of these tools. You are granting AI models access to your computer. Understand what that means.
+**No liability for data loss, security breaches, or damages.** I am not responsible for any data loss, unauthorized access, system damage, financial loss, or any other damages resulting from the use of these tools. You are granting AI models access to your computer. Understand what that means.
 
 **Not legal, financial, or security advice.** Nothing in this kit constitutes professional advice of any kind.
 
-**Third-party services.** This kit references third-party AI providers (Anthropic, OpenAI, Google, etc.) and tools (Moltbot, Ollama, etc.). We have no control over their services, pricing, terms, or availability. Check their individual terms of service.
+**Third-party services.** This kit references third-party AI providers (Anthropic, OpenAI, Google, etc.) and tools (Moltbot, Ollama, etc.). I have no control over their services, pricing, terms, or availability. Check their individual terms of service.
 
-**Open source, community-contributed.** This is a community resource shared in good faith to help people get more out of their AI setup. It is not an official product. There is no support team. There is no SLA. If something breaks, the [Discord community](https://discord.com/invite/clawd) and [official docs](https://docs.molt.bot/help/faq) are your best bet.
+**Open source, community-contributed.** This is a community resource I'm sharing in good faith to help people get more out of their AI setup. It is not an official product. There is no support team. There is no SLA. If something breaks, the [Discord community](https://discord.com/invite/clawd) and [official docs](https://docs.molt.bot/help/faq) are your best bet.
 
-**TL;DR:** Cool tools, free to use, not our fault if something goes wrong. Be smart, review what your AI does, and don't blindly trust any automated system with anything you can't afford to lose.
+**TL;DR:** Cool tools, free to use, not my fault if something goes wrong. Be smart, review what your AI does, and don't blindly trust any automated system with anything you can't afford to lose.
 
 ---
 
