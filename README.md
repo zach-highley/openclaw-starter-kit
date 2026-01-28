@@ -1,0 +1,506 @@
+# 🐸 The Moltbot Starter Kit
+### Turn Clawdbot Into a Self-Healing, Multi-Model Autonomous AI System
+
+> *"I set up Clawdbot on a Sunday. By Tuesday it was fixing itself at 3 AM, routing tasks across 5 AI models, monitoring my security, and building me apps while I slept."*
+
+**Time:** ~2 hours for basics, then it evolves on its own
+**What you need:** A Mac (or Linux), a Telegram account, and ambition
+
+---
+
+## ⚡ Quick Start (5 Minutes to Live)
+
+```bash
+# 1. Install
+npm install -g clawdbot
+
+# 2. Setup (connects Telegram + your AI model)
+clawdbot init
+
+# 3. Send a message on Telegram. You're live.
+```
+
+That gives you a chatbot. Everything below turns it into an **employee**.
+
+---
+
+## What's In This Kit
+
+```
+moltbot-starter-kit/
+├── README.md                      ← You are here (the deep guide)
+├── templates/                     ← Copy these to your workspace
+│   ├── AGENTS.md                  — Operating system for your AI
+│   ├── SOUL.md                    — Personality & identity template
+│   ├── HEARTBEAT.md               — Proactive monitoring tasks
+│   └── SECURITY.md                — Confirmation protocols
+├── scripts/                       ← Drop these in your scripts/ folder
+│   ├── watchdog.sh                — Self-healing watchdog (13 checks, 4 escalation levels)
+│   ├── watchdog_learn.sh          — Incident learning & root cause analysis
+│   ├── security_hound.py          — Learning security monitor (file integrity, network, processes)
+│   ├── check_usage.py             — Rate limit monitoring with threshold alerts
+│   └── emergency_lockdown.sh      — Break-glass emergency controls
+└── docs/                          ← Reference documentation
+    ├── MODEL_ROUTING.md           — Multi-model routing logic
+    └── WATCHDOG_CONCEPTS.md       — Self-healing system architecture
+```
+
+**How to use it:** Clone this repo, copy `templates/` into your Clawdbot workspace root, copy `scripts/` into your workspace scripts folder, customize the `[PLACEHOLDERS]`, and go.
+
+---
+
+# 🧠 THE ARCHITECTURE
+
+## Level 1: The Brain (AGENTS.md + SOUL.md)
+
+Most people install Clawdbot and just... chat with it. That's like hiring an employee and never giving them a job description.
+
+**AGENTS.md** is the operating system. It tells your AI:
+- What to do when it wakes up (session startup checklist)
+- How to organize files (MECE rules)
+- When to use which AI model (routing decisions)
+- How to handle errors (escalation philosophy)
+- What to do proactively (overnight builds, heartbeat tasks)
+
+**SOUL.md** is the personality. Without it, you get generic AI responses. With it, you get a character — dry wit, honest feedback, anticipates your needs instead of waiting for commands.
+
+### The Prime Directives
+
+These five rules govern everything the system does:
+
+1. **Run Silently** — Handle errors, heal problems, no spam. If something breaks at 3 AM, fix it. The human wakes up to a working system.
+2. **Learn Continuously** — Track patterns, preferences, goals. Get smarter every day.
+3. **Anticipate Needs** — Don't wait to be asked. See the problem coming and act.
+4. **Create Value** — Build tools, automate tasks, save time. Every minute saved matters.
+5. **Stay Invisible** — The best assistant is one you forget exists. Until you need them.
+
+### MECE File Organization
+
+This sounds boring. It's actually the difference between a system that scales and one that collapses into a mess of duplicate files.
+
+**MECE = Mutually Exclusive, Collectively Exhaustive**
+
+Before your AI creates ANY file, it must:
+1. Check the INDEX — does a home already exist?
+2. Check for overlap — does another file cover this?
+3. Choose the right level — root is for config only, everything else in subfolders
+4. Update the INDEX after changes
+
+We went from 20 root files to 13 with zero information lost. Every file has ONE purpose that no other file shares.
+
+```
+workspace/
+├── Root (config only)     — AGENTS.md, SOUL.md, SECURITY.md, HEARTBEAT.md
+├── notes/                 — Knowledge base by category
+├── projects/              — Code projects (subfolders)
+├── scripts/               — Automation scripts
+├── docs/                  — Reference documentation
+├── memory/                — Daily logs, state files
+└── INDEX.md               — Master navigation
+```
+
+→ **Template:** [`templates/AGENTS.md`](templates/AGENTS.md) | [`templates/SOUL.md`](templates/SOUL.md)
+
+---
+
+## Level 2: Multi-Model Routing
+
+This is the single biggest upgrade you can make. Instead of burning one expensive model on everything, route tasks to the right specialist.
+
+### The Stack
+
+| Tier | Role | Model | What It Does |
+|------|------|-------|-------------|
+| T0 | 🧠 Orchestrator | Claude Opus | Strategy, reasoning, main conversation |
+| T1 | 💻 Code Specialist | OpenAI Codex | Writes all code, scripts, apps |
+| T2 | 📡 Bulk/Background | Google Gemini | Heartbeats, summaries, monitoring |
+| T3 | 🏠 Local Emergency | Ollama (local) | Runs on your machine when cloud is down |
+
+### Why This Matters
+
+Without routing, your best model handles everything — you burn through rate limits by noon. With routing:
+- **Opus thinks and delegates** — architecture, strategy, complex reasoning
+- **Codex writes code** — spawned as a sub-agent, doesn't touch your main session
+- **Gemini does grunt work** — heartbeats, bulk summaries, monitoring tasks
+- **Ollama is always there** — even if every cloud API goes down, you're never at zero
+
+### The Routing Decision Flow
+
+```
+1. Is this CODING?           → Spawn Codex sub-agent
+2. Is this SUMMARIZATION?    → Spawn Gemini sub-agent
+3. Is this DEEP RESEARCH?    → Handle directly (Opus is best)
+4. Is this IMAGE GENERATION? → Use specialized image model
+5. Is this COMPLEX/QUICK?    → Handle directly (Opus)
+```
+
+### Degradation Curve
+
+As usage increases, the system automatically becomes more conservative:
+
+```
+Usage %    Behavior
+0-80%      All models freely available
+80-90%     Prefer cheaper models for applicable tasks
+90-95%     Only Codex + Gemini (minimize expensive model)
+95-100%    Codex + Gemini only
+100%+      Gemini + Local (never hit zero)
+```
+
+### Setup
+
+Install a local fallback (your safety net):
+```bash
+brew install ollama
+ollama pull qwen2.5:14b
+```
+
+Configure heartbeat model to Gemini in your Clawdbot config — saves your best model for real work.
+
+→ **Full reference:** [`docs/MODEL_ROUTING.md`](docs/MODEL_ROUTING.md)
+
+---
+
+## Level 3: Self-Healing Watchdog
+
+This is what separates a toy from a production system. The watchdog runs every 5 minutes and fixes problems before you notice them.
+
+### 13 Health Checks Per Cycle
+
+| # | Check | What It Does |
+|---|-------|-------------|
+| 1 | **Gateway process** | Is Clawdbot running? If not, start it. |
+| 2 | **Memory usage** | >2GB? Kill and restart (memory leak). |
+| 3 | **Process uptime** | >48 hours? Routine restart (prevents drift). |
+| 4 | **Health endpoint** | Can it respond? Track consecutive failures. |
+| 5 | **Proactive doctor** | Run `clawdbot doctor` every 6h to catch issues early. |
+| 6 | **Heartbeat response** | No response for 60+ min? Alert — may be stuck. |
+| 7 | **Disk space** | >95%? Auto-clean old logs. |
+| 8 | **Local LLM** | Is Ollama running? If not, start it (your backup). |
+| 9 | **Predictive analysis** | Scan patterns, predict failures before they happen. |
+| 10 | **Model health** | Are AI APIs responding? Track error rates. |
+| 11 | **External ping** | Optional: ping an uptime monitor (UptimeRobot, etc). |
+| 12 | **Error recovery** | Scan logs, auto-apply known fixes. |
+| 13 | **Pipeline health** | Full message flow check (send → process → respond). |
+
+### The 4-Level Escalation Ladder
+
+```
+Problem detected
+    ↓
+Level 1: Run clawdbot doctor --fix
+         (fixes auth expiry, config issues, 90% of problems)
+    ↓ (if that didn't work)
+Level 2: Restart gateway
+         (kills process, starts fresh)
+    ↓ (if still broken)
+Level 3: Switch to fallback model
+         (keeps running on alternative AI)
+    ↓ (nuclear option — all else failed)
+Level 4: Alert human
+         (ONE notification with context, not spam)
+```
+
+### The Learning Part (Machine Learning Lite)
+
+Every intervention is logged and analyzed. The system tracks:
+- **Which fixes work for which errors** (success rates per fix type)
+- **Pattern detection** (3+ of the same problem = not a fluke, adapt)
+- **Root cause analysis** (check trigger first, then scan logs for clues)
+- **Prevention rules** (automatically applied based on learned patterns)
+
+This means the watchdog gets smarter over time. Month 1, it might restart the gateway for an auth issue. Month 2, it knows to run `doctor --fix` first, which is faster and less disruptive.
+
+### Setup
+
+```bash
+# 1. Copy the watchdog scripts to your workspace
+cp scripts/watchdog.sh ~/clawd/scripts/
+cp scripts/watchdog_learn.sh ~/clawd/scripts/
+chmod +x ~/clawd/scripts/watchdog*.sh
+
+# 2. Create a launchd plist (macOS) — runs every 5 minutes
+cat > ~/Library/LaunchAgents/com.clawdbot.watchdog.plist << 'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.clawdbot.watchdog</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>REPLACE_WITH_YOUR_PATH/scripts/watchdog.sh</string>
+    </array>
+    <key>StartInterval</key>
+    <integer>300</integer>
+    <key>StandardOutPath</key>
+    <string>/tmp/watchdog-stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/watchdog-stderr.log</string>
+</dict>
+</plist>
+EOF
+
+# 3. Load it
+launchctl load ~/Library/LaunchAgents/com.clawdbot.watchdog.plist
+```
+
+For Linux, use a cron job instead:
+```bash
+# Run every 5 minutes
+*/5 * * * * /bin/bash /path/to/scripts/watchdog.sh >> /tmp/watchdog.log 2>&1
+```
+
+→ **Full code:** [`scripts/watchdog.sh`](scripts/watchdog.sh) | [`scripts/watchdog_learn.sh`](scripts/watchdog_learn.sh)
+→ **Architecture:** [`docs/WATCHDOG_CONCEPTS.md`](docs/WATCHDOG_CONCEPTS.md)
+
+---
+
+## Level 4: Learning Security Monitor
+
+A lightweight "security hound" that learns what's normal on your system and barks when something isn't.
+
+### What It Monitors
+
+**File Integrity (SHA256)**
+Hashes critical config files on first run (baseline). Every scan, it re-hashes and compares. If someone modifies `.zshrc`, `authorized_keys`, `/etc/hosts`, or your Clawdbot config, you know instantly.
+
+**Network Connections**
+Monitors active connections via `lsof`. Learns which processes normally connect where. Alerts on new, unusual outbound connections from unknown processes. Over time, builds a model of what "normal" looks like for your machine.
+
+**Suspicious Processes**
+Scans the process list for known-bad patterns: crypto miners, keyloggers, backdoors, reverse shells. Simple but catches the obvious stuff.
+
+**Alert Deduplication**
+Won't repeat the same alert within 60 minutes. No notification spam.
+
+**Learning**
+When an alert is a false positive, mark it:
+```bash
+python3 security_hound.py --learn-fp "New connection: node → 127.0.0.1:3000"
+```
+The hound remembers and won't bark at that pattern again. Over time, it goes from noisy to precise.
+
+### Setup
+
+```bash
+cp scripts/security_hound.py ~/clawd/scripts/
+chmod +x ~/clawd/scripts/security_hound.py
+
+# Test it
+python3 ~/clawd/scripts/security_hound.py | jq .
+```
+
+Add to your HEARTBEAT.md so it runs every hour automatically.
+
+→ **Full code:** [`scripts/security_hound.py`](scripts/security_hound.py)
+
+---
+
+## Level 5: Proactive Heartbeats
+
+Heartbeats transform your AI from reactive (waits for commands) to proactive (checks in, does work, reaches out).
+
+### How It Works
+
+Clawdbot polls your AI at a set interval (e.g., every hour). The AI reads `HEARTBEAT.md` for instructions on what to check. Use a cheap model (Gemini) — don't burn your best model on monitoring.
+
+### What To Check
+
+```markdown
+## Every Heartbeat
+- Usage monitoring (alert at 80%, 90%, 95%)
+- Security scan (security_hound.py)
+
+## Every 4th Heartbeat (~4 hours)
+- System health (disk, memory, process health)
+- Personal learning loop (pattern detection)
+
+## Weekly
+- Auto-update packages (brew update)
+- Clean temp files
+- Full security audit
+```
+
+### The Usage Alert System
+
+Tracks Claude rate limits and alerts at thresholds:
+
+| Threshold | Action |
+|-----------|--------|
+| 80% | ⚠️ "Running low!" |
+| 90% | 🚨 Code Red alert |
+| 95% | "Almost out!" |
+| 100% | "Limit hit — wait for reset" |
+
+On each heartbeat, `check_usage.py` compares current usage against previously-alerted thresholds. Only notifies on NEW threshold crossings, not repeats.
+
+→ **Template:** [`templates/HEARTBEAT.md`](templates/HEARTBEAT.md)
+→ **Usage script:** [`scripts/check_usage.py`](scripts/check_usage.py)
+
+---
+
+## Level 6: Emergency Controls
+
+Sometimes you need to pull the plug. The emergency lockdown gives you instant control:
+
+```bash
+# Kill all Clawdbot processes immediately
+emergency_lockdown.sh kill
+
+# Shut down the entire computer in 60 seconds
+emergency_lockdown.sh shutdown
+
+# Cancel a pending shutdown
+emergency_lockdown.sh cancel
+
+# Check status
+emergency_lockdown.sh status
+```
+
+### Security Confirmation Protocol
+
+For sensitive operations (sending emails, financial transactions, file deletions), set up a confirmation system:
+
+**Tiered approach:**
+- **Critical** (financial, public posts): Requires passphrase + Telegram confirmation
+- **High** (emails, file changes): Requires Telegram confirmation
+- **Medium** (internal operations): AI proceeds but logs the action
+- **Low** (reading, organizing): No confirmation needed
+
+→ **Template:** [`templates/SECURITY.md`](templates/SECURITY.md)
+→ **Script:** [`scripts/emergency_lockdown.sh`](scripts/emergency_lockdown.sh)
+
+---
+
+## Level 7: Overnight Builds
+
+The flex. While you sleep, your AI builds things.
+
+### How It Works
+1. Maintain a "build queue" in your workspace
+2. Set a 2 AM cron job:
+   ```
+   clawdbot cron add --schedule "0 2 * * *" --text "Check PROJECTS.md build queue, pick something small, build it"
+   ```
+3. AI picks a task, builds it, stages for review
+4. You wake up to new tools
+
+### Rules
+- **Scope: 1-2 hours max.** One focused improvement.
+- **Never push live.** Stage everything for human review.
+- **Report in the morning.** Include what was built.
+- **Safety rails.** No deletions, no external sends, no production commits.
+
+What's been built overnight so far: web apps, research documents, analytics tools, automation scripts.
+
+---
+
+## Level 8: Personal Learning Loop
+
+The system doesn't just work for you — it *learns* you.
+
+### What It Tracks
+- **Goal mentions** — which goals come up most? Which ones are stale?
+- **Emotional signals** — stress, loneliness, overwhelm (detected via language patterns)
+- **Decision patterns** — what you say you'll do vs. what you actually do
+- **Preferences** — communication style, tools, topics, schedule patterns
+
+### How It Works
+A Python script (`personal_learner.py`) scans your memory files for patterns. It builds a JSON model:
+
+```json
+{
+  "goals": {
+    "fitness": {"frequency": "daily", "sentiment": "positive", "last_mentioned": "2026-01-28"},
+    "dating": {"frequency": "weekly", "sentiment": "mixed", "last_mentioned": "2026-01-27"}
+  },
+  "patterns": {
+    "most_productive_hours": "9am-12pm",
+    "stress_triggers": ["deadlines", "social situations"],
+    "preferred_communication": "direct, no fluff"
+  }
+}
+```
+
+The AI references this model to:
+- Nudge you about forgotten goals (7+ days stale)
+- Adapt its communication style to your mood
+- Anticipate what you need before you ask
+- Surface insights at the right time
+
+---
+
+# 📊 THE 48-HOUR TIMELINE
+
+| Hour | What Was Built |
+|------|---------------|
+| 0-1 | Installed Clawdbot, connected Telegram, first message |
+| 1-3 | Multi-model routing (Opus + Codex + Gemini + Ollama) |
+| 3-5 | Watchdog v1 (basic health checks + auto-restart) |
+| 5-8 | AGENTS.md, SOUL.md, workspace organization |
+| 8-12 | Security hound, usage monitoring, heartbeat system |
+| 12-18 | Smart home integration (Hue lights, sunrise alarm) |
+| 18-24 | Watchdog v2 (learning from failures, escalation ladder) |
+| 24-30 | AI built its first overnight project while I slept |
+| 30-36 | Trading research system, YouTube analytics, proactive learning |
+| 36-42 | Security hound v2 (file integrity, network monitoring) |
+| 42-48 | MECE reorganization, self-study loops, autonomous operation |
+
+By hour 48:
+- Self-healing through problems without human intervention
+- 5 AI models routing intelligently
+- 24/7 security and health monitoring
+- Building apps overnight
+- Learning user patterns autonomously
+- 30+ automation scripts
+- 13-point health check every 5 minutes
+
+---
+
+# 🚀 GET STARTED
+
+```bash
+# 1. Install Clawdbot
+npm install -g clawdbot
+
+# 2. Init (Telegram + model setup)
+clawdbot init
+
+# 3. Clone this kit
+git clone https://github.com/zach-highley/moltbot-starter-kit.git
+
+# 4. Copy templates to your workspace
+cp moltbot-starter-kit/templates/* ~/clawd/
+
+# 5. Copy scripts
+mkdir -p ~/clawd/scripts
+cp moltbot-starter-kit/scripts/* ~/clawd/scripts/
+chmod +x ~/clawd/scripts/*.sh
+
+# 6. Install local LLM fallback
+brew install ollama && ollama pull qwen2.5:14b
+
+# 7. Set up the watchdog (see Level 3 for launchd setup)
+
+# 8. Customize the templates
+# Edit SOUL.md with your AI's personality
+# Edit AGENTS.md with your rules
+# Edit HEARTBEAT.md with your check tasks
+
+# 9. Send a message. Watch it come alive.
+```
+
+---
+
+# 📚 Resources
+
+- **Clawdbot Docs:** [docs.clawd.bot](https://docs.clawd.bot)
+- **Clawdbot GitHub:** [github.com/clawdbot/clawdbot](https://github.com/clawdbot/clawdbot)
+- **Discord Community:** [discord.com/invite/clawd](https://discord.com/invite/clawd)
+- **Skills Hub:** [clawdhub.com](https://clawdhub.com)
+
+---
+
+*Built in 48 hours. Improving itself every hour since.* 🐸
