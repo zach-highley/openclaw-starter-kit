@@ -3,7 +3,7 @@
 # Kill everything, shut down, or restart. The nuclear option.
 #
 # Usage:
-#   emergency_lockdown.sh kill       # Stop all Clawdbot processes
+#   emergency_lockdown.sh kill       # Stop all Moltbot processes
 #   emergency_lockdown.sh shutdown   # Shut down computer in 60s
 #   emergency_lockdown.sh restart    # Restart computer in 60s
 #   emergency_lockdown.sh cancel     # Cancel pending shutdown
@@ -13,10 +13,10 @@ ACTION="${1:-status}"
 
 case "$ACTION" in
   "kill")
-    echo "🚨 KILLING ALL CLAWDBOT PROCESSES..."
-    pkill -f clawdbot || true
+    echo "🚨 KILLING ALL MOLTBOT PROCESSES..."
+    pkill -f moltbot || true
     pkill -f "node.*gateway" || true
-    echo "✅ Clawdbot stopped"
+    echo "✅ Moltbot stopped"
     ;;
   "shutdown")
     echo "🚨 SHUTTING DOWN COMPUTER IN 60 SECONDS..."
@@ -35,7 +35,7 @@ case "$ACTION" in
     ;;
   "status")
     echo "🔒 LOCKDOWN STATUS"
-    echo "Clawdbot running: $(pgrep -f clawdbot > /dev/null && echo 'YES' || echo 'NO')"
+    echo "Moltbot running: $(pgrep -f moltbot > /dev/null && echo 'YES' || echo 'NO')"
     echo "Pending shutdown: $(ps aux | grep -v grep | grep shutdown > /dev/null && echo 'YES' || echo 'NO')"
     ;;
   *)

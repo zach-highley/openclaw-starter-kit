@@ -1,7 +1,7 @@
 # 🐸 The Moltbot Starter Kit
-### Turn Clawdbot Into a Self-Healing, Multi-Model Autonomous AI System
+### Turn Moltbot Into a Self-Healing, Multi-Model Autonomous AI System
 
-> *"I set up Clawdbot on a Sunday. By Tuesday it was fixing itself at 3 AM, routing tasks across 5 AI models, monitoring my security, and building me apps while I slept."*
+> *"Within 48 hours you can have an AI that fixes itself at 3 AM, routes tasks across 5 models, monitors your security, and builds you apps while you sleep."*
 
 **Time:** ~2 hours for basics, then it evolves on its own
 **What you need:** A Mac (or Linux), a Telegram account, and ambition
@@ -12,10 +12,10 @@
 
 ```bash
 # 1. Install
-npm install -g clawdbot
+curl -fsSL https://molt.bot/install.sh | bash
 
 # 2. Setup (connects Telegram + your AI model)
-clawdbot init
+moltbot onboard
 
 # 3. Send a message on Telegram. You're live.
 ```
@@ -45,7 +45,7 @@ moltbot-starter-kit/
     └── WATCHDOG_CONCEPTS.md       — Self-healing system architecture
 ```
 
-**How to use it:** Clone this repo, copy `templates/` into your Clawdbot workspace root, copy `scripts/` into your workspace scripts folder, customize the `[PLACEHOLDERS]`, and go.
+**How to use it:** Clone this repo, copy `templates/` into your Moltbot workspace root, copy `scripts/` into your workspace scripts folder, customize the `[PLACEHOLDERS]`, and go.
 
 ---
 
@@ -53,7 +53,7 @@ moltbot-starter-kit/
 
 ## Level 1: The Brain (AGENTS.md + SOUL.md)
 
-Most people install Clawdbot and just... chat with it. That's like hiring an employee and never giving them a job description.
+Most people install Moltbot and just... chat with it. That's like hiring an employee and never giving them a job description.
 
 **AGENTS.md** is the operating system. It tells your AI:
 - What to do when it wakes up (session startup checklist)
@@ -86,7 +86,7 @@ Before your AI creates ANY file, it must:
 3. Choose the right level — root is for config only, everything else in subfolders
 4. Update the INDEX after changes
 
-We went from 20 root files to 13 with zero information lost. Every file has ONE purpose that no other file shares.
+Without this rule, your workspace balloons into 20+ root files with massive overlap. With it, every file has ONE purpose that no other file shares.
 
 ```
 workspace/
@@ -155,7 +155,7 @@ brew install ollama
 ollama pull qwen2.5:14b
 ```
 
-Configure heartbeat model to Gemini in your Clawdbot config — saves your best model for real work.
+Configure heartbeat model to Gemini in your Moltbot config — saves your best model for real work.
 
 → **Full reference:** [`docs/MODEL_ROUTING.md`](docs/MODEL_ROUTING.md)
 
@@ -169,11 +169,11 @@ This is what separates a toy from a production system. The watchdog runs every 5
 
 | # | Check | What It Does |
 |---|-------|-------------|
-| 1 | **Gateway process** | Is Clawdbot running? If not, start it. |
+| 1 | **Gateway process** | Is Moltbot running? If not, start it. |
 | 2 | **Memory usage** | >2GB? Kill and restart (memory leak). |
 | 3 | **Process uptime** | >48 hours? Routine restart (prevents drift). |
 | 4 | **Health endpoint** | Can it respond? Track consecutive failures. |
-| 5 | **Proactive doctor** | Run `clawdbot doctor` every 6h to catch issues early. |
+| 5 | **Proactive doctor** | Run `moltbot doctor` every 6h to catch issues early. |
 | 6 | **Heartbeat response** | No response for 60+ min? Alert — may be stuck. |
 | 7 | **Disk space** | >95%? Auto-clean old logs. |
 | 8 | **Local LLM** | Is Ollama running? If not, start it (your backup). |
@@ -188,7 +188,7 @@ This is what separates a toy from a production system. The watchdog runs every 5
 ```
 Problem detected
     ↓
-Level 1: Run clawdbot doctor --fix
+Level 1: Run moltbot doctor --fix
          (fixes auth expiry, config issues, 90% of problems)
     ↓ (if that didn't work)
 Level 2: Restart gateway
@@ -220,13 +220,13 @@ cp scripts/watchdog_learn.sh ~/clawd/scripts/
 chmod +x ~/clawd/scripts/watchdog*.sh
 
 # 2. Create a launchd plist (macOS) — runs every 5 minutes
-cat > ~/Library/LaunchAgents/com.clawdbot.watchdog.plist << 'EOF'
+cat > ~/Library/LaunchAgents/com.moltbot.watchdog.plist << 'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.clawdbot.watchdog</string>
+    <string>com.moltbot.watchdog</string>
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
@@ -243,7 +243,7 @@ cat > ~/Library/LaunchAgents/com.clawdbot.watchdog.plist << 'EOF'
 EOF
 
 # 3. Load it
-launchctl load ~/Library/LaunchAgents/com.clawdbot.watchdog.plist
+launchctl load ~/Library/LaunchAgents/com.moltbot.watchdog.plist
 ```
 
 For Linux, use a cron job instead:
@@ -264,7 +264,7 @@ A lightweight "security hound" that learns what's normal on your system and bark
 ### What It Monitors
 
 **File Integrity (SHA256)**
-Hashes critical config files on first run (baseline). Every scan, it re-hashes and compares. If someone modifies `.zshrc`, `authorized_keys`, `/etc/hosts`, or your Clawdbot config, you know instantly.
+Hashes critical config files on first run (baseline). Every scan, it re-hashes and compares. If someone modifies `.zshrc`, `authorized_keys`, `/etc/hosts`, or your Moltbot config, you know instantly.
 
 **Network Connections**
 Monitors active connections via `lsof`. Learns which processes normally connect where. Alerts on new, unusual outbound connections from unknown processes. Over time, builds a model of what "normal" looks like for your machine.
@@ -304,7 +304,7 @@ Heartbeats transform your AI from reactive (waits for commands) to proactive (ch
 
 ### How It Works
 
-Clawdbot polls your AI at a set interval (e.g., every hour). The AI reads `HEARTBEAT.md` for instructions on what to check. Use a cheap model (Gemini) — don't burn your best model on monitoring.
+Moltbot polls your AI at a set interval (e.g., every hour). The AI reads `HEARTBEAT.md` for instructions on what to check. Use a cheap model (Gemini) — don't burn your best model on monitoring.
 
 ### What To Check
 
@@ -346,7 +346,7 @@ On each heartbeat, `check_usage.py` compares current usage against previously-al
 Sometimes you need to pull the plug. The emergency lockdown gives you instant control:
 
 ```bash
-# Kill all Clawdbot processes immediately
+# Kill all Moltbot processes immediately
 emergency_lockdown.sh kill
 
 # Shut down the entire computer in 60 seconds
@@ -382,7 +382,7 @@ The flex. While you sleep, your AI builds things.
 1. Maintain a "build queue" in your workspace
 2. Set a 2 AM cron job:
    ```
-   clawdbot cron add --schedule "0 2 * * *" --text "Check PROJECTS.md build queue, pick something small, build it"
+   moltbot cron add --schedule "0 2 * * *" --text "Check PROJECTS.md build queue, pick something small, build it"
    ```
 3. AI picks a task, builds it, stages for review
 4. You wake up to new tools
@@ -432,29 +432,27 @@ The AI references this model to:
 
 ---
 
-# 📊 THE 48-HOUR TIMELINE
+# 📊 SUGGESTED SETUP ORDER
 
-| Hour | What Was Built |
-|------|---------------|
-| 0-1 | Installed Clawdbot, connected Telegram, first message |
-| 1-3 | Multi-model routing (Opus + Codex + Gemini + Ollama) |
-| 3-5 | Watchdog v1 (basic health checks + auto-restart) |
-| 5-8 | AGENTS.md, SOUL.md, workspace organization |
-| 8-12 | Security hound, usage monitoring, heartbeat system |
-| 12-18 | Smart home integration (Hue lights, sunrise alarm) |
-| 18-24 | Watchdog v2 (learning from failures, escalation ladder) |
-| 24-30 | AI built its first overnight project while I slept |
-| 30-36 | Trading research system, YouTube analytics, proactive learning |
-| 36-42 | Security hound v2 (file integrity, network monitoring) |
-| 42-48 | MECE reorganization, self-study loops, autonomous operation |
+Follow this sequence for the smoothest experience:
 
-By hour 48:
-- Self-healing through problems without human intervention
-- 5 AI models routing intelligently
+| Phase | What To Do | Time |
+|-------|-----------|------|
+| **1. Go Live** | Install Moltbot, connect Telegram, send first message | ~15 min |
+| **2. Give It a Brain** | Copy `AGENTS.md` + `SOUL.md` templates, customize personality | ~30 min |
+| **3. Multi-Model** | Set up model routing (Opus + Codex/Gemini + Ollama fallback) | ~30 min |
+| **4. Self-Healing** | Install watchdog scripts, set up launchd/cron | ~45 min |
+| **5. Security** | Deploy security hound, set up heartbeat monitoring | ~30 min |
+| **6. Organize** | Create INDEX.md, set up folder structure, MECE rules | ~15 min |
+| **7. Overnight Builds** | Set up 2 AM cron job, create build queue | ~10 min |
+| **8. Evolve** | Personal learning loop, smart home, custom integrations | Ongoing |
+
+**What you'll have when you're done:**
+- Self-healing system that fixes problems without you touching it
+- Multiple AI models routing intelligently (never hit zero capacity)
 - 24/7 security and health monitoring
-- Building apps overnight
-- Learning user patterns autonomously
-- 30+ automation scripts
+- AI that builds tools while you sleep
+- Learns your patterns and anticipates your needs
 - 13-point health check every 5 minutes
 
 ---
@@ -462,11 +460,11 @@ By hour 48:
 # 🚀 GET STARTED
 
 ```bash
-# 1. Install Clawdbot
-npm install -g clawdbot
+# 1. Install Moltbot
+curl -fsSL https://molt.bot/install.sh | bash
 
 # 2. Init (Telegram + model setup)
-clawdbot init
+moltbot onboard
 
 # 3. Clone this kit
 git clone https://github.com/[USERNAME]/moltbot-starter-kit.git
@@ -496,8 +494,8 @@ brew install ollama && ollama pull qwen2.5:14b
 
 # 📚 Resources
 
-- **Clawdbot Docs:** [docs.clawd.bot](https://docs.clawd.bot)
-- **Clawdbot GitHub:** [github.com/clawdbot/clawdbot](https://github.com/clawdbot/clawdbot)
+- **Moltbot Docs:** [docs.molt.bot](https://docs.molt.bot)
+- **Moltbot GitHub:** [github.com/moltbot/moltbot](https://github.com/moltbot/moltbot)
 - **Discord Community:** [discord.com/invite/clawd](https://discord.com/invite/clawd)
 - **Skills Hub:** [clawdhub.com](https://clawdhub.com)
 

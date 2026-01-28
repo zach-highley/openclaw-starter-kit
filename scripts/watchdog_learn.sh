@@ -10,9 +10,9 @@
 
 set -euo pipefail
 
-LOG_DIR="$HOME/.clawdbot/logs"
+LOG_DIR="$HOME/.moltbot/logs"
 LEARN_LOG="$LOG_DIR/watchdog-learn.log"
-TODAY_LOG="/tmp/clawdbot/clawdbot-$(date +%Y-%m-%d).log"
+TODAY_LOG="/tmp/moltbot/moltbot-$(date +%Y-%m-%d).log"
 WATCHDOG_MD="${WATCHDOG_MD:-$HOME/clawd/WATCHDOG.md}"
 
 LEVEL="${1:-1}"

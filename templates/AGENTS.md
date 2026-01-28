@@ -30,7 +30,7 @@ When you need to find a file, create something new, or figure out where somethin
 Before creating, moving, or committing ANY .md file:
 1. **Check INDEX.md** — does a home already exist for this content?
 2. **Check for overlap** — does another file already cover this topic? If so, merge, don't duplicate.
-3. **Choose the right level** — root is for Clawdbot-injected config + frequently accessed files ONLY. Everything else goes in a subfolder (`notes/`, `docs/`, `projects/`, `memory/`).
+3. **Choose the right level** — root is for Moltbot-injected config + frequently accessed files ONLY. Everything else goes in a subfolder (`notes/`, `docs/`, `projects/`, `memory/`).
 4. **Update INDEX.md** after adding/moving any file.
 5. **MECE = Mutually Exclusive, Collectively Exhaustive.** Every file has ONE clear purpose that no other file shares. Every topic has a home.
 

@@ -118,7 +118,7 @@ Quick tasks (single file, small fix) → skip straight to Specialist.
 | Deep research | Orchestrator | Direct |
 | Code writing | Specialist | `sessions_spawn` |
 | Summarization | Background | `sessions_spawn` |
-| Heartbeat checks | Background | Clawdbot config |
+| Heartbeat checks | Background | Moltbot config |
 | Daily security audit | Background | cron |
 | Extreme fallback | Local | Only when all else fails |
 
