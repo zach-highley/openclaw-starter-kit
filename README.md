@@ -3,8 +3,87 @@
 
 > *"Within 48 hours you can have an AI that fixes itself at 3 AM, routes tasks across 5 models, monitors your security, and builds you apps while you sleep."*
 
-**Time:** ~2 hours for basics, then it evolves on its own
-**What you need:** A Mac (or Linux), a Telegram account, and ambition
+---
+
+# 📋 WHAT YOU NEED (Before You Start)
+
+## Hardware
+
+Any computer that stays on. That's it. No server rack, no cloud VM, no special hardware.
+
+| Setup | Machine | Works? |
+|-------|---------|--------|
+| **Ideal** | Mac (M-series recommended) or Linux desktop/laptop | ✅ Best experience |
+| **Fine** | Older Mac (Intel) or any Linux box | ✅ Works great |
+| **Possible** | Windows via WSL2 | ⚠️ Works but rougher edges |
+| **Not needed** | Cloud servers, VPS, Raspberry Pi | Skip it. Run it on your daily driver. |
+
+**Minimum specs:** 8GB RAM, 20GB free disk space. If you want to run local AI models (Ollama), 16GB+ RAM helps.
+
+## Software
+
+| What | Why | Cost |
+|------|-----|------|
+| **Node.js 18+** | Runs Moltbot | Free |
+| **Telegram** | Your primary chat interface | Free |
+| **Homebrew** (Mac) | Installs dependencies | Free |
+| **Git** | Clone this repo | Free |
+| **Ollama** (optional) | Local AI fallback so you never hit zero | Free |
+
+## AI Model Accounts (The Actual Brain)
+
+This is where it gets interesting. You need at least ONE AI provider. More providers = smarter routing and better uptime.
+
+| Provider | What It Does | Cost | Required? |
+|----------|-------------|------|-----------|
+| **Anthropic (Claude)** | Main brain. Best reasoning. | Free tier available, Pro is $20/mo | Pick at least one |
+| **OpenAI (Codex/GPT)** | Code specialist. Writes your scripts. | Free tier available, Plus is $20/mo | Pick at least one |
+| **Google (Gemini)** | Background tasks, heartbeats, bulk work | Free tier available | Optional but recommended |
+| **Ollama (Local)** | Offline backup. Never hit zero. | Free forever | Optional but recommended |
+
+**Bottom line on cost:**
+- 🆓 **Level 1 (Free):** Use free tiers of Claude or Gemini. Limited but functional.
+- 💰 **Level 2 (~$20/mo):** One paid subscription (Claude Pro OR ChatGPT Plus). Solid daily driver.
+- 🚀 **Level 3 (~$40-60/mo):** Multiple providers (Claude Pro + ChatGPT Plus + Gemini). Full multi-model routing, never hit rate limits, the whole system fires on all cylinders.
+
+You can start at Level 1 and upgrade as you see the value. Everything in this kit works at every level.
+
+---
+
+# 🏗️ THE THREE LEVELS
+
+Not everyone needs the full setup. Pick your level:
+
+### Level 1: The Basics (30 minutes)
+**What you get:** A smart chatbot on Telegram that remembers things and has a personality.
+
+- Install Moltbot
+- Connect Telegram
+- Drop in `AGENTS.md` + `SOUL.md` templates
+- Done. You have a useful AI assistant.
+
+**Good for:** People who want a better ChatGPT that lives in Telegram, remembers context, and has character.
+
+### Level 2: The Operator (2 hours)
+**Everything in Level 1, plus:**
+
+- Multi-model routing (don't burn expensive tokens on simple tasks)
+- Heartbeat monitoring (your AI checks in proactively)
+- Usage tracking (know when you're running low)
+- Local Ollama fallback (never hit zero)
+
+**Good for:** People who use AI daily and want it smarter, cheaper, and always available.
+
+### Level 3: The Machine (4+ hours, then it evolves itself)
+**Everything in Level 2, plus:**
+
+- Self-healing watchdog (fixes itself at 3 AM)
+- Learning security monitor (detects threats, learns your patterns)
+- Overnight builds (AI builds tools while you sleep)
+- Personal learning loop (AI learns your habits and anticipates needs)
+- Emergency controls (kill switch when needed)
+
+**Good for:** People who want an autonomous AI employee that runs 24/7 and gets smarter every day.
 
 ---
 
