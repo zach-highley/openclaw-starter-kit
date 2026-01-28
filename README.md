@@ -89,17 +89,70 @@ Not everyone needs the full setup. Pick your level:
 
 ## ⚡ Quick Start (5 Minutes to Live)
 
-```bash
-# 1. Install
-npm install -g clawdbot
+### Never opened a terminal before? Start here.
 
-# 2. Setup (connects Telegram + your AI model)
-clawdbot init
+<details>
+<summary><strong>🍎 Mac: Open Terminal</strong> (click to expand)</summary>
+
+1. Press `Cmd + Space`, type **Terminal**, hit Enter
+2. You're in. That black/white window is your terminal.
+
+**Install Node.js** (required, one-time):
+```bash
+# This installs Homebrew (Mac package manager) + Node.js
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install node
+```
+</details>
+
+<details>
+<summary><strong>🪟 Windows: Install WSL2 first</strong> (click to expand)</summary>
+
+1. Open PowerShell as Admin
+2. Run: `wsl --install`
+3. Restart your computer
+4. Open "Ubuntu" from Start menu
+5. Now follow the Linux steps below
+</details>
+
+<details>
+<summary><strong>🐧 Linux: You probably already have a terminal</strong></summary>
+
+Install Node.js if you don't have it:
+```bash
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+</details>
+
+### Now install Moltbot:
+
+```bash
+# 1. Install (one command)
+curl -fsSL https://molt.bot/install.sh | bash
+
+# 2. Run the setup wizard (connects Telegram, picks your AI model, everything)
+moltbot onboard
 
 # 3. Send a message on Telegram. You're live.
 ```
 
 That gives you a chatbot. Everything below turns it into an **employee**.
+
+### 🚀 Skip the repo cloning — just tell your bot
+
+Don't know Git? Don't want to clone repos? Once your bot is running, just send it this message:
+
+> "Hey, can you take a look at this repo and integrate everything it suggests? Think hard about it, make sure it works with our current setup, and don't change anything until I give the OK. Also, point out anything that looks wrong or doesn't apply to us: https://github.com/[USERNAME]/moltbot-starter-kit"
+
+Your bot will read the repo, understand the templates and scripts, and walk you through what to adopt. No terminal skills needed beyond the initial install.
+
+### ❓ Stuck? Something not working?
+
+The official docs have answers to basically everything:
+- **[FAQ & Troubleshooting](https://docs.molt.bot/help/faq)** — covers install issues, auth problems, Telegram setup, model errors, Windows quirks, and more
+- **[Getting Started guide](https://docs.molt.bot/start/getting-started)** — step-by-step from zero
+- **[Discord community](https://discord.com/invite/clawd)** — real people who can help
 
 ---
 
@@ -538,12 +591,14 @@ Follow this sequence for the smoothest experience:
 
 # 🚀 GET STARTED
 
+### Option A: The Terminal Way (for people comfortable with command line)
+
 ```bash
 # 1. Install Moltbot
-npm install -g clawdbot
+curl -fsSL https://molt.bot/install.sh | bash
 
-# 2. Init (Telegram + model setup)
-clawdbot init
+# 2. Run the setup wizard
+moltbot onboard
 
 # 3. Clone this kit
 git clone https://github.com/[USERNAME]/moltbot-starter-kit.git
@@ -556,7 +611,7 @@ mkdir -p ~/clawd/scripts
 cp moltbot-starter-kit/scripts/* ~/clawd/scripts/
 chmod +x ~/clawd/scripts/*.sh
 
-# 6. Install local LLM fallback
+# 6. Install local LLM fallback (optional but recommended)
 brew install ollama && ollama pull qwen2.5:14b
 
 # 7. Set up the watchdog (see Level 3 for launchd setup)
@@ -569,11 +624,21 @@ brew install ollama && ollama pull qwen2.5:14b
 # 9. Send a message. Watch it come alive.
 ```
 
+### Option B: Let Your Bot Do It (no Git needed)
+
+Once Moltbot is installed and running, just send your bot this message on Telegram:
+
+> "Hey, can you take a look at this repo and integrate everything it suggests? Think hard about it, make sure it works with our current setup, and don't change anything until I give the OK: https://github.com/[USERNAME]/moltbot-starter-kit"
+
+Your bot reads the repo, understands the architecture, and walks you through adopting each piece. It handles the file creation, script installation, and customization. You just approve.
+
 ---
 
 # 📚 Resources
 
 - **Moltbot Docs:** [docs.molt.bot](https://docs.molt.bot)
+- **Getting Started:** [docs.molt.bot/start/getting-started](https://docs.molt.bot/start/getting-started)
+- **FAQ & Troubleshooting:** [docs.molt.bot/help/faq](https://docs.molt.bot/help/faq)
 - **Moltbot GitHub:** [github.com/moltbot/moltbot](https://github.com/moltbot/moltbot)
 - **Discord Community:** [discord.com/invite/clawd](https://discord.com/invite/clawd)
 - **Skills Hub:** [clawdhub.com](https://clawdhub.com)
