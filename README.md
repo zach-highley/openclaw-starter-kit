@@ -12,10 +12,10 @@
 
 ```bash
 # 1. Install
-curl -fsSL https://molt.bot/install.sh | bash
+npm install -g clawdbot
 
 # 2. Setup (connects Telegram + your AI model)
-moltbot onboard
+clawdbot init
 
 # 3. Send a message on Telegram. You're live.
 ```
@@ -173,7 +173,7 @@ This is what separates a toy from a production system. The watchdog runs every 5
 | 2 | **Memory usage** | >2GB? Kill and restart (memory leak). |
 | 3 | **Process uptime** | >48 hours? Routine restart (prevents drift). |
 | 4 | **Health endpoint** | Can it respond? Track consecutive failures. |
-| 5 | **Proactive doctor** | Run `moltbot doctor` every 6h to catch issues early. |
+| 5 | **Proactive doctor** | Run `clawdbot doctor` every 6h to catch issues early. |
 | 6 | **Heartbeat response** | No response for 60+ min? Alert — may be stuck. |
 | 7 | **Disk space** | >95%? Auto-clean old logs. |
 | 8 | **Local LLM** | Is Ollama running? If not, start it (your backup). |
@@ -188,7 +188,7 @@ This is what separates a toy from a production system. The watchdog runs every 5
 ```
 Problem detected
     ↓
-Level 1: Run moltbot doctor --fix
+Level 1: Run clawdbot doctor --fix
          (fixes auth expiry, config issues, 90% of problems)
     ↓ (if that didn't work)
 Level 2: Restart gateway
@@ -382,7 +382,7 @@ The flex. While you sleep, your AI builds things.
 1. Maintain a "build queue" in your workspace
 2. Set a 2 AM cron job:
    ```
-   moltbot cron add --schedule "0 2 * * *" --text "Check PROJECTS.md build queue, pick something small, build it"
+   clawdbot cron add --schedule "0 2 * * *" --text "Check PROJECTS.md build queue, pick something small, build it"
    ```
 3. AI picks a task, builds it, stages for review
 4. You wake up to new tools
@@ -461,10 +461,10 @@ Follow this sequence for the smoothest experience:
 
 ```bash
 # 1. Install Moltbot
-curl -fsSL https://molt.bot/install.sh | bash
+npm install -g clawdbot
 
 # 2. Init (Telegram + model setup)
-moltbot onboard
+clawdbot init
 
 # 3. Clone this kit
 git clone https://github.com/[USERNAME]/moltbot-starter-kit.git
@@ -498,6 +498,101 @@ brew install ollama && ollama pull qwen2.5:14b
 - **Moltbot GitHub:** [github.com/moltbot/moltbot](https://github.com/moltbot/moltbot)
 - **Discord Community:** [discord.com/invite/clawd](https://discord.com/invite/clawd)
 - **Skills Hub:** [clawdhub.com](https://clawdhub.com)
+
+---
+
+---
+
+# 🔧 TROUBLESHOOTING
+
+Real problems you'll hit, and how to fix them. All of these were discovered in the first 48 hours of running this system.
+
+## Telegram Issues
+
+**Bot doesn't respond to messages:**
+- Run `clawdbot health` — check if "Telegram: ok" shows
+- If not: `clawdbot gateway restart`
+- Still broken? `clawdbot doctor --fix` — often catches expired auth
+- Nuclear option: stop gateway, delete session files, restart fresh
+
+**Bot responds but very slowly (30+ seconds):**
+- Context is probably bloated. Your AI's conversation history is too long.
+- Fix: Reset the session — `clawdbot gateway restart` or set up a daily session reset cron
+- Prevention: Add a 5:30 AM daily session reset cron job
+
+**"Context overflow" or "prompt too large" errors:**
+- Session context has grown too big for the model
+- Fix: Restart gateway (clears active session)
+- Prevention: Set `cache-ttl` mode in config, or schedule daily resets
+- Long-term: After big projects, ask the AI to summarize and reset
+
+## Claude / Model Issues
+
+**"Unknown model" errors (e.g., `claude-sonnet-4` not found):**
+- Some models may not be available in your Clawdbot version
+- Fix: Switch to a model you know works: `clawdbot config` and update the model name
+- Common: If you configured Sonnet for heartbeats/subagents but it's unavailable, switch to Gemini
+- This silently breaks heartbeats and cron jobs — you won't notice until something doesn't fire
+
+**Auth token expired / OAuth errors:**
+- `clawdbot doctor --fix` resolves 90% of these
+- If recurring: consider API-key auth instead of OAuth (more stable)
+- The watchdog's proactive doctor run (every 6h) catches these automatically
+
+**Rate limiting (429 errors):**
+- You've hit your usage limit. Check with your usage monitoring script.
+- Degradation curve kicks in — system should automatically shift to cheaper models
+- If ALL models are rate-limited: Ollama local fallback keeps you running
+- Prevention: Route heartbeats/bulk work to Gemini, save your main model for real conversations
+
+**LLM request timeouts:**
+- Complex tasks (deep research, large code generation) can exceed the default timeout
+- The watchdog will log these but they're usually transient
+- If recurring: break complex tasks into smaller chunks when prompting
+
+**"All models failed" error:**
+- Every model in your fallback chain is down or rate-limited
+- Check: Is Ollama running? (`pgrep ollama` — if not, `ollama serve`)
+- Check: Are you on wifi? Network issues take out all cloud models at once
+- The watchdog should auto-start Ollama, but verify it's configured
+
+## Watchdog Issues
+
+**Watchdog isn't running:**
+- Check: `launchctl list | grep moltbot` (macOS) or `crontab -l` (Linux)
+- Verify the plist/cron points to the correct path for watchdog.sh
+- Check logs: `cat ~/.moltbot/logs/watchdog.log | tail -20`
+
+**Getting spammed with notifications:**
+- Old watchdog versions would send separate alerts for each error type
+- Fix: The v2 learning script batches related errors into ONE notification
+- Set a 30-minute global notification cooldown in the watchdog config
+
+**Triple notification spam for one incident:**
+- Classic v1 bug: the health check, model check, and doctor each triggered separate alerts
+- Fix: v2 checks trigger FIRST, then logs. Uses batched escalation.
+- Already fixed in the scripts included in this kit
+
+## General Tips
+
+**"It deleted my config!"**
+- Always back up `~/.moltbot/config.yaml` before asking your AI to modify configs
+- Better: tell the AI "show me the config change first, don't apply it until I approve"
+- The SECURITY.md template includes confirmation tiers for exactly this reason
+
+**Things break when you switch models rapidly:**
+- Each model has different context handling. Switching mid-conversation can confuse state.
+- Best practice: finish a task on one model, reset session, then switch
+
+**Session corruption after long use:**
+- Long sessions (12+ hours of heavy use) can accumulate malformed context
+- Prevention: Daily 5:30 AM session reset cron
+- Recovery: Stop gateway, archive sessions folder, restart fresh
+
+```bash
+# Daily session reset cron (add via clawdbot)
+clawdbot cron add --schedule "30 5 * * *" --text "Summarize yesterday, write to memory, then /new"
+```
 
 ---
 
