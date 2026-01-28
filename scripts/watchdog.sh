@@ -19,7 +19,7 @@
 set -euo pipefail
 
 # === CONFIGURATION (customize these) ===
-MOLTBOT="clawdbot"                            # Path to moltbot binary
+MOLTBOT="moltbot"                             # Path to moltbot binary (change to "clawdbot" if you installed via npm)
 LEARN_SCRIPT="$(dirname "$0")/watchdog_learn.sh"
 LOG_DIR="$HOME/.moltbot/logs"
 LOG_FILE="$LOG_DIR/watchdog.log"

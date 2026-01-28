@@ -1,6 +1,8 @@
 # 🐸 The Moltbot Starter Kit
 ### Turn Moltbot Into a Self-Healing, Multi-Model Autonomous AI System
 
+**What is Moltbot?** It's a free, open-source tool that connects AI models (like Claude, ChatGPT, Gemini) to your phone via Telegram, WhatsApp, or Discord. Instead of going to a website to chat with AI, it comes to YOU — in your pocket, 24/7. This starter kit turns that basic chatbot into an autonomous AI employee.
+
 > *"Within 48 hours you can have an AI that fixes itself at 3 AM, routes tasks across 5 models, monitors your security, and builds you apps while you sleep."*
 
 ---
@@ -24,10 +26,10 @@ Any computer that stays on. That's it. No server rack, no cloud VM, no special h
 
 | What | Why | Cost |
 |------|-----|------|
-| **Node.js 18+** | Runs Moltbot | Free |
+| **Node.js 22+** | Runs Moltbot (don't worry, the installer handles this) | Free |
 | **Telegram** | Your primary chat interface | Free |
 | **Homebrew** (Mac) | Installs dependencies | Free |
-| **Git** | Clone this repo | Free |
+| **Git** | Clone this repo (or just paste the link to your bot — see below) | Free |
 | **Ollama** (optional) | Local AI fallback so you never hit zero | Free |
 
 ## AI Model Accounts (The Actual Brain)
@@ -177,13 +179,15 @@ moltbot-starter-kit/
     └── WATCHDOG_CONCEPTS.md       — Self-healing system architecture
 ```
 
-**How to use it:** Clone this repo, copy `templates/` into your Moltbot workspace root, copy `scripts/` into your workspace scripts folder, customize the `[PLACEHOLDERS]`, and go.
+**How to use it:** Either clone this repo and copy the files manually (Option A in the Get Started section), OR just paste the repo link to your bot on Telegram and let it do the work for you (Option B — no Git needed). Your **workspace** is the folder where Moltbot stores its files — by default it's `~/clawd/` in your home directory.
 
 ---
 
-# 🧠 THE ARCHITECTURE
+# 🧠 THE ARCHITECTURE (Deep Dive)
 
-## Level 1: The Brain (AGENTS.md + SOUL.md)
+Everything below explains *how* each piece works. You don't need to read it all — just the sections that match the level you picked above.
+
+## The Brain (AGENTS.md + SOUL.md)
 
 Most people install Moltbot and just... chat with it. That's like hiring an employee and never giving them a job description.
 
@@ -235,7 +239,7 @@ workspace/
 
 ---
 
-## Level 2: Multi-Model Routing
+## Multi-Model Routing
 
 This is the single biggest upgrade you can make. Instead of burning one expensive model on everything, route tasks to the right specialist.
 
@@ -293,7 +297,7 @@ Configure heartbeat model to Gemini in your Moltbot config — saves your best m
 
 ---
 
-## Level 3: Self-Healing Watchdog
+## Self-Healing Watchdog
 
 This is what separates a toy from a production system. The watchdog runs every 5 minutes and fixes problems before you notice them.
 
@@ -305,7 +309,7 @@ This is what separates a toy from a production system. The watchdog runs every 5
 | 2 | **Memory usage** | >2GB? Kill and restart (memory leak). |
 | 3 | **Process uptime** | >48 hours? Routine restart (prevents drift). |
 | 4 | **Health endpoint** | Can it respond? Track consecutive failures. |
-| 5 | **Proactive doctor** | Run `clawdbot doctor` every 6h to catch issues early. |
+| 5 | **Proactive doctor** | Run `moltbot doctor` every 6h to catch issues early. |
 | 6 | **Heartbeat response** | No response for 60+ min? Alert — may be stuck. |
 | 7 | **Disk space** | >95%? Auto-clean old logs. |
 | 8 | **Local LLM** | Is Ollama running? If not, start it (your backup). |
@@ -320,7 +324,7 @@ This is what separates a toy from a production system. The watchdog runs every 5
 ```
 Problem detected
     ↓
-Level 1: Run clawdbot doctor --fix
+Level 1: Run moltbot doctor --fix
          (fixes auth expiry, config issues, 90% of problems)
     ↓ (if that didn't work)
 Level 2: Restart gateway
@@ -345,13 +349,21 @@ This means the watchdog gets smarter over time. Month 1, it might restart the ga
 
 ### Setup
 
+**The easy way:** Just tell your bot: *"Set up the watchdog from the moltbot-starter-kit repo. Run it every 5 minutes."* It will create the scripts and schedule them for you.
+
+**The manual way** (if you prefer):
+
+<details>
+<summary><strong>🍎 Mac setup</strong> (click to expand)</summary>
+
 ```bash
 # 1. Copy the watchdog scripts to your workspace
 cp scripts/watchdog.sh ~/clawd/scripts/
 cp scripts/watchdog_learn.sh ~/clawd/scripts/
 chmod +x ~/clawd/scripts/watchdog*.sh
 
-# 2. Create a launchd plist (macOS) — runs every 5 minutes
+# 2. Create a scheduled task that runs the watchdog every 5 minutes
+# (This is a "launchd plist" — Mac's way of scheduling background tasks)
 cat > ~/Library/LaunchAgents/com.moltbot.watchdog.plist << 'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -362,7 +374,7 @@ cat > ~/Library/LaunchAgents/com.moltbot.watchdog.plist << 'EOF'
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>REPLACE_WITH_YOUR_PATH/scripts/watchdog.sh</string>
+        <string>REPLACE_WITH_YOUR_HOME_FOLDER/clawd/scripts/watchdog.sh</string>
     </array>
     <key>StartInterval</key>
     <integer>300</integer>
@@ -374,22 +386,31 @@ cat > ~/Library/LaunchAgents/com.moltbot.watchdog.plist << 'EOF'
 </plist>
 EOF
 
-# 3. Load it
+# 3. Tell Mac to start running it
 launchctl load ~/Library/LaunchAgents/com.moltbot.watchdog.plist
 ```
+</details>
 
-For Linux, use a cron job instead:
+<details>
+<summary><strong>🐧 Linux setup</strong> (click to expand)</summary>
+
 ```bash
-# Run every 5 minutes
-*/5 * * * * /bin/bash /path/to/scripts/watchdog.sh >> /tmp/watchdog.log 2>&1
+# 1. Copy scripts
+cp scripts/watchdog.sh ~/clawd/scripts/
+cp scripts/watchdog_learn.sh ~/clawd/scripts/
+chmod +x ~/clawd/scripts/watchdog*.sh
+
+# 2. Add to cron (runs every 5 minutes)
+(crontab -l 2>/dev/null; echo "*/5 * * * * /bin/bash $HOME/clawd/scripts/watchdog.sh >> /tmp/watchdog.log 2>&1") | crontab -
 ```
+</details>
 
 → **Full code:** [`scripts/watchdog.sh`](scripts/watchdog.sh) | [`scripts/watchdog_learn.sh`](scripts/watchdog_learn.sh)
 → **Architecture:** [`docs/WATCHDOG_CONCEPTS.md`](docs/WATCHDOG_CONCEPTS.md)
 
 ---
 
-## Level 4: Learning Security Monitor
+## Learning Security Monitor
 
 A lightweight "security hound" that learns what's normal on your system and barks when something isn't.
 
@@ -416,21 +437,24 @@ The hound remembers and won't bark at that pattern again. Over time, it goes fro
 
 ### Setup
 
-```bash
-cp scripts/security_hound.py ~/clawd/scripts/
-chmod +x ~/clawd/scripts/security_hound.py
+**The easy way:** Tell your bot: *"Set up the security hound from the moltbot-starter-kit repo."* Done.
 
-# Test it
-python3 ~/clawd/scripts/security_hound.py | jq .
+**Manual:**
+```bash
+# Copy the script to your workspace
+cp scripts/security_hound.py ~/clawd/scripts/
+
+# Test it (you should see a JSON report with no alerts)
+python3 ~/clawd/scripts/security_hound.py
 ```
 
-Add to your HEARTBEAT.md so it runs every hour automatically.
+Then add it to your `HEARTBEAT.md` so it runs automatically every hour.
 
 → **Full code:** [`scripts/security_hound.py`](scripts/security_hound.py)
 
 ---
 
-## Level 5: Proactive Heartbeats
+## Proactive Heartbeats
 
 Heartbeats transform your AI from reactive (waits for commands) to proactive (checks in, does work, reaches out).
 
@@ -473,7 +497,7 @@ On each heartbeat, `check_usage.py` compares current usage against previously-al
 
 ---
 
-## Level 6: Emergency Controls
+## Emergency Controls
 
 Sometimes you need to pull the plug. The emergency lockdown gives you instant control:
 
@@ -506,7 +530,7 @@ For sensitive operations (sending emails, financial transactions, file deletions
 
 ---
 
-## Level 7: Overnight Builds
+## Overnight Builds
 
 The flex. While you sleep, your AI builds things.
 
@@ -514,7 +538,7 @@ The flex. While you sleep, your AI builds things.
 1. Maintain a "build queue" in your workspace
 2. Set a 2 AM cron job:
    ```
-   clawdbot cron add --schedule "0 2 * * *" --text "Check PROJECTS.md build queue, pick something small, build it"
+   moltbot cron add --schedule "0 2 * * *" --text "Check PROJECTS.md build queue, pick something small, build it"
    ```
 3. AI picks a task, builds it, stages for review
 4. You wake up to new tools
@@ -529,7 +553,7 @@ What's been built overnight so far: web apps, research documents, analytics tool
 
 ---
 
-## Level 8: Personal Learning Loop
+## Personal Learning Loop
 
 The system doesn't just work for you — it *learns* you.
 
@@ -540,7 +564,7 @@ The system doesn't just work for you — it *learns* you.
 - **Preferences** — communication style, tools, topics, schedule patterns
 
 ### How It Works
-A Python script (`personal_learner.py`) scans your memory files for patterns. It builds a JSON model:
+Your bot automatically scans its memory files for patterns and builds a model of you over time. You don't need to set this up manually — just tell your bot about it and it handles the rest. Here's what the model looks like under the hood:
 
 ```json
 {
@@ -645,23 +669,29 @@ Your bot reads the repo, understands the architecture, and walks you through ado
 
 ---
 
----
-
 # 🔧 TROUBLESHOOTING
 
-Real problems you'll hit, and how to fix them. All of these were discovered in the first 48 hours of running this system.
+Real problems you'll hit, and how to fix them. All of these were discovered the hard way.
+
+**Before anything else:** Run these two commands in your terminal. They fix 90% of issues:
+```bash
+moltbot doctor --fix
+moltbot gateway restart
+```
+
+**Still stuck?** Check the [official FAQ](https://docs.molt.bot/help/faq) or ask in the [Discord](https://discord.com/invite/clawd).
 
 ## Telegram Issues
 
 **Bot doesn't respond to messages:**
-- Run `clawdbot health` — check if "Telegram: ok" shows
-- If not: `clawdbot gateway restart`
-- Still broken? `clawdbot doctor --fix` — often catches expired auth
+- Run `moltbot health` — check if "Telegram: ok" shows
+- If not: `moltbot gateway restart`
+- Still broken? `moltbot doctor --fix` — often catches expired auth
 - Nuclear option: stop gateway, delete session files, restart fresh
 
 **Bot responds but very slowly (30+ seconds):**
 - Context is probably bloated. Your AI's conversation history is too long.
-- Fix: Reset the session — `clawdbot gateway restart` or set up a daily session reset cron
+- Fix: Reset the session — `moltbot gateway restart` or set up a daily session reset cron
 - Prevention: Add a 5:30 AM daily session reset cron job
 
 **"Context overflow" or "prompt too large" errors:**
@@ -673,13 +703,13 @@ Real problems you'll hit, and how to fix them. All of these were discovered in t
 ## Claude / Model Issues
 
 **"Unknown model" errors (e.g., `claude-sonnet-4` not found):**
-- Some models may not be available in your Clawdbot version
-- Fix: Switch to a model you know works: `clawdbot config` and update the model name
+- Some models may not be available in your Moltbot version
+- Fix: Switch to a model you know works: `moltbot config` and update the model name
 - Common: If you configured Sonnet for heartbeats/subagents but it's unavailable, switch to Gemini
 - This silently breaks heartbeats and cron jobs — you won't notice until something doesn't fire
 
 **Auth token expired / OAuth errors:**
-- `clawdbot doctor --fix` resolves 90% of these
+- `moltbot doctor --fix` resolves 90% of these
 - If recurring: consider API-key auth instead of OAuth (more stable)
 - The watchdog's proactive doctor run (every 6h) catches these automatically
 
@@ -705,7 +735,7 @@ Real problems you'll hit, and how to fix them. All of these were discovered in t
 **Watchdog isn't running:**
 - Check: `launchctl list | grep moltbot` (macOS) or `crontab -l` (Linux)
 - Verify the plist/cron points to the correct path for watchdog.sh
-- Check logs: `cat ~/.moltbot/logs/watchdog.log | tail -20`
+- Check logs: `cat ~/.clawdbot/logs/watchdog.log | tail -20`
 
 **Getting spammed with notifications:**
 - Old watchdog versions would send separate alerts for each error type
@@ -720,7 +750,7 @@ Real problems you'll hit, and how to fix them. All of these were discovered in t
 ## General Tips
 
 **"It deleted my config!"**
-- Always back up `~/.moltbot/config.yaml` before asking your AI to modify configs
+- Always back up your Moltbot config before asking your AI to modify it
 - Better: tell the AI "show me the config change first, don't apply it until I approve"
 - The SECURITY.md template includes confirmation tiers for exactly this reason
 
@@ -734,8 +764,8 @@ Real problems you'll hit, and how to fix them. All of these were discovered in t
 - Recovery: Stop gateway, archive sessions folder, restart fresh
 
 ```bash
-# Daily session reset cron (add via clawdbot)
-clawdbot cron add --schedule "30 5 * * *" --text "Summarize yesterday, write to memory, then /new"
+# Daily session reset cron (add via moltbot)
+moltbot cron add --schedule "30 5 * * *" --text "Summarize yesterday, write to memory, then /new"
 ```
 
 ---
