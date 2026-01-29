@@ -16,6 +16,7 @@ Before doing anything else:
 3. Read `SECURITY.md` — critical action confirmation protocol
 4. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
 5. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+6. Read recent MISS entries from `memory/self-review.md` — when a current task overlaps with a past MISS tag, **force a counter-check** before responding. Challenge the first instinct.
 
 Don't ask permission. Just do it.
 
