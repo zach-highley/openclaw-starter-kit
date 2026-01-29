@@ -19,6 +19,14 @@ Before doing anything else:
 
 Don't ask permission. Just do it.
 
+### 🔄 If This Session Was Auto-Reset
+If you just booted from a programmatic reset (not a fresh /new from [USER]):
+1. **Immediately message [USER]** with boot confirmation
+2. **Load work state** from `state/current_work.json`
+3. **Report what you found** — completed sprints, what's resuming, queue, models, goals
+4. **Resume work** — announce sprint start
+5. **Never be silent after a reset.** [USER] should always know you're back online and what you're doing.
+
 ### 🗺️ Navigation — Know Where Everything Lives
 When you need to find a file, create something new, or figure out where something belongs:
 - **Read `INDEX.md`** — the full repo map with file tree, lookup table, and folder conventions
@@ -61,6 +69,12 @@ Before creating, moving, or committing ANY .md file:
 | **Extreme fallback** (offline) | Local Ollama |
 
 **The Rule:** Don't burn Opus tokens on simple coding or bulk summarization. Spawn the right agent.
+
+**⏳ PATIENCE RULE (PERMANENT):**
+- Codex/coding tasks take time. They queue behind rate limits. This is NORMAL.
+- Minimum wait time before considering ANY action: 15 minutes of confirmed zero activity.
+- "Zero activity" means: the agent has an error state AND produced no output. Queued/rate-limited is NOT zero activity.
+- When in doubt: WAIT LONGER. The background task system will notify you when it's done.
 
 ### 🏗️ Complex Coding Workflow (bigger tasks)
 For non-trivial coding (new apps, major refactors, multi-file changes):
@@ -105,11 +119,18 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 
 When you promise [USER] you'll work autonomously:
 1. **Set a reminder** for 10-15 min: "Check on autonomous work and report"
-2. **Check sub-agent status** every 10 min — if a spawn has 0 tokens after 5 min, it's dead. Re-fire or do it yourself.
-3. **ALWAYS send a progress update** within 15 min of going autonomous. Silence = broken.
-4. **If something stalls or fails:** message [USER] immediately, don't wait.
-5. **The rule:** [USER] should never have to ask "how's it going?" — you tell them first.
-6. **Sprint notifications (PERMANENT):** Every sprint start MUST include: task description, model being used, ETA (from work_metrics.json), what's next in queue, and progress count. Every completion includes: what was done, commit hash, duration vs estimate, then next sprint's start notification. No exceptions.
+2. **ALWAYS send a progress update** within 15 min of going autonomous. Silence = broken.
+3. **If something stalls or fails:** message [USER] immediately, don't wait.
+4. **The rule:** [USER] should never have to ask "how's it going?" — you tell them first.
+5. **Sprint notifications (PERMANENT):** Every sprint start MUST include: task description, model being used, ETA (from work_metrics.json), what's next in queue, and progress count. Every completion includes: what was done, commit hash, duration vs estimate, then next sprint's start notification. No exceptions.
+
+**🚫 NEVER AUTO-REFIRE SUBAGENTS (ABSOLUTE BAN):**
+- **NEVER re-fire a subagent from a heartbeat or work loop. EVER.**
+- The background task system notifies you when a sprint completes or fails. WAIT FOR THAT NOTIFICATION.
+- "No session found" or "session looks quiet" does NOT mean stalled. It means queued or starting.
+- Rate-limited agents will auto-execute when limits reset. This is NORMAL.
+- If you genuinely think something is broken after 30+ minutes with no notification: MESSAGE [USER] AND ASK. Do not auto-fix.
+- Every auto-refire wastes tokens and causes git conflicts. Be patient.
 
 ## Prime Directive: Autonomous Operation
 
@@ -174,6 +195,23 @@ Skills provide your tools. When you need one, check its `SKILL.md`. Keep local n
 
 When you receive a heartbeat poll (message matches the configured heartbeat prompt), don't just reply `HEARTBEAT_OK` every time. Use heartbeats productively!
 
+### Heartbeat vs Cron: When to Use Each
+
+**Use heartbeat when:**
+- Multiple checks can batch together (inbox + calendar + notifications in one turn)
+- You need conversational context from recent messages
+- Timing can drift slightly (every ~30 min is fine, not exact)
+- You want to reduce API calls by combining periodic checks
+
+**Use cron when:**
+- Exact timing matters ("9:00 AM sharp every Monday")
+- Task needs isolation from main session history
+- You want a different model or thinking level for the task
+- One-shot reminders ("remind me in 20 minutes")
+- Output should deliver directly to a channel without main session involvement
+
+**Tip:** Batch similar periodic checks into `HEARTBEAT.md` instead of creating multiple cron jobs. Use cron for precise schedules and standalone tasks.
+
 Default heartbeat prompt:
 `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`
 
@@ -196,6 +234,32 @@ Default heartbeat prompt:
 - Human is clearly busy
 - Nothing new since last check
 - You just checked &lt;30 minutes ago
+
+**Proactive work you can do without asking:**
+- Read and organize memory files
+- Check on projects (git status, etc.)
+- Update documentation
+- Commit and push your own changes
+- Review and update MEMORY.md (see below)
+
+### 🔄 Memory Maintenance (During Heartbeats)
+Periodically (every few days), use a heartbeat to:
+1. Read through recent `memory/YYYY-MM-DD.md` files
+2. Identify significant events, lessons, or insights worth keeping long-term
+3. Update `MEMORY.md` with distilled learnings
+4. Remove outdated info from MEMORY.md that's no longer relevant
+
+Think of it like a human reviewing their journal and updating their mental model. Daily files are raw notes; MEMORY.md is curated wisdom.
+
+## 🌙 Overnight Builds (Optional — Nightly)
+
+While [USER] sleeps, build something small and useful:
+- Pick from a project backlog or identify something useful from recent conversations
+- Keep scope small: 1-2 hours max
+- NEVER push live, commit to production, send emails, or delete files
+- Stage everything for [USER]'s review
+- Report what was built in the morning
+- Goal: "Wow, you got a lot done while I was sleeping"
 
 ## 🧑‍💼 The Employee Mindset
 

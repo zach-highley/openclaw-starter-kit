@@ -32,11 +32,14 @@ Read `state/current_work.json`. If `queue` has items:
 
 **Smart work detection:** Queue has items = work mode ON. Queue empty = work mode OFF.
 
-**Stall Detection (3-strikes):**
-- A sprint "stalls" when the agent produces no output for 5+ minutes
-- **Strike 1-2:** Kill the stalled agent, re-spawn with updated instructions
-- **Strike 3:** Deep dive — read the spec, find the root cause, fix it or do it yourself
-- Always notify the user when a stall is detected and resolved
+**🚫 ABSOLUTE BAN ON AUTO-REFIRING (NO EXCEPTIONS):**
+- **NEVER re-fire a subagent from a heartbeat. EVER. FOR ANY REASON.**
+- Subagents are managed by the background task system. It will notify you when they complete or fail.
+- "No session found" does NOT mean stalled. It means the session hasn't registered yet, or is queued.
+- Rate-limited agents will auto-execute when limits reset. This is NORMAL.
+- If a sprint genuinely fails, the background task system will report the failure. You respond to THAT notification.
+- If you suspect something is truly broken after 30+ minutes of silence with NO background task notification: MESSAGE [USER] AND ASK. Do not auto-fix.
+- Every single time you auto-refire, you waste tokens and risk git conflicts. Be patient.
 
 **Learning:** After each sprint, log to `state/work_metrics.json` via `scripts/log_sprint_metric.py`
 
@@ -85,13 +88,29 @@ Message user: "Context at ~X% — saving state and resetting."
 ### Step 3: Reset
 Run session reset command
 
-### Step 4: Post-Reset Boot
-Message user: "Reset complete. Loading work state..."
+### Step 4: Post-Reset Boot (new session does this)
+Message user:
+> ✅ **Reset complete. Fresh session online.**
+> 📊 Context: 0% | Model: [current model] | Session: [new session ID]
+> 📂 Loading: SOUL.md, USER.md, memory files, work state...
 
-### Step 5: Resume
-Read work state, report what's completed/queued, start next sprint with full notification format.
+### Step 5: Work State Pickup
+Read `state/current_work.json` and message user:
+> 🔧 **Work state loaded.**
+> ✅ Completed: [list completed sprints]
+> 🔄 Resuming: Sprint [X] — [description]
+> 📋 Queue: [Y] sprints remaining — [brief list]
+> 🤖 Models: [which models for which tasks]
 
-**Rule:** User should NEVER wonder what happened during a reset. Every step is narrated.
+### Step 6: Sprint Resume
+Message user (same format as work loop step 4):
+> 🚀 **Sprint [X] started** — [description]
+> 🤖 Model: [Codex/Opus/etc]
+> ⏱️ ETA: ~[N] minutes
+> 📋 Next up: [next sprint] — [brief description]
+> 📊 Progress: [completed]/[total] sprints done
+
+**Rule:** User should NEVER wonder what happened during a reset. Every step is narrated. Silence during reset = broken.
 
 ---
 
