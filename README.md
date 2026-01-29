@@ -84,8 +84,31 @@ Not everyone needs the full setup. Pick your level:
 - Overnight builds (AI builds tools while you sleep)
 - Personal learning loop (AI learns your habits and anticipates needs)
 - Emergency controls (kill switch when needed)
+- **🆕 Autonomous Work Loop** — AI executes a queue of coding sprints while you're away
+- **🆕 CI/CD Build Monitor** — auto-detects build failures from email, auto-fixes via AI
+- **🆕 Sprint System** — break projects into AI-executable tasks with specs, metrics, and learning
+- **🆕 Stall Detection** — 3-strikes rule catches stuck agents, does deep-dive analysis, self-recovers
 
 **Good for:** People who want an autonomous AI employee that runs 24/7 and gets smarter every day.
+
+### 🆕 Level 3 Deep Dives
+
+These systems were battle-tested building a real iOS app (16 sprints, zero human code written):
+
+| System | What It Does | Doc |
+|--------|-------------|-----|
+| **Work Loop** | Queue tasks → AI picks next → spawns agent → monitors → chains next | [docs/WORK_LOOP.md](docs/WORK_LOOP.md) |
+| **Build Monitor** | Reads CI failure emails → parses errors → auto-fixes → pushes | [docs/BUILD_MONITOR.md](docs/BUILD_MONITOR.md) |
+| **Sprint System** | Write specs → queue them → AI executes autonomously | [docs/SPRINT_SYSTEM.md](docs/SPRINT_SYSTEM.md) |
+| **Sprint Metrics** | Tracks agent performance, durations, failure rates | `scripts/log_sprint_metric.py` |
+| **Stall Detection** | Catches stuck agents after 5 min, 3-strike escalation | Built into HEARTBEAT.md |
+
+**Real results from our first run:**
+- 16 coding sprints completed in ~3 hours
+- Average sprint: 5-12 minutes
+- Models used: Codex (11 sprints), Opus (5 as fallback)
+- One stall detected and recovered (xcodebuild hang)
+- Zero failures, all commits pushed automatically
 
 ---
 

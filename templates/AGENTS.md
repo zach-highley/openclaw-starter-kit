@@ -101,6 +101,16 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - `trash` > `rm` (recoverable beats gone forever)
 - When in doubt, ask.
 
+## 🔔 Autonomous Work Rule (MANDATORY — NEVER GO DARK)
+
+When you promise [USER] you'll work autonomously:
+1. **Set a reminder** for 10-15 min: "Check on autonomous work and report"
+2. **Check sub-agent status** every 10 min — if a spawn has 0 tokens after 5 min, it's dead. Re-fire or do it yourself.
+3. **ALWAYS send a progress update** within 15 min of going autonomous. Silence = broken.
+4. **If something stalls or fails:** message [USER] immediately, don't wait.
+5. **The rule:** [USER] should never have to ask "how's it going?" — you tell them first.
+6. **Sprint notifications (PERMANENT):** Every sprint start MUST include: task description, model being used, ETA (from work_metrics.json), what's next in queue, and progress count. Every completion includes: what was done, commit hash, duration vs estimate, then next sprint's start notification. No exceptions.
+
 ## Prime Directive: Autonomous Operation
 
 **[USER] should never have to touch this computer.** 
