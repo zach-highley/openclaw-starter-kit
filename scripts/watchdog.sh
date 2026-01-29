@@ -1,9 +1,9 @@
 #!/bin/bash
-# Moltbot Watchdog v6 — Self-Learning Resilience System
+# Moltbot Watchdog v8 — Self-Learning Resilience System
 # Runs via launchd/cron every 5 minutes. Monitors health, fixes problems, learns from failures.
 #
 # What it does:
-# - 13 health checks per cycle
+# - 15 health checks per cycle
 # - 4-level escalation ladder (doctor → restart → model switch → alert human)
 # - Learns which fixes work for which problems
 # - Memory leak detection + auto-kill
@@ -15,6 +15,9 @@
 # - Predictive failure analysis
 # - Pipeline health checks
 # - Error recovery engine
+# - v8: Session size monitoring (prevents context overflow)
+# - v8: Telegram delivery health (detects one-way pipe failures)
+# - v8: "Don't panic" messaging (reassure user during auto-fixes)
 
 set -euo pipefail
 
@@ -69,7 +72,40 @@ learn() {
 notify() {
     local message="$1" urgency="${2:-normal}"
     log "📢 [$urgency] $message"
-    run_with_timeout 30 "$MOLTBOT" message send --channel telegram --message "🤖 Watchdog [$urgency]: $message" >> "$LOG_FILE" 2>&1 || true
+    run_with_timeout 30 "$MOLTBOT" message send --channel telegram --message "🤖 Watchdog [$urgency]: $message" >> "$LOG_FILE" 2>&1 || {
+        # v8: Fallback to direct Telegram API if Moltbot can't send
+        if [[ -n "${TELEGRAM_BOT_TOKEN:-}" ]] && [[ -n "${TELEGRAM_CHAT_ID:-}" ]]; then
+            curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+                -d chat_id="$TELEGRAM_CHAT_ID" \
+                -d text="🤖 Watchdog [$urgency]: $message" >> "$LOG_FILE" 2>&1 || true
+        fi
+    }
+}
+
+# v8: "Don't panic" message — tells the user the watchdog is handling it
+reassure() {
+    local issue="$1" eta="${2:-5 minutes}"
+    local msg="🐕 Hey — I noticed a problem ($issue) and I'm fixing it automatically. Don't touch the terminal! Everything will be back to normal within $eta. I'll send you a ✅ when it's done."
+    log "🐕 Reassuring user: $issue (ETA: $eta)"
+    run_with_timeout 30 "$MOLTBOT" message send --channel telegram --message "$msg" >> "$LOG_FILE" 2>&1 || {
+        if [[ -n "${TELEGRAM_BOT_TOKEN:-}" ]] && [[ -n "${TELEGRAM_CHAT_ID:-}" ]]; then
+            curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+                -d chat_id="$TELEGRAM_CHAT_ID" -d text="$msg" >> "$LOG_FILE" 2>&1 || true
+        fi
+    }
+}
+
+# v8: "All clear" message — confirms the fix worked
+all_clear() {
+    local fix="$1"
+    local msg="✅ All fixed! $fix — back to normal. You didn't have to do anything."
+    log "✅ All clear: $fix"
+    run_with_timeout 30 "$MOLTBOT" message send --channel telegram --message "$msg" >> "$LOG_FILE" 2>&1 || {
+        if [[ -n "${TELEGRAM_BOT_TOKEN:-}" ]] && [[ -n "${TELEGRAM_CHAT_ID:-}" ]]; then
+            curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+                -d chat_id="$TELEGRAM_CHAT_ID" -d text="$msg" >> "$LOG_FILE" 2>&1 || true
+        fi
+    }
 }
 
 safe_json_update() {
@@ -290,6 +326,55 @@ if ! pgrep -x ollama > /dev/null 2>&1; then
     ollama serve >> "$LOG_DIR/ollama.log" 2>&1 &
     sleep 5
     pgrep -x ollama > /dev/null 2>&1 && learn 1 "ollama-started" "recovered"
+fi
+
+# ============================================
+# CHECK 14: Session size (v8 — prevents context overflow)
+# ============================================
+log "[CHECK 14] Session size..."
+SESSION_DIR="$HOME/.moltbot/agents/main/sessions"  # Adjust for clawdbot: ~/.clawdbot/agents/main/sessions
+if [[ -d "$SESSION_DIR" ]]; then
+    LARGEST=$(find "$SESSION_DIR" -name "*.jsonl" -exec ls -la {} + 2>/dev/null | sort -k5 -nr | head -1)
+    if [[ -n "$LARGEST" ]]; then
+        SIZE_BYTES=$(echo "$LARGEST" | awk '{print $5}')
+        SIZE_MB=$((SIZE_BYTES / 1048576))
+        if [[ $SIZE_BYTES -gt 2621440 ]]; then
+            # > 2.5MB = auto-reset to prevent context overflow
+            log "🔴 [CHECK 14] Session ${SIZE_MB}MB — AUTO-RESETTING"
+            reassure "Session too large (${SIZE_MB}MB), auto-resetting to prevent crash" "30 seconds"
+            # Flush context to memory, then reset
+            "$MOLTBOT" session reset --agent main 2>> "$LOG_FILE" || true
+            sleep 5
+            all_clear "Session auto-reset (was ${SIZE_MB}MB). Context saved to memory."
+            learn 4 "session-auto-reset" "auto-reset"
+        elif [[ $SIZE_BYTES -gt 1572864 ]]; then
+            # > 1.5MB = warning
+            log "⚠️ [CHECK 14] Session ${SIZE_MB}MB — getting large"
+            notify "Session is ${SIZE_MB}MB. I'll auto-reset at 2.5MB. No action needed." "warning"
+        else
+            log "✅ [CHECK 14] Session size OK (${SIZE_BYTES} bytes)"
+        fi
+    fi
+fi
+
+# ============================================
+# CHECK 15: Telegram delivery health (v8 — detects one-way pipe failure)
+# ============================================
+log "[CHECK 15] Telegram delivery..."
+GATEWAY_LOG="/tmp/moltbot/moltbot-$(date +%Y-%m-%d).log"  # Adjust for clawdbot: /tmp/clawdbot/clawdbot-YYYY-MM-DD.log
+if [[ -f "$GATEWAY_LOG" ]]; then
+    RECENT_IN=$(grep -c "messageChannel=telegram" "$GATEWAY_LOG" 2>/dev/null || echo 0)
+    RECENT_OUT=$(grep -c "Sent via Telegram" "$GATEWAY_LOG" 2>/dev/null || echo 0)
+    if [[ "$RECENT_IN" -gt 3 ]] && [[ "$RECENT_OUT" -eq 0 ]]; then
+        log "🔴 [CHECK 15] Telegram one-way failure! In: $RECENT_IN, Out: $RECENT_OUT"
+        reassure "Telegram replies aren't reaching you" "2 minutes"
+        "$MOLTBOT" gateway restart 2>/dev/null || true
+        sleep 10
+        all_clear "Telegram delivery fixed — gateway restarted"
+        learn 2 "telegram-delivery-fix" "auto-restarted"
+    else
+        log "✅ [CHECK 15] Telegram delivery OK"
+    fi
 fi
 
 # ============================================
