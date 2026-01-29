@@ -7,6 +7,18 @@
 
 ---
 
+# ⚡ DON'T WANT TO READ ANYTHING?
+
+Just install Moltbot (`curl -fsSL https://molt.bot/install.sh | bash` → `moltbot onboard`), then send this message to your bot:
+
+> "Hey [bot], can you take a look at this Repo and steal/integrate every single thing this guy suggests? Think hard about it, make sure it meshes and matches with everything we've done already, and don't change anything until I give the OK. Also, point out any mistakes and improvements you see to make it better for me specifically and my goals before we get going. And let's integrate things one step at a time and track all changes so if anything breaks we can go back to the way we had it before. My goals are my goals as you know them but also automation, notifications, and consistent up-time with machine learning to fix all errors so I never have to touch the terminal or computer: https://github.com/[USERNAME]/moltbot-starter-kit"
+
+That's it. Your bot reads the entire repo, compares it to your current setup, tells you what to adopt, points out what doesn't apply, and walks you through integrating everything one piece at a time with rollback tracking. No reading required.
+
+**Want to understand what's actually in here?** Keep reading. 👇
+
+---
+
 # 📋 WHAT YOU NEED (Before You Start)
 
 ## Hardware
