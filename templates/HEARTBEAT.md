@@ -8,40 +8,18 @@ Customize the sections below. Remove what you don't need, add what you do.
 
 ---
 
-## 🔄 WORK LOOP (HIGHEST PRIORITY — check every heartbeat)
-Read `state/current_work.json`. If `queue` has items:
+## 🔄 WORK LOOP — HANDS OFF (MAIN SESSION ONLY)
+**⛔ HEARTBEATS DO NOT MANAGE SPRINTS. PERIOD.**
 
-1. **Read the work state** — what task, what queue, what's in progress, what's done
-2. **Pick next item** from `queue` (first item), set it as `inProgress`
-3. **Execute it** — spawn the appropriate agent (Codex for coding, Gemini for docs, etc.)
-4. **Sprint-start notification** — IMMEDIATELY message the user:
-   > 🚀 **Sprint [X] started** — [description from spec]
-   > 🤖 Model: [Codex/Opus/etc]
-   > ⏱️ ETA: ~[N] minutes (based on `work_metrics.json` avg for that agent)
-   > 📋 Next up: [next sprint in queue] — [brief description]
-   > 📊 Progress: [completed count]/[total count] sprints done
-5. **On success:** move from `inProgress` to `completed`, remove from `queue`, update `lastUpdated`
-6. **On rate limit:** log it, set `rateLimitedUntil` timestamp, wait and retry next heartbeat
-7. **On failure:** log error, retry up to `maxRetries`, then skip and move to next
-8. **Sprint-complete notification** — message the user:
-   > ✅ **Sprint [X] COMPLETE** — [what was done, commit hash]
-   > ⏱️ Duration: [actual time] (est was [N] min)
-   > [then the sprint-start notification for the NEXT sprint, same format as step 4]
-9. **After `autoNewAfterSprints` completions (default 3):** save state, reset session for fresh context
-10. **When queue is empty:** set `active: false`, send a full completion report
+Sprint management (spawning, monitoring, re-firing, completing) is handled EXCLUSIVELY by the main session via background task notifications.
 
-**Smart work detection:** Queue has items = work mode ON. Queue empty = work mode OFF.
+**If you are a heartbeat session reading this: DO NOT touch sprints. DO NOT check sessions. DO NOT spawn agents. DO NOT message about stalls. Skip this section entirely and move to the next one.**
 
-**🚫 ABSOLUTE BAN ON AUTO-REFIRING (NO EXCEPTIONS):**
-- **NEVER re-fire a subagent from a heartbeat. EVER. FOR ANY REASON.**
-- Subagents are managed by the background task system. It will notify you when they complete or fail.
-- "No session found" does NOT mean stalled. It means the session hasn't registered yet, or is queued.
-- Rate-limited agents will auto-execute when limits reset. This is NORMAL.
-- If a sprint genuinely fails, the background task system will report the failure. You respond to THAT notification.
-- If you suspect something is truly broken after 30+ minutes of silence with NO background task notification: MESSAGE [USER] AND ASK. Do not auto-fix.
-- Every single time you auto-refire, you waste tokens and risk git conflicts. Be patient.
+The ONLY thing a heartbeat may do with `state/current_work.json` is READ it to include a brief status line in a report IF [USER] explicitly asks. Never write to it. Never act on it.
 
-**Learning:** After each sprint, log to `state/work_metrics.json` via `scripts/log_sprint_metric.py`
+**Why?** Heartbeat models (often cheaper/faster models like Gemini) consistently misinterpret "check if stalled" as "re-fire immediately." This wastes tokens, causes git conflicts, and annoys users. The nuclear fix: heartbeats don't touch sprints at all. The main session (your primary model) handles everything through background task notifications.
+
+**Sprint learning:** After each sprint completes in the main session, log to `state/work_metrics.json` via `scripts/log_sprint_metric.py`
 
 ---
 
