@@ -114,6 +114,33 @@ Message user (same format as work loop step 4):
 
 ---
 
+## 🪞 Self-Review (every 4th heartbeat — metacognition loop)
+Read `memory/self-review.md` and reflect on recent work:
+
+**Ask yourself:**
+1. What sounded right but went nowhere?
+2. Where did I default to consensus or lazy thinking?
+3. What assumption did I not pressure test?
+4. What worked well that I should keep doing?
+
+**Log entries using this format:**
+```
+[YYYY-MM-DD] TAG: [confidence|uncertainty|speed|depth]
+MISS|HIT: what happened
+FIX|KEEP: what to do about it
+```
+
+**Rules:**
+- Be honest. Self-review theater is worthless — only log real observations.
+- Include HITs too, not just MISSes. Reinforce what works.
+- When a current task overlaps with a past MISS tag: PAUSE. Challenge your first instinct. Run a counter-check before responding.
+- Review the last 5 MISS entries for patterns. If the same TAG appears 3+ times, that's a systemic issue — update AGENTS.md or HEARTBEAT.md rules to fix it structurally.
+- Prune entries older than 30 days (the lessons should be absorbed into rules by then).
+
+See `docs/SELF_REVIEW.md` for full setup guide and examples.
+
+---
+
 ## Quick Checks (rotate through, don't do all every time)
 - Email inbox (any urgent messages?)
 - Calendar (upcoming events in 24h?)
