@@ -118,6 +118,7 @@ These systems were battle-tested building a real iOS app (33 sprints, zero human
 | **🆕 Telegram Delivery** | Verifies messages actually reach you, auto-retries on failure | `scripts/telegram_delivery_checker.py` |
 | **🆕 Morning Briefing** | Daily digest: weather, quotes, calendar, social engagement, system health | `scripts/morning_briefing.py` |
 | **🆕 Meta-Monitor** | Watches the watchers — detects when monitoring systems themselves are broken | [docs/META_MONITOR.md](docs/META_MONITOR.md) |
+| **🆕 Hybrid Workflow** | 8-step Claude+Codex pipeline: plan → validate → assess → implement → orchestrate → review → document → next | [docs/HYBRID_CODING_WORKFLOW.md](docs/HYBRID_CODING_WORKFLOW.md) |
 
 **🆕 Latest additions (Jan 30, 2026):**
 
@@ -129,7 +130,7 @@ These systems were battle-tested building a real iOS app (33 sprints, zero human
 | **🆕 System Awareness Table** | 9-system reference so the AI knows all its teammates | AGENTS.md |
 
 **Real results from our production system:**
-- 40 coding sprints completed autonomously (S1-S40)
+- 55 coding sprints completed autonomously (S1-S55)
 - 109 successful auto-recoveries (zero human intervention)
 - Doctor fix rate: 100% (9/9)
 - Watchdog risk score: 0/100 (all systems healthy)
