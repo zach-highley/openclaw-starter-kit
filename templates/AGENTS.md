@@ -38,7 +38,7 @@ Boot checks run once. These fire EVERY TIME the trigger condition is met, throug
 | Trigger | Check | Action |
 |---------|-------|--------|
 | **About to create a file or script** | MECE | `ls` the target directory + `grep` for overlap. Extend, don't duplicate. |
-| **About to spawn a subagent** | Model routing | Run routing check. Use recommended model. |
+| **About to spawn a subagent** | Model routing | Run routing check. Use the REQUIRED model from output. Not a suggestion.. |
 | **ANY coding task starting** | Model availability | Check model status file — if primary coder is available, USE IT. Don't assume from memory. CHECK THE FILE. |
 | **Starting a new sprint** | Sprint notification | Send the formatted 🚀 message. No exceptions. |
 | **Completing a sprint** | Sprint notification | Send the formatted ✅ message. No exceptions. |
