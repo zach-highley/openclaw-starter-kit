@@ -2,7 +2,7 @@
 
 **"A system that crashes is annoying. A system that fixes itself is magic. A system that learns *why* it crashed is alive."**
 
-The Moltbot Watchdog is not just a cron job that restarts a process. It is a resilient, learning organism that ensures the agent is always available, even when things go wrong.
+The OpenClaw Watchdog is not just a cron job that restarts a process. It is a resilient, learning organism that ensures the agent is always available, even when things go wrong.
 
 ## Core Philosophy
 
@@ -100,7 +100,7 @@ These checks were added after real-world production incidents. They solve proble
 - `reassure()` — Sends "I'm fixing this automatically, don't touch anything, back in X minutes"
 - `all_clear()` — Sends "All fixed! Here's what happened. You didn't have to do anything."
 
-The watchdog also has a direct Telegram API fallback — if Moltbot itself is too broken to send messages, the watchdog calls the Telegram Bot API directly. Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` environment variables to enable this.
+The watchdog also has a direct Telegram API fallback — if OpenClaw itself is too broken to send messages, the watchdog calls the Telegram Bot API directly. Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` environment variables to enable this.
 
 ### Common Gotcha: Ollama "Model Not Allowed"
 If you configure Ollama as a fallback but get "model not allowed" errors, you need to add it to `agents.defaults.models` in your config. This key acts as an **allowlist** — models not listed there can't be used for overrides or explicit selection:
