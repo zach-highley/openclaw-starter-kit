@@ -1,47 +1,39 @@
-# Meta-Monitor — The Operations Manager
+# Meta-Monitor Documentation
 
-The meta-monitor watches everything else. It's the monitor that monitors the monitors.
+*The "Watcher of Watchers"*
 
-## What It Does
+## The Problem
+You have a watchdog that restarts the gateway if it crashes.
+But what if the watchdog crashes?
+Or what if the heartbeat cron job stops firing?
+Who watches the watchers?
 
-Every heartbeat, it checks:
-- **Work loop health** — is the sprint system running? Stalled? Queue stuck?
-- **Script health** — are monitoring scripts erroring out?
-- **Gateway health** — is the bot process stable? Restarting too often?
-- **Context usage** — is the session getting full? Time to reset?
-- **Memory freshness** — are daily files being written? Is learning happening?
+## The Solution
+The **Meta-Monitor** (`scripts/meta_monitor.py`) is a high-level Python script that sits above your other automation systems. It doesn't check *health*; it checks *liveness*.
 
-## Usage
+It answers the question: **"Are the automation scripts actually running?"**
 
-```bash
-# Quick health check (read-only)
-python3 scripts/meta_monitor.py --check
+## What It Monitors
+| System | How It Checks | Threshold (Stall Time) |
+|--------|---------------|------------------------|
+| **Watchdog** | Checks timestamp of `watchdog-state.json` | 10 minutes |
+| **Error Recovery** | Checks timestamp of recovery logs | 30 minutes |
+| **Security Hound** | Checks timestamp of `security-hound.json` | 2 hours |
+| **Heartbeat** | Checks timestamp of `heartbeat-state.json` | 2 hours |
 
-# JSON output for parsing
-python3 scripts/meta_monitor.py --check --json
+## Fencing Tokens
+One dangerous race condition in autonomous systems is **Restart Contention**.
+- Script A sees the gateway is slow → Issues Restart
+- Script B sees the gateway is down (because A killed it) → Issues Restart
+- Script C sees memory is low → Issues Restart
 
-# Lightweight heartbeat mode (skip heavy checks)
-python3 scripts/meta_monitor.py --check --mode heartbeat
+Result: The gateway gets stuck in a restart loop and never boots.
 
-# Attempt auto-recovery on issues found
-python3 scripts/meta_monitor.py --fix
-```
+**The Fix:** The Meta-Monitor manages a "fencing token" (a lock file).
+- Before any script can restart the gateway, it must check the token.
+- If a restart happened < 60 seconds ago, it must WAIT.
 
-## When to Escalate
-
-The meta-monitor reports a severity level:
-- **OK** — everything's fine
-- **WARN** — something's degraded but not broken
-- **ESCALATE** — 3+ systems stalled/broken, message the user immediately
-
-## Adding to Your Heartbeat
-
-```markdown
-## 🔍 Meta-Monitor (every heartbeat — fast)
-Run `python3 scripts/meta_monitor.py --check --mode heartbeat`
-If it reports ESCALATE, message [USER] with the summary.
-```
-
-## Why It Matters
-
-Without a meta-monitor, individual monitors can silently break. The security hound stops running. The usage checker crashes. You don't notice until you're over budget or exposed. The meta-monitor catches that drift.
+## Setup
+1. Copy `scripts/meta_monitor.py` to your scripts folder.
+2. Add it to your `HEARTBEAT.md` task list (so it runs hourly).
+3. OR run it via cron independent of the main bot.

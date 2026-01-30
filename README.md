@@ -105,7 +105,7 @@ Not everyone needs the full setup. Pick your level:
 
 ### 🆕 Level 3 Deep Dives
 
-These systems were battle-tested building a real iOS app (16 sprints, zero human code written):
+These systems were battle-tested building a real iOS app (33 sprints, zero human code written):
 
 | System | What It Does | Doc |
 |--------|-------------|-----|
@@ -114,9 +114,17 @@ These systems were battle-tested building a real iOS app (16 sprints, zero human
 | **Sprint System** | Write specs → queue them → AI executes autonomously | [docs/SPRINT_SYSTEM.md](docs/SPRINT_SYSTEM.md) |
 | **Sprint Metrics** | Tracks agent performance, durations, failure rates | `scripts/log_sprint_metric.py` |
 | **Stall Detection** | Catches stuck agents after 5 min, 3-strike escalation | Built into HEARTBEAT.md |
+| **🆕 Meta-Learning** | 6-layer system that learns from mistakes and never repeats them | [docs/META_LEARNING.md](docs/META_LEARNING.md) |
+| **🆕 Telegram Delivery** | Verifies messages actually reach you, auto-retries on failure | `scripts/telegram_delivery_checker.py` |
+| **🆕 Morning Briefing** | Daily digest: weather, quotes, calendar, social engagement, system health | `scripts/morning_briefing.py` |
+| **🆕 Meta-Monitor** | Watches the watchers — detects when monitoring systems themselves are broken | [docs/META_MONITOR.md](docs/META_MONITOR.md) |
 
-**Real results from our first run:**
-- 16 coding sprints completed in ~3 hours
+**Real results from our production system:**
+- 33 coding sprints completed autonomously (S1-S33)
+- 109 successful auto-recoveries (zero human intervention)
+- Doctor fix rate: 100% (9/9)
+- Watchdog risk score: 0/100 (all systems healthy)
+- 6 learning layers continuously improving the system
 - Average sprint: 5-12 minutes
 - Models used: Codex (11 sprints), Opus (5 as fallback)
 - One stall detected and recovered (xcodebuild hang)
