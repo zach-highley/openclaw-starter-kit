@@ -152,6 +152,14 @@ These systems work together. Know what each does so you don't duplicate or contr
 
 **Why:** Transparency on which model is burning tokens. Helps with cost awareness and debugging routing issues.
 
+**Periodic status line (every 3-5 messages or when context shifts significantly):**
+Include a full status line with context and usage:
+`[opus | ctx X% | Y% 5h usage]`
+- ctx = context window consumption
+- 5h usage = primary usage percentage
+- Lets your human know at a glance: what model, how full the context is, how much quota remains
+- Don't include on EVERY message (noisy), but regularly enough they never have to ask
+
 ### 🔀 Smart Model Routing (MANDATORY)
 **Before starting any task, THINK: which agent is best for this?**
 
