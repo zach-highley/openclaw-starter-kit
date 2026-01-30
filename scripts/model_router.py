@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Intelligent Model Router for Clawdbot/OpenClaw
+Intelligent Model Router for OpenClaw/OpenClaw
 Implements logarithmic degradation based on usage thresholds.
 
 Tracks ALL model availability including:

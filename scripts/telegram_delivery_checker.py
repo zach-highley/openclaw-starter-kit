@@ -28,7 +28,7 @@ from pathlib import Path
 # === Config (set via environment variables or edit defaults) ===
 CLAWD_DIR = Path(os.environ.get("CLAWD_DIR", Path.home() / "clawd"))
 STATE_FILE = CLAWD_DIR / "state" / "telegram_delivery_state.json"
-LOG_FILE = Path.home() / ".clawdbot/logs/watchdog.log"
+LOG_FILE = Path.home() / ".openclaw/logs/watchdog.log"
 
 BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "YOUR_BOT_TOKEN_HERE")
 CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "YOUR_CHAT_ID_HERE")
@@ -101,7 +101,7 @@ def check_telegram_api() -> bool:
 def check_recent_messages(hours_back: int = 2) -> list:
     """Scan gateway logs for recent outbound Telegram messages."""
     messages_found = []
-    log_path = Path.home() / ".clawdbot/logs/gateway.log"
+    log_path = Path.home() / ".openclaw/logs/gateway.log"
     if not log_path.exists():
         return messages_found
     try:
@@ -138,9 +138,9 @@ def attempt_fix() -> str:
     fixes = []
     # Try restarting gateway
     try:
-        clawdbot = Path.home() / ".nvm/versions/node/v22.16.0/bin/clawdbot"
-        if clawdbot.exists():
-            subprocess.run([str(clawdbot), "gateway", "restart"], capture_output=True, timeout=30)
+        openclaw = Path.home() / ".nvm/versions/node/v22.16.0/bin/openclaw"
+        if openclaw.exists():
+            subprocess.run([str(openclaw), "gateway", "restart"], capture_output=True, timeout=30)
             fixes.append("gateway_restart")
             time.sleep(5)
     except Exception:

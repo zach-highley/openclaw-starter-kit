@@ -27,7 +27,7 @@ from pathlib import Path
 # Adjust paths for your setup
 CLAWD_DIR = Path(os.environ.get("CLAWD_DIR", Path.home() / "clawd"))
 STATE_FILE = CLAWD_DIR / "state" / "meta_monitor_state.json"
-GATEWAY_PID_FILE = Path.home() / ".clawdbot" / "pids" / "gateway.pid"
+GATEWAY_PID_FILE = Path.home() / ".openclaw" / "pids" / "gateway.pid"
 
 # Thresholds (seconds) - How long before we consider a system "stalled"
 THRESHOLDS = {
@@ -66,7 +66,7 @@ def run_check(mode="check"):
     # Note: specific paths depend on where your scripts write their state/logs
     # This is a reference implementation.
     systems = {
-        "watchdog": Path.home() / ".clawdbot" / "logs" / "watchdog-state.json",
+        "watchdog": Path.home() / ".openclaw" / "logs" / "watchdog-state.json",
         "heartbeat": CLAWD_DIR / "memory" / "heartbeat-state.json",
     }
     
