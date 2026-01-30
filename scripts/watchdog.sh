@@ -1,5 +1,5 @@
 #!/bin/bash
-# Moltbot Watchdog v8 — Self-Learning Resilience System
+# OpenClaw Watchdog v8 — Self-Learning Resilience System
 # Runs via launchd/cron every 5 minutes. Monitors health, fixes problems, learns from failures.
 #
 # What it does:
@@ -22,9 +22,9 @@
 set -euo pipefail
 
 # === CONFIGURATION (customize these) ===
-MOLTBOT="moltbot"                             # Path to moltbot binary (change to "clawdbot" if you installed via npm)
+OPENCLAW="openclaw"                             # Path to openclaw binary (change to "clawdbot" if you installed via npm)
 LEARN_SCRIPT="$(dirname "$0")/watchdog_learn.sh"
-LOG_DIR="$HOME/.moltbot/logs"
+LOG_DIR="$HOME/.openclaw/logs"
 LOG_FILE="$LOG_DIR/watchdog.log"
 STATE_FILE="$LOG_DIR/watchdog-state.json"
 HEARTBEAT_STATE="$LOG_DIR/heartbeat-monitor.json"
@@ -72,8 +72,8 @@ learn() {
 notify() {
     local message="$1" urgency="${2:-normal}"
     log "📢 [$urgency] $message"
-    run_with_timeout 30 "$MOLTBOT" message send --channel telegram --message "🤖 Watchdog [$urgency]: $message" >> "$LOG_FILE" 2>&1 || {
-        # v8: Fallback to direct Telegram API if Moltbot can't send
+    run_with_timeout 30 "$OPENCLAW" message send --channel telegram --message "🤖 Watchdog [$urgency]: $message" >> "$LOG_FILE" 2>&1 || {
+        # v8: Fallback to direct Telegram API if OpenClaw can't send
         if [[ -n "${TELEGRAM_BOT_TOKEN:-}" ]] && [[ -n "${TELEGRAM_CHAT_ID:-}" ]]; then
             curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
                 -d chat_id="$TELEGRAM_CHAT_ID" \
@@ -87,7 +87,7 @@ reassure() {
     local issue="$1" eta="${2:-5 minutes}"
     local msg="🐕 Hey — I noticed a problem ($issue) and I'm fixing it automatically. Don't touch the terminal! Everything will be back to normal within $eta. I'll send you a ✅ when it's done."
     log "🐕 Reassuring user: $issue (ETA: $eta)"
-    run_with_timeout 30 "$MOLTBOT" message send --channel telegram --message "$msg" >> "$LOG_FILE" 2>&1 || {
+    run_with_timeout 30 "$OPENCLAW" message send --channel telegram --message "$msg" >> "$LOG_FILE" 2>&1 || {
         if [[ -n "${TELEGRAM_BOT_TOKEN:-}" ]] && [[ -n "${TELEGRAM_CHAT_ID:-}" ]]; then
             curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
                 -d chat_id="$TELEGRAM_CHAT_ID" -d text="$msg" >> "$LOG_FILE" 2>&1 || true
@@ -100,7 +100,7 @@ all_clear() {
     local fix="$1"
     local msg="✅ All fixed! $fix — back to normal. You didn't have to do anything."
     log "✅ All clear: $fix"
-    run_with_timeout 30 "$MOLTBOT" message send --channel telegram --message "$msg" >> "$LOG_FILE" 2>&1 || {
+    run_with_timeout 30 "$OPENCLAW" message send --channel telegram --message "$msg" >> "$LOG_FILE" 2>&1 || {
         if [[ -n "${TELEGRAM_BOT_TOKEN:-}" ]] && [[ -n "${TELEGRAM_CHAT_ID:-}" ]]; then
             curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
                 -d chat_id="$TELEGRAM_CHAT_ID" -d text="$msg" >> "$LOG_FILE" 2>&1 || true
@@ -149,14 +149,14 @@ log "=== Watchdog check starting (failures: $FAILURES) ==="
 # CHECK 1: Is gateway process running?
 # ============================================
 log "[CHECK 1] Gateway process..."
-GATEWAY_PID=$(pgrep -f "moltbot.*gateway" 2>/dev/null | head -1 || echo "")
+GATEWAY_PID=$(pgrep -f "openclaw.*gateway" 2>/dev/null | head -1 || echo "")
 
 if [[ -z "$GATEWAY_PID" ]]; then
     log "❌ Gateway not running — starting it"
     FAILURES=$((FAILURES + 1))
-    nohup "$MOLTBOT" gateway >> "$LOG_DIR/gateway-restart.log" 2>&1 &
+    nohup "$OPENCLAW" gateway >> "$LOG_DIR/gateway-restart.log" 2>&1 &
     sleep 15
-    GATEWAY_PID=$(pgrep -f "moltbot.*gateway" 2>/dev/null | head -1 || echo "")
+    GATEWAY_PID=$(pgrep -f "openclaw.*gateway" 2>/dev/null | head -1 || echo "")
     if [[ -n "$GATEWAY_PID" ]]; then
         log "✅ Gateway started (PID: $GATEWAY_PID)"
         notify "Gateway was dead, I started it! PID: $GATEWAY_PID" "critical"
@@ -184,7 +184,7 @@ if [[ $GATEWAY_MEM_MB -gt $MAX_MEMORY_MB ]]; then
     notify "Memory leak detected (${GATEWAY_MEM_MB}MB) — restarting" "warning"
     kill -TERM "$GATEWAY_PID" 2>/dev/null || true; sleep 5
     kill -9 "$GATEWAY_PID" 2>/dev/null || true; sleep 2
-    nohup "$MOLTBOT" gateway >> "$LOG_DIR/gateway-restart.log" 2>&1 &
+    nohup "$OPENCLAW" gateway >> "$LOG_DIR/gateway-restart.log" 2>&1 &
     sleep 15
     learn 2 "memory-leak-${GATEWAY_MEM_MB}MB" "recovered"
     FAILURES=0
@@ -204,8 +204,8 @@ if [[ -n "$GATEWAY_START" ]]; then
     if [[ $UPTIME_HOURS -gt $MAX_UPTIME_HOURS ]]; then
         log "⚠️ Running too long — routine restart"
         notify "Routine restart after ${UPTIME_HOURS}h" "normal"
-        "$MOLTBOT" gateway stop >> "$LOG_FILE" 2>&1 || true; sleep 5
-        nohup "$MOLTBOT" gateway >> "$LOG_DIR/gateway-restart.log" 2>&1 &
+        "$OPENCLAW" gateway stop >> "$LOG_FILE" 2>&1 || true; sleep 5
+        nohup "$OPENCLAW" gateway >> "$LOG_DIR/gateway-restart.log" 2>&1 &
         sleep 15
         learn 1 "uptime-${UPTIME_HOURS}h" "recovered"
         exit 0
@@ -216,7 +216,7 @@ fi
 # CHECK 4: Health endpoint
 # ============================================
 log "[CHECK 4] Health check..."
-HEALTH_OUTPUT=$(run_with_timeout $HEALTH_TIMEOUT_SEC "$MOLTBOT" health 2>&1) || HEALTH_OUTPUT="TIMEOUT"
+HEALTH_OUTPUT=$(run_with_timeout $HEALTH_TIMEOUT_SEC "$OPENCLAW" health 2>&1) || HEALTH_OUTPUT="TIMEOUT"
 
 if echo "$HEALTH_OUTPUT" | grep -q "Telegram: ok"; then
     log "✅ Health check passed"
@@ -245,12 +245,12 @@ RUN_DOCTOR=false
 
 if [[ "$RUN_DOCTOR" == "true" ]]; then
     log "[CHECK 5] Running doctor..."
-    DOCTOR_OUTPUT=$("$MOLTBOT" doctor 2>&1) || true
+    DOCTOR_OUTPUT=$("$OPENCLAW" doctor 2>&1) || true
     echo "$NOW_EPOCH" > "$LAST_DOCTOR_FILE"
     
     if echo "$DOCTOR_OUTPUT" | grep -qi "expir\|unavailable\|cooldown"; then
         log "🔑 Auth issue — running doctor --fix"
-        "$MOLTBOT" doctor --fix >> "$LOG_FILE" 2>&1 || true
+        "$OPENCLAW" doctor --fix >> "$LOG_FILE" 2>&1 || true
         learn 1 "auth-issue-doctor-fix" "auto-fixed"
     fi
     if echo "$DOCTOR_OUTPUT" | grep -qi "invalid\|missing\|error"; then
@@ -280,11 +280,11 @@ fi
 if [[ $FAILURES -ge 2 ]]; then
     log "⚠️ 2+ failures — restarting gateway"
     notify "$FAILURES consecutive failures — restarting 🔄" "warning"
-    "$MOLTBOT" gateway stop >> "$LOG_FILE" 2>&1 || true; sleep 5
-    pkill -f "moltbot.*gateway" 2>/dev/null || true; sleep 2
-    nohup "$MOLTBOT" gateway >> "$LOG_DIR/gateway-restart.log" 2>&1 &
+    "$OPENCLAW" gateway stop >> "$LOG_FILE" 2>&1 || true; sleep 5
+    pkill -f "openclaw.*gateway" 2>/dev/null || true; sleep 2
+    nohup "$OPENCLAW" gateway >> "$LOG_DIR/gateway-restart.log" 2>&1 &
     sleep 15
-    if run_with_timeout 10 "$MOLTBOT" health 2>&1 | grep -q "Telegram: ok"; then
+    if run_with_timeout 10 "$OPENCLAW" health 2>&1 | grep -q "Telegram: ok"; then
         notify "Gateway restarted successfully! ✅" "normal"
         learn 3 "health-failures-$FAILURES" "recovered"
         FAILURES=0
@@ -298,10 +298,10 @@ if [[ $FAILURES -ge 4 ]]; then
     notify "💀 4 failures — resetting session (nuclear)" "critical"
     ARCHIVE_DIR="$LOG_DIR/session-archives/$(date +%Y%m%d-%H%M%S)"
     mkdir -p "$ARCHIVE_DIR"
-    cp -r "$HOME/.moltbot/agents/main/sessions/"* "$ARCHIVE_DIR/" 2>/dev/null || true
-    rm -f "$HOME/.moltbot/agents/main/sessions/sessions.json"
-    pkill -9 -f "moltbot.*gateway" 2>/dev/null || true; sleep 3
-    nohup "$MOLTBOT" gateway >> "$LOG_DIR/gateway-restart.log" 2>&1 &
+    cp -r "$HOME/.openclaw/agents/main/sessions/"* "$ARCHIVE_DIR/" 2>/dev/null || true
+    rm -f "$HOME/.openclaw/agents/main/sessions/sessions.json"
+    pkill -9 -f "openclaw.*gateway" 2>/dev/null || true; sleep 3
+    nohup "$OPENCLAW" gateway >> "$LOG_DIR/gateway-restart.log" 2>&1 &
     sleep 15
     FAILURES=0
     learn 4 "nuclear-session-reset" "recovered"
@@ -311,7 +311,7 @@ fi
 # CHECK 7: Disk space
 # ============================================
 log "[CHECK 7] Disk space..."
-DISK_USED=$(df -h "$HOME/.moltbot" | tail -1 | awk '{print $5}' | tr -d '%')
+DISK_USED=$(df -h "$HOME/.openclaw" | tail -1 | awk '{print $5}' | tr -d '%')
 if [[ $DISK_USED -gt 95 ]]; then
     find "$LOG_DIR" -name "*.log" -mtime +7 -delete 2>/dev/null || true
     notify "Disk at ${DISK_USED}% — cleaned old logs" "warning"
@@ -332,7 +332,7 @@ fi
 # CHECK 14: Session size (v8 — prevents context overflow)
 # ============================================
 log "[CHECK 14] Session size..."
-SESSION_DIR="$HOME/.moltbot/agents/main/sessions"  # Adjust for clawdbot: ~/.clawdbot/agents/main/sessions
+SESSION_DIR="$HOME/.openclaw/agents/main/sessions"  # Adjust for clawdbot: ~/.clawdbot/agents/main/sessions
 if [[ -d "$SESSION_DIR" ]]; then
     LARGEST=$(find "$SESSION_DIR" -name "*.jsonl" -exec ls -la {} + 2>/dev/null | sort -k5 -nr | head -1)
     if [[ -n "$LARGEST" ]]; then
@@ -343,7 +343,7 @@ if [[ -d "$SESSION_DIR" ]]; then
             log "🔴 [CHECK 14] Session ${SIZE_MB}MB — AUTO-RESETTING"
             reassure "Session too large (${SIZE_MB}MB), auto-resetting to prevent crash" "30 seconds"
             # Flush context to memory, then reset
-            "$MOLTBOT" session reset --agent main 2>> "$LOG_FILE" || true
+            "$OPENCLAW" session reset --agent main 2>> "$LOG_FILE" || true
             sleep 5
             all_clear "Session auto-reset (was ${SIZE_MB}MB). Context saved to memory."
             learn 4 "session-auto-reset" "auto-reset"
@@ -361,14 +361,14 @@ fi
 # CHECK 15: Telegram delivery health (v8 — detects one-way pipe failure)
 # ============================================
 log "[CHECK 15] Telegram delivery..."
-GATEWAY_LOG="/tmp/moltbot/moltbot-$(date +%Y-%m-%d).log"  # Adjust for clawdbot: /tmp/clawdbot/clawdbot-YYYY-MM-DD.log
+GATEWAY_LOG="/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log"  # Adjust for clawdbot: /tmp/clawdbot/clawdbot-YYYY-MM-DD.log
 if [[ -f "$GATEWAY_LOG" ]]; then
     RECENT_IN=$(grep -c "messageChannel=telegram" "$GATEWAY_LOG" 2>/dev/null || echo 0)
     RECENT_OUT=$(grep -c "Sent via Telegram" "$GATEWAY_LOG" 2>/dev/null || echo 0)
     if [[ "$RECENT_IN" -gt 3 ]] && [[ "$RECENT_OUT" -eq 0 ]]; then
         log "🔴 [CHECK 15] Telegram one-way failure! In: $RECENT_IN, Out: $RECENT_OUT"
         reassure "Telegram replies aren't reaching you" "2 minutes"
-        "$MOLTBOT" gateway restart 2>/dev/null || true
+        "$OPENCLAW" gateway restart 2>/dev/null || true
         sleep 10
         all_clear "Telegram delivery fixed — gateway restarted"
         learn 2 "telegram-delivery-fix" "auto-restarted"

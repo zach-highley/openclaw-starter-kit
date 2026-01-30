@@ -1,7 +1,7 @@
-# 🐸 The Moltbot Starter Kit
-### Turn Moltbot Into a Self-Healing, Multi-Model Autonomous AI System
+# 🐸 The OpenClaw Starter Kit
+### Turn OpenClaw Into a Self-Healing, Multi-Model Autonomous AI System
 
-**What is Moltbot?** It's a free, open-source tool that connects AI models (like Claude, ChatGPT, Gemini) to your phone via Telegram, WhatsApp, or Discord. Instead of going to a website to chat with AI, it comes to YOU — in your pocket, 24/7. This starter kit turns that basic chatbot into an autonomous AI employee.
+**What is OpenClaw?** It's a free, open-source tool that connects AI models (like Claude, ChatGPT, Gemini) to your phone via Telegram, WhatsApp, or Discord. Instead of going to a website to chat with AI, it comes to YOU — in your pocket, 24/7. This starter kit turns that basic chatbot into an autonomous AI employee.
 
 > *"Within 48 hours you can have an AI that fixes itself at 3 AM, routes tasks across 5 models, monitors your security, and builds you apps while you sleep."*
 
@@ -9,9 +9,9 @@
 
 # ⚡ DON'T WANT TO READ ANYTHING?
 
-Just install Moltbot (`curl -fsSL https://molt.bot/install.sh | bash` → `moltbot onboard`), then send this message to your bot:
+Just install OpenClaw (`curl -fsSL https://openclaw.bot/install.sh | bash` → `openclaw onboard`), then send this message to your bot:
 
-> "Hey [bot], can you take a look at this Repo and steal/integrate every single thing this guy suggests? Think hard about it, make sure it meshes and matches with everything we've done already, and don't change anything until I give the OK. Also, point out any mistakes and improvements you see to make it better for me specifically and my goals before we get going. And let's integrate things one step at a time and track all changes so if anything breaks we can go back to the way we had it before. My goals are my goals as you know them but also automation, notifications, and consistent up-time with machine learning to fix all errors so I never have to touch the terminal or computer: https://github.com/[USERNAME]/moltbot-starter-kit"
+> "Hey [bot], can you take a look at this Repo and steal/integrate every single thing this guy suggests? Think hard about it, make sure it meshes and matches with everything we've done already, and don't change anything until I give the OK. Also, point out any mistakes and improvements you see to make it better for me specifically and my goals before we get going. And let's integrate things one step at a time and track all changes so if anything breaks we can go back to the way we had it before. My goals are my goals as you know them but also automation, notifications, and consistent up-time with machine learning to fix all errors so I never have to touch the terminal or computer: https://github.com/[USERNAME]/openclaw-starter-kit"
 
 That's it. Your bot reads the entire repo, compares it to your current setup, tells you what to adopt, points out what doesn't apply, and walks you through integrating everything one piece at a time with rollback tracking. No reading required.
 
@@ -38,7 +38,7 @@ Any computer that stays on. That's it. No server rack, no cloud VM, no special h
 
 | What | Why | Cost |
 |------|-----|------|
-| **Node.js 22+** | Runs Moltbot (don't worry, the installer handles this) | Free |
+| **Node.js 22+** | Runs OpenClaw (don't worry, the installer handles this) | Free |
 | **Telegram** | Your primary chat interface | Free |
 | **Homebrew** (Mac) | Installs dependencies | Free |
 | **Git** | Clone this repo (or just paste the link to your bot — see below) | Free |
@@ -71,7 +71,7 @@ Not everyone needs the full setup. Pick your level:
 ### Level 1: The Basics (30 minutes)
 **What you get:** A smart chatbot on Telegram that remembers things and has a personality.
 
-- Install Moltbot
+- Install OpenClaw
 - Connect Telegram
 - Drop in `AGENTS.md` + `SOUL.md` templates
 - Done. You have a useful AI assistant.
@@ -170,14 +170,14 @@ sudo apt-get install -y nodejs
 ```
 </details>
 
-### Now install Moltbot:
+### Now install OpenClaw:
 
 ```bash
 # 1. Install (one command)
-curl -fsSL https://molt.bot/install.sh | bash
+curl -fsSL https://openclaw.bot/install.sh | bash
 
 # 2. Run the setup wizard (connects Telegram, picks your AI model, everything)
-moltbot onboard
+openclaw onboard
 
 # 3. Send a message on Telegram. You're live.
 ```
@@ -188,15 +188,15 @@ That gives you a chatbot. Everything below turns it into an **employee**.
 
 Don't know Git? Don't want to clone repos? Once your bot is running, just send it this message:
 
-> "Hey, can you take a look at this repo and integrate everything it suggests? Think hard about it, make sure it works with our current setup, and don't change anything until I give the OK. Also, point out anything that looks wrong or doesn't apply to us: https://github.com/[USERNAME]/moltbot-starter-kit"
+> "Hey, can you take a look at this repo and integrate everything it suggests? Think hard about it, make sure it works with our current setup, and don't change anything until I give the OK. Also, point out anything that looks wrong or doesn't apply to us: https://github.com/[USERNAME]/openclaw-starter-kit"
 
 Your bot will read the repo, understand the templates and scripts, and walk you through what to adopt. No terminal skills needed beyond the initial install.
 
 ### ❓ Stuck? Something not working?
 
 The official docs have answers to basically everything:
-- **[FAQ & Troubleshooting](https://docs.molt.bot/help/faq)** — covers install issues, auth problems, Telegram setup, model errors, Windows quirks, and more
-- **[Getting Started guide](https://docs.molt.bot/start/getting-started)** — step-by-step from zero
+- **[FAQ & Troubleshooting](https://docs.openclaw.ai/help/faq)** — covers install issues, auth problems, Telegram setup, model errors, Windows quirks, and more
+- **[Getting Started guide](https://docs.openclaw.ai/start/getting-started)** — step-by-step from zero
 - **[Discord community](https://discord.com/invite/clawd)** — real people who can help
 
 ---
@@ -204,7 +204,7 @@ The official docs have answers to basically everything:
 ## What's In This Kit
 
 ```
-moltbot-starter-kit/
+openclaw-starter-kit/
 ├── README.md                      ← You are here (the deep guide)
 ├── templates/                     ← Copy these to your workspace
 │   ├── AGENTS.md                  — Operating system for your AI
@@ -222,7 +222,7 @@ moltbot-starter-kit/
     └── WATCHDOG_CONCEPTS.md       — Self-healing system architecture
 ```
 
-**How to use it:** Either clone this repo and copy the files manually (Option A in the Get Started section), OR just paste the repo link to your bot on Telegram and let it do the work for you (Option B — no Git needed). Your **workspace** is the folder where Moltbot stores its files — by default it's `~/clawd/` in your home directory.
+**How to use it:** Either clone this repo and copy the files manually (Option A in the Get Started section), OR just paste the repo link to your bot on Telegram and let it do the work for you (Option B — no Git needed). Your **workspace** is the folder where OpenClaw stores its files — by default it's `~/clawd/` in your home directory.
 
 ---
 
@@ -232,7 +232,7 @@ Everything below explains *how* each piece works. You don't need to read it all 
 
 ## The Brain (AGENTS.md + SOUL.md)
 
-Most people install Moltbot and just... chat with it. That's like hiring an employee and never giving them a job description.
+Most people install OpenClaw and just... chat with it. That's like hiring an employee and never giving them a job description.
 
 **AGENTS.md** is the operating system. It tells your AI:
 - What to do when it wakes up (session startup checklist)
@@ -334,7 +334,7 @@ brew install ollama
 ollama pull qwen2.5:14b
 ```
 
-Configure heartbeat model to Gemini in your Moltbot config — saves your best model for real work.
+Configure heartbeat model to Gemini in your OpenClaw config — saves your best model for real work.
 
 → **Full reference:** [`docs/MODEL_ROUTING.md`](docs/MODEL_ROUTING.md)
 
@@ -348,11 +348,11 @@ This is what separates a toy from a production system. The watchdog runs every 5
 
 | # | Check | What It Does |
 |---|-------|-------------|
-| 1 | **Gateway process** | Is Moltbot running? If not, start it. |
+| 1 | **Gateway process** | Is OpenClaw running? If not, start it. |
 | 2 | **Memory usage** | >2GB? Kill and restart (memory leak). |
 | 3 | **Process uptime** | >48 hours? Routine restart (prevents drift). |
 | 4 | **Health endpoint** | Can it respond? Track consecutive failures. |
-| 5 | **Proactive doctor** | Run `moltbot doctor` every 6h to catch issues early. |
+| 5 | **Proactive doctor** | Run `openclaw doctor` every 6h to catch issues early. |
 | 6 | **Heartbeat response** | No response for 60+ min? Alert — may be stuck. |
 | 7 | **Disk space** | >95%? Auto-clean old logs. |
 | 8 | **Local LLM** | Is Ollama running? If not, start it (your backup). |
@@ -367,7 +367,7 @@ This is what separates a toy from a production system. The watchdog runs every 5
 ```
 Problem detected
     ↓
-Level 1: Run moltbot doctor --fix
+Level 1: Run openclaw doctor --fix
          (fixes auth expiry, config issues, 90% of problems)
     ↓ (if that didn't work)
 Level 2: Restart gateway
@@ -392,7 +392,7 @@ This means the watchdog gets smarter over time. Month 1, it might restart the ga
 
 ### Setup
 
-**The easy way:** Just tell your bot: *"Set up the watchdog from the moltbot-starter-kit repo. Run it every 5 minutes."* It will create the scripts and schedule them for you.
+**The easy way:** Just tell your bot: *"Set up the watchdog from the openclaw-starter-kit repo. Run it every 5 minutes."* It will create the scripts and schedule them for you.
 
 **The manual way** (if you prefer):
 
@@ -407,13 +407,13 @@ chmod +x ~/clawd/scripts/watchdog*.sh
 
 # 2. Create a scheduled task that runs the watchdog every 5 minutes
 # (This is a "launchd plist" — Mac's way of scheduling background tasks)
-cat > ~/Library/LaunchAgents/com.moltbot.watchdog.plist << 'EOF'
+cat > ~/Library/LaunchAgents/com.openclaw.watchdog.plist << 'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.moltbot.watchdog</string>
+    <string>com.openclaw.watchdog</string>
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
@@ -430,7 +430,7 @@ cat > ~/Library/LaunchAgents/com.moltbot.watchdog.plist << 'EOF'
 EOF
 
 # 3. Tell Mac to start running it
-launchctl load ~/Library/LaunchAgents/com.moltbot.watchdog.plist
+launchctl load ~/Library/LaunchAgents/com.openclaw.watchdog.plist
 ```
 </details>
 
@@ -460,7 +460,7 @@ A lightweight "security hound" that learns what's normal on your system and bark
 ### What It Monitors
 
 **File Integrity (SHA256)**
-Hashes critical config files on first run (baseline). Every scan, it re-hashes and compares. If someone modifies `.zshrc`, `authorized_keys`, `/etc/hosts`, or your Moltbot config, you know instantly.
+Hashes critical config files on first run (baseline). Every scan, it re-hashes and compares. If someone modifies `.zshrc`, `authorized_keys`, `/etc/hosts`, or your OpenClaw config, you know instantly.
 
 **Network Connections**
 Monitors active connections via `lsof`. Learns which processes normally connect where. Alerts on new, unusual outbound connections from unknown processes. Over time, builds a model of what "normal" looks like for your machine.
@@ -480,7 +480,7 @@ The hound remembers and won't bark at that pattern again. Over time, it goes fro
 
 ### Setup
 
-**The easy way:** Tell your bot: *"Set up the security hound from the moltbot-starter-kit repo."* Done.
+**The easy way:** Tell your bot: *"Set up the security hound from the openclaw-starter-kit repo."* Done.
 
 **Manual:**
 ```bash
@@ -503,7 +503,7 @@ Heartbeats transform your AI from reactive (waits for commands) to proactive (ch
 
 ### How It Works
 
-Moltbot polls your AI at a set interval (e.g., every hour). The AI reads `HEARTBEAT.md` for instructions on what to check. Use a cheap model (Gemini) — don't burn your best model on monitoring.
+OpenClaw polls your AI at a set interval (e.g., every hour). The AI reads `HEARTBEAT.md` for instructions on what to check. Use a cheap model (Gemini) — don't burn your best model on monitoring.
 
 ### What To Check
 
@@ -545,7 +545,7 @@ On each heartbeat, `check_usage.py` compares current usage against previously-al
 Sometimes you need to pull the plug. The emergency lockdown gives you instant control:
 
 ```bash
-# Kill all Moltbot processes immediately
+# Kill all OpenClaw processes immediately
 emergency_lockdown.sh kill
 
 # Shut down the entire computer in 60 seconds
@@ -581,7 +581,7 @@ The flex. While you sleep, your AI builds things.
 1. Maintain a "build queue" in your workspace
 2. Set a 2 AM cron job:
    ```
-   moltbot cron add --schedule "0 2 * * *" --text "Check PROJECTS.md build queue, pick something small, build it"
+   openclaw cron add --schedule "0 2 * * *" --text "Check PROJECTS.md build queue, pick something small, build it"
    ```
 3. AI picks a task, builds it, stages for review
 4. You wake up to new tools
@@ -637,7 +637,7 @@ Follow this sequence for the smoothest experience:
 
 | Phase | What To Do | Time |
 |-------|-----------|------|
-| **1. Go Live** | Install Moltbot, connect Telegram, send first message | ~15 min |
+| **1. Go Live** | Install OpenClaw, connect Telegram, send first message | ~15 min |
 | **2. Give It a Brain** | Copy `AGENTS.md` + `SOUL.md` templates, customize personality | ~30 min |
 | **3. Multi-Model** | Set up model routing (Opus + Codex/Gemini + Ollama fallback) | ~30 min |
 | **4. Self-Healing** | Install watchdog scripts, set up launchd/cron | ~45 min |
@@ -661,21 +661,21 @@ Follow this sequence for the smoothest experience:
 ### Option A: The Terminal Way (for people comfortable with command line)
 
 ```bash
-# 1. Install Moltbot
-curl -fsSL https://molt.bot/install.sh | bash
+# 1. Install OpenClaw
+curl -fsSL https://openclaw.bot/install.sh | bash
 
 # 2. Run the setup wizard
-moltbot onboard
+openclaw onboard
 
 # 3. Clone this kit
-git clone https://github.com/[USERNAME]/moltbot-starter-kit.git
+git clone https://github.com/[USERNAME]/openclaw-starter-kit.git
 
 # 4. Copy templates to your workspace
-cp moltbot-starter-kit/templates/* ~/clawd/
+cp openclaw-starter-kit/templates/* ~/clawd/
 
 # 5. Copy scripts
 mkdir -p ~/clawd/scripts
-cp moltbot-starter-kit/scripts/* ~/clawd/scripts/
+cp openclaw-starter-kit/scripts/* ~/clawd/scripts/
 chmod +x ~/clawd/scripts/*.sh
 
 # 6. Install local LLM fallback (optional but recommended)
@@ -693,9 +693,9 @@ brew install ollama && ollama pull qwen2.5:14b
 
 ### Option B: Let Your Bot Do It (no Git needed)
 
-Once Moltbot is installed and running, just send your bot this message on Telegram:
+Once OpenClaw is installed and running, just send your bot this message on Telegram:
 
-> "Hey, can you take a look at this repo and integrate everything it suggests? Think hard about it, make sure it works with our current setup, and don't change anything until I give the OK: https://github.com/[USERNAME]/moltbot-starter-kit"
+> "Hey, can you take a look at this repo and integrate everything it suggests? Think hard about it, make sure it works with our current setup, and don't change anything until I give the OK: https://github.com/[USERNAME]/openclaw-starter-kit"
 
 Your bot reads the repo, understands the architecture, and walks you through adopting each piece. It handles the file creation, script installation, and customization. You just approve.
 
@@ -703,10 +703,10 @@ Your bot reads the repo, understands the architecture, and walks you through ado
 
 # 📚 Resources
 
-- **Moltbot Docs:** [docs.molt.bot](https://docs.molt.bot)
-- **Getting Started:** [docs.molt.bot/start/getting-started](https://docs.molt.bot/start/getting-started)
-- **FAQ & Troubleshooting:** [docs.molt.bot/help/faq](https://docs.molt.bot/help/faq)
-- **Moltbot GitHub:** [github.com/moltbot/moltbot](https://github.com/moltbot/moltbot)
+- **OpenClaw Docs:** [docs.openclaw.ai](https://docs.openclaw.ai)
+- **Getting Started:** [docs.openclaw.ai/start/getting-started](https://docs.openclaw.ai/start/getting-started)
+- **FAQ & Troubleshooting:** [docs.openclaw.ai/help/faq](https://docs.openclaw.ai/help/faq)
+- **OpenClaw GitHub:** [github.com/openclaw/openclaw](https://github.com/openclaw/openclaw)
 - **Discord Community:** [discord.com/invite/clawd](https://discord.com/invite/clawd)
 - **Skills Hub:** [clawdhub.com](https://clawdhub.com)
 
@@ -718,23 +718,23 @@ Real problems you'll hit, and how to fix them. All of these were discovered the 
 
 **Before anything else:** Run these two commands in your terminal. They fix 90% of issues:
 ```bash
-moltbot doctor --fix
-moltbot gateway restart
+openclaw doctor --fix
+openclaw gateway restart
 ```
 
-**Still stuck?** Check the [official FAQ](https://docs.molt.bot/help/faq) or ask in the [Discord](https://discord.com/invite/clawd).
+**Still stuck?** Check the [official FAQ](https://docs.openclaw.ai/help/faq) or ask in the [Discord](https://discord.com/invite/clawd).
 
 ## Telegram Issues
 
 **Bot doesn't respond to messages:**
-- Run `moltbot health` — check if "Telegram: ok" shows
-- If not: `moltbot gateway restart`
-- Still broken? `moltbot doctor --fix` — often catches expired auth
+- Run `openclaw health` — check if "Telegram: ok" shows
+- If not: `openclaw gateway restart`
+- Still broken? `openclaw doctor --fix` — often catches expired auth
 - Nuclear option: stop gateway, delete session files, restart fresh
 
 **Bot responds but very slowly (30+ seconds):**
 - Context is probably bloated. Your AI's conversation history is too long.
-- Fix: Reset the session — `moltbot gateway restart` or set up a daily session reset cron
+- Fix: Reset the session — `openclaw gateway restart` or set up a daily session reset cron
 - Prevention: Add a 5:30 AM daily session reset cron job
 
 **"Context overflow" or "prompt too large" errors:**
@@ -746,13 +746,13 @@ moltbot gateway restart
 ## Claude / Model Issues
 
 **"Unknown model" errors (e.g., `claude-sonnet-4` not found):**
-- Some models may not be available in your Moltbot version
-- Fix: Switch to a model you know works: `moltbot config` and update the model name
+- Some models may not be available in your OpenClaw version
+- Fix: Switch to a model you know works: `openclaw config` and update the model name
 - Common: If you configured Sonnet for heartbeats/subagents but it's unavailable, switch to Gemini
 - This silently breaks heartbeats and cron jobs — you won't notice until something doesn't fire
 
 **Auth token expired / OAuth errors:**
-- `moltbot doctor --fix` resolves 90% of these
+- `openclaw doctor --fix` resolves 90% of these
 - If recurring: consider API-key auth instead of OAuth (more stable)
 - The watchdog's proactive doctor run (every 6h) catches these automatically
 
@@ -776,7 +776,7 @@ moltbot gateway restart
 ## Watchdog Issues
 
 **Watchdog isn't running:**
-- Check: `launchctl list | grep moltbot` (macOS) or `crontab -l` (Linux)
+- Check: `launchctl list | grep openclaw` (macOS) or `crontab -l` (Linux)
 - Verify the plist/cron points to the correct path for watchdog.sh
 - Check logs: `cat ~/.clawdbot/logs/watchdog.log | tail -20`
 
@@ -793,7 +793,7 @@ moltbot gateway restart
 ## General Tips
 
 **"It deleted my config!"**
-- Always back up your Moltbot config before asking your AI to modify it
+- Always back up your OpenClaw config before asking your AI to modify it
 - Better: tell the AI "show me the config change first, don't apply it until I approve"
 - The SECURITY.md template includes confirmation tiers for exactly this reason
 
@@ -807,8 +807,8 @@ moltbot gateway restart
 - Recovery: Stop gateway, archive sessions folder, restart fresh
 
 ```bash
-# Daily session reset cron (add via moltbot)
-moltbot cron add --schedule "30 5 * * *" --text "Summarize yesterday, write to memory, then /new"
+# Daily session reset cron (add via openclaw)
+openclaw cron add --schedule "30 5 * * *" --text "Summarize yesterday, write to memory, then /new"
 ```
 
 ---
@@ -825,9 +825,9 @@ moltbot cron add --schedule "30 5 * * *" --text "Summarize yesterday, write to m
 
 **Not legal, financial, or security advice.** Nothing in this kit constitutes professional advice of any kind.
 
-**Third-party services.** This kit references third-party AI providers (Anthropic, OpenAI, Google, etc.) and tools (Moltbot, Ollama, etc.). I have no control over their services, pricing, terms, or availability. Check their individual terms of service.
+**Third-party services.** This kit references third-party AI providers (Anthropic, OpenAI, Google, etc.) and tools (OpenClaw, Ollama, etc.). I have no control over their services, pricing, terms, or availability. Check their individual terms of service.
 
-**Open source, community-contributed.** This is a community resource I'm sharing in good faith to help people get more out of their AI setup. It is not an official product. There is no support team. There is no SLA. If something breaks, the [Discord community](https://discord.com/invite/clawd) and [official docs](https://docs.molt.bot/help/faq) are your best bet.
+**Open source, community-contributed.** This is a community resource I'm sharing in good faith to help people get more out of their AI setup. It is not an official product. There is no support team. There is no SLA. If something breaks, the [Discord community](https://discord.com/invite/clawd) and [official docs](https://docs.openclaw.ai/help/faq) are your best bet.
 
 **TL;DR:** Cool tools, free to use, not my fault if something goes wrong. Be smart, review what your AI does, and don't blindly trust any automated system with anything you can't afford to lose.
 

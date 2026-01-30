@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Intelligent Model Router for Moltbot/Moltbot
+Intelligent Model Router for OpenClaw/OpenClaw
 Implements logarithmic degradation based on usage thresholds.
 
 Usage: python3 model_router.py [--task-type TYPE] [--check-only]

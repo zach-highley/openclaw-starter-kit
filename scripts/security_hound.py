@@ -32,7 +32,7 @@ MEMORY_FILE = WORKSPACE / "memory" / "security-hound.json"
 CRITICAL_FILES = [
     Path.home() / ".zshrc",
     Path.home() / ".ssh" / "authorized_keys",
-    Path.home() / ".moltbot" / "config.yaml",
+    Path.home() / ".openclaw" / "config.yaml",
     Path("/etc/hosts"),
 ]
 

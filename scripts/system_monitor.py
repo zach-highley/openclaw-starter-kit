@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-System monitoring script for Moltbot/Moltbot.
+System monitoring script for OpenClaw/OpenClaw.
 Checks: disk, battery, Time Machine, brew outdated, security.
 Returns JSON with status and alerts.
 """
