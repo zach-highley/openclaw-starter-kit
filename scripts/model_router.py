@@ -137,9 +137,12 @@ DEGRADATION_CURVE = [
 
 CODEX_TASK_CONFIG = {
     # task_type → (codex_model, effort_level, description)
-    "audit":        ("gpt-5.2-codex", "xhigh", "Full codebase audit — maximum thoroughness"),
-    "architecture": ("gpt-5.2-codex", "high",  "Architecture changes — needs deep reasoning"),
-    "refactor":     ("gpt-5.2-codex", "high",  "Multi-file refactor — complex coordination"),
+    # gpt-5.1-codex-max = long-horizon agentic specialist (audits, architecture, multi-hour work)
+    # gpt-5.2-codex = most advanced model (feature work, complex reasoning)
+    # gpt-5.1-codex-mini = fast + cheap (simple tasks, hotfixes, lint)
+    "audit":        ("gpt-5.1-codex-max", "xhigh", "Full codebase audit — long-horizon specialist, maximum thoroughness"),
+    "architecture": ("gpt-5.1-codex-max", "high",  "Architecture overhaul — long-horizon, deep reasoning"),
+    "refactor":     ("gpt-5.2-codex", "high",  "Multi-file refactor — most advanced model"),
     "implement":    ("gpt-5.2-codex", "high",  "Feature implementation — substantial new code"),
     "review":       ("gpt-5.2-codex", "high",  "Code review — thorough analysis"),
     "debug":        ("gpt-5.2-codex", "high",  "Complex debugging — needs careful analysis"),
