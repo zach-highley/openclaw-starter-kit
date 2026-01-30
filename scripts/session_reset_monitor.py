@@ -14,7 +14,7 @@ import time
 from pathlib import Path
 
 # === Config ===
-SESSION_FILE = Path.home() / ".clawdbot" / "agents" / "main" / "sessions" / "sessions.json"
+SESSION_FILE = Path.home() / ".openclaw" / "agents" / "main" / "sessions" / "sessions.json"
 STATE_FILE = Path.home() / "clawd" / "state" / "session_monitor_state.json"
 BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")

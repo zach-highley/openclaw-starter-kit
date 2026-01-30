@@ -105,7 +105,7 @@ Before creating ANY file, script, function, or process:
 3. **Check scripts/** — `ls ~/clawd/scripts/` before writing any new script. We have 49 scripts. The one you need probably exists.
 4. **Check state/** — `ls ~/clawd/state/` before creating a new state file. We have 11. Reuse them.
 5. **Check docs/** — `ls ~/clawd/docs/` before writing new docs. We have 14. Merge, don't create.
-6. **Choose the right level** — root is for Clawdbot-injected config + frequently accessed files ONLY. Everything else goes in a subfolder.
+6. **Choose the right level** — root is for OpenClaw-injected config + frequently accessed files ONLY. Everything else goes in a subfolder.
 7. **Update INDEX.md** after adding/moving any file.
 8. **MECE = Mutually Exclusive, Collectively Exhaustive.** Every file has ONE clear purpose that no other file shares. Every topic has a home.
 

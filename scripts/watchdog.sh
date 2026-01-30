@@ -22,7 +22,7 @@
 set -euo pipefail
 
 # === CONFIGURATION (customize these) ===
-OPENCLAW="openclaw"                             # Path to openclaw binary (change to "clawdbot" if you installed via npm)
+OPENCLAW="openclaw"                             # Path to openclaw binary (change to "openclaw" if you installed via npm)
 LEARN_SCRIPT="$(dirname "$0")/watchdog_learn.sh"
 LOG_DIR="$HOME/.openclaw/logs"
 LOG_FILE="$LOG_DIR/watchdog.log"
@@ -332,7 +332,7 @@ fi
 # CHECK 14: Session size (v8 — prevents context overflow)
 # ============================================
 log "[CHECK 14] Session size..."
-SESSION_DIR="$HOME/.openclaw/agents/main/sessions"  # Adjust for clawdbot: ~/.clawdbot/agents/main/sessions
+SESSION_DIR="$HOME/.openclaw/agents/main/sessions"  # Adjust for openclaw: ~/.openclaw/agents/main/sessions
 if [[ -d "$SESSION_DIR" ]]; then
     LARGEST=$(find "$SESSION_DIR" -name "*.jsonl" -exec ls -la {} + 2>/dev/null | sort -k5 -nr | head -1)
     if [[ -n "$LARGEST" ]]; then
@@ -361,7 +361,7 @@ fi
 # CHECK 15: Telegram delivery health (v8 — detects one-way pipe failure)
 # ============================================
 log "[CHECK 15] Telegram delivery..."
-GATEWAY_LOG="/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log"  # Adjust for clawdbot: /tmp/clawdbot/clawdbot-YYYY-MM-DD.log
+GATEWAY_LOG="/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log"  # Adjust for openclaw: /tmp/openclaw/openclaw-YYYY-MM-DD.log
 if [[ -f "$GATEWAY_LOG" ]]; then
     RECENT_IN=$(grep -c "messageChannel=telegram" "$GATEWAY_LOG" 2>/dev/null || echo 0)
     RECENT_OUT=$(grep -c "Sent via Telegram" "$GATEWAY_LOG" 2>/dev/null || echo 0)

@@ -788,7 +788,7 @@ openclaw gateway restart
 **Watchdog isn't running:**
 - Check: `launchctl list | grep openclaw` (macOS) or `crontab -l` (Linux)
 - Verify the plist/cron points to the correct path for watchdog.sh
-- Check logs: `cat ~/.clawdbot/logs/watchdog.log | tail -20`
+- Check logs: `cat ~/.openclaw/logs/watchdog.log | tail -20`
 
 **Getting spammed with notifications:**
 - Old watchdog versions would send separate alerts for each error type
