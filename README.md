@@ -119,15 +119,24 @@ These systems were battle-tested building a real iOS app (33 sprints, zero human
 | **🆕 Morning Briefing** | Daily digest: weather, quotes, calendar, social engagement, system health | `scripts/morning_briefing.py` |
 | **🆕 Meta-Monitor** | Watches the watchers — detects when monitoring systems themselves are broken | [docs/META_MONITOR.md](docs/META_MONITOR.md) |
 
+**🆕 Latest additions (Jan 30, 2026):**
+
+| System | What It Does | Doc |
+|--------|-------------|-----|
+| **🆕 Codex Status Tracking** | Tracks model exhaustion across sessions, auto-resets on expiry | `scripts/model_router.py --show-all` |
+| **🆕 Session Boot Check-In** | Every session verifies model availability, system health, and work state | AGENTS.md step 7 |
+| **🆕 MECE for Code** | Anti-duplication rules for scripts, state files, and docs (not just markdown) | AGENTS.md |
+| **🆕 System Awareness Table** | 9-system reference so the AI knows all its teammates | AGENTS.md |
+
 **Real results from our production system:**
-- 33 coding sprints completed autonomously (S1-S33)
+- 40 coding sprints completed autonomously (S1-S40)
 - 109 successful auto-recoveries (zero human intervention)
 - Doctor fix rate: 100% (9/9)
 - Watchdog risk score: 0/100 (all systems healthy)
 - 6 learning layers continuously improving the system
 - Average sprint: 5-12 minutes
-- Models used: Codex (11 sprints), Opus (5 as fallback)
-- One stall detected and recovered (xcodebuild hang)
+- Models used: Codex (11 sprints), Claude Code (7 sprints), Opus (5 as fallback)
+- Smart model fallback: Codex exhausted → auto-routes to Claude Code
 - Zero failures, all commits pushed automatically
 
 ---
@@ -291,7 +300,7 @@ This is the single biggest upgrade you can make. Instead of burning one expensiv
 | Tier | Role | Model | What It Does |
 |------|------|-------|-------------|
 | T0 | 🧠 Orchestrator | Claude Opus | Strategy, reasoning, main conversation |
-| T1 | 💻 Code Specialist | OpenAI Codex | Writes all code, scripts, apps |
+| T1 | 💻 Code Specialist | OpenAI Codex / Claude Code | Writes all code, scripts, apps (auto-fallback when exhausted) |
 | T2 | 📡 Bulk/Background | Google Gemini | Heartbeats, summaries, monitoring |
 | T3 | 🏠 Local Emergency | Ollama (local) | Runs on your machine when cloud is down |
 
