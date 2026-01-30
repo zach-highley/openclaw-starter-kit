@@ -129,16 +129,26 @@ These systems were battle-tested building a real iOS app (33 sprints, zero human
 | **🆕 MECE for Code** | Anti-duplication rules for scripts, state files, and docs (not just markdown) | AGENTS.md |
 | **🆕 System Awareness Table** | 9-system reference so the AI knows all its teammates | AGENTS.md |
 
+**🆕 Latest additions (Jan 30, 2026 — Session 2):**
+
+| System | What It Does | Doc |
+|--------|-------------|-----|
+| **🆕 Agent Poll Enforcer** | External script that catches AI silence during background agent work — forces notification if >5 min quiet | [docs/AGENT_POLL_ENFORCER.md](docs/AGENT_POLL_ENFORCER.md) |
+| **🆕 Git Push Guard** | Verifies repo visibility (public/private) before every push — prevents accidental public exposure | [docs/GIT_PUSH_SECURITY.md](docs/GIT_PUSH_SECURITY.md) |
+| **🆕 Xcode Cloud Monitor** | Checks multiple Gmail accounts for CI failure emails, auto-diagnoses build errors | [docs/XCODE_CLOUD_MONITOR.md](docs/XCODE_CLOUD_MONITOR.md) |
+
+**Key lesson learned: Architecture > Instructions.** If your AI keeps violating a rule despite clear documentation, don't rewrite the rule — build external enforcement that doesn't depend on the AI remembering. The poll enforcer is the poster child: 6 failures of the same rule before we built a script that catches it externally.
+
 **Real results from our production system:**
-- 55 coding sprints completed autonomously (S1-S55)
+- 66 coding sprints completed autonomously (S1-S55 + BP1-BP12)
 - 109 successful auto-recoveries (zero human intervention)
 - Doctor fix rate: 100% (9/9)
-- Watchdog risk score: 0/100 (all systems healthy)
+- Watchdog risk score: 0/100 (10 systems healthy)
 - 6 learning layers continuously improving the system
 - Average sprint: 5-12 minutes
 - Models used: Codex (11 sprints), Claude Code (7 sprints), Opus (5 as fallback)
 - Smart model fallback: Codex exhausted → auto-routes to Claude Code
-- Zero failures, all commits pushed automatically
+- Zero accidental public pushes (git push guard active)
 
 ---
 
