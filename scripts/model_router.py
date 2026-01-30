@@ -137,21 +137,52 @@ DEGRADATION_CURVE = [
 
 CODEX_TASK_CONFIG = {
     # task_type → (codex_model, effort_level, description)
-    # gpt-5.1-codex-max = long-horizon agentic specialist (audits, architecture, multi-hour work)
-    # gpt-5.2-codex = most advanced model (feature work, complex reasoning)
-    # gpt-5.1-codex-mini = fast + cheap (simple tasks, hotfixes, lint)
-    "audit":        ("gpt-5.1-codex-max", "xhigh", "Full codebase audit — long-horizon specialist, maximum thoroughness"),
+    #
+    # MODEL SELECTION (from OpenAI docs + Reddit community consensus):
+    #   gpt-5.1-codex-max  = Long-horizon agentic specialist. Trained for compaction.
+    #                        Supports xhigh effort. Use for audits, architecture, multi-hour work.
+    #   gpt-5.2-codex      = Most advanced coding model. Fast + efficient.
+    #                        ⚠️ xhigh MAY BE BUGGED (Reddit reports routing issues). Use high max.
+    #                        Best for implementation when plan is clear.
+    #   gpt-5.1-codex-mini = Fast, cheap, less capable. Simple/mechanical tasks only.
+    #
+    # EFFORT LEVELS (from OpenAI prompting guide):
+    #   medium = "Daily driver for most tasks" — 30% fewer thinking tokens, fast + smart
+    #   high   = Multi-file changes, complex reasoning, substantial new code
+    #   xhigh  = "Non-latency-sensitive, extra highly complex problems" — thinks longest
+    #            Only use on gpt-5.1-codex-max. Do NOT use on gpt-5.2-codex (buggy).
+    #
+    # COMMUNITY BEST PRACTICE:
+    #   "GPT-5.2 for planning, Codex for executing" — combined approach
+    #   "Codex models need explicit guidance — only suitable for implementation with clear plan"
+    #   "xhigh only for problems that need 10 engineers sitting around a table"
+    #
+    # Sources:
+    #   https://developers.openai.com/codex/models/
+    #   https://cookbook.openai.com/examples/gpt-5/codex_prompting_guide
+    #   https://openai.com/index/gpt-5-1-codex-max/
+    #   Reddit r/codex, r/ChatGPTCoding consensus (Nov 2025 - Jan 2026)
+    
+    # LONG-HORIZON tasks → gpt-5.1-codex-max (built for multi-hour autonomous work)
+    "audit":        ("gpt-5.1-codex-max", "xhigh", "Full codebase audit — long-horizon specialist, max thoroughness"),
     "architecture": ("gpt-5.1-codex-max", "high",  "Architecture overhaul — long-horizon, deep reasoning"),
-    "refactor":     ("gpt-5.2-codex", "high",  "Multi-file refactor — most advanced model"),
+    "content_audit":("gpt-5.1-codex-max", "xhigh", "Content mismatch audit (deep dives, links) — rare, thorough"),
+    
+    # COMPLEX IMPLEMENTATION → gpt-5.2-codex high (most advanced, clear plan needed)
+    "refactor":     ("gpt-5.2-codex", "high",  "Multi-file refactor — most advanced model, complex coordination"),
     "implement":    ("gpt-5.2-codex", "high",  "Feature implementation — substantial new code"),
     "review":       ("gpt-5.2-codex", "high",  "Code review — thorough analysis"),
     "debug":        ("gpt-5.2-codex", "high",  "Complex debugging — needs careful analysis"),
-    "coding":       ("gpt-5.2-codex", "medium","General coding — balanced speed/intelligence"),
+    
+    # DAILY DRIVER → gpt-5.2-codex medium (OpenAI recommended default)
+    "coding":       ("gpt-5.2-codex", "medium","General coding — daily driver, balanced speed/intelligence"),
     "code":         ("gpt-5.2-codex", "medium","General code task"),
     "bugfix":       ("gpt-5.2-codex", "medium","Bug fix — targeted, usually single-file"),
     "fix":          ("gpt-5.2-codex", "medium","Quick fix"),
     "test":         ("gpt-5.2-codex", "medium","Write/fix tests"),
     "build":        ("gpt-5.2-codex", "medium","Build configuration"),
+    
+    # QUICK/SIMPLE → gpt-5.1-codex-mini medium (speed over depth)
     "script":       ("gpt-5.1-codex-mini", "medium","Simple script — mini model is sufficient"),
     "hotfix":       ("gpt-5.1-codex-mini", "medium","Quick hotfix — speed over depth"),
     "lint":         ("gpt-5.1-codex-mini", "medium","Lint/format — mechanical, mini is fine"),
