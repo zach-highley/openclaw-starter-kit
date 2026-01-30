@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Intelligent Model Router for OpenClaw
+Intelligent Model Router for Clawdbot/OpenClaw
 Implements logarithmic degradation based on usage thresholds.
 
 Tracks ALL model availability including:
@@ -35,14 +35,34 @@ MODELS = {
 # codex Code Review = reviews PRs on GitHub = separate quota entirely
 CODEX_STATUS_FILE = Path(__file__).parent.parent / "state" / "codex_status.json"
 
+# ═══════════════════════════════════════════════════════════════════
+# HYBRID WORKFLOW STRATEGY (2026-01-30)
+# ═══════════════════════════════════════════════════════════════════
+# Community consensus from 200+ devs:
+#   - Codex 5.2 (High/xHigh) is the CODING MASTER — slow, methodical,
+#     catches bugs Claude misses. Non-existent limits on MAX tier.
+#   - Claude (Opus/Sonnet) is the CREATIVE WORKHORSE — fast, great for
+#     planning, architecture, initial code generation.
+#   - Gemini is NOT for coding. Period.
+#
+# PRO-GAMER HYBRID WORKFLOW:
+#   1. Claude plans architecture & generates initial code (fast, creative)
+#   2. Codex 5.2 executes coding tasks & reviews for bugs (thorough, methodical)
+#   3. Claude orchestrates and makes strategic decisions
+#
+# For ALL coding tasks: Codex is PRIMARY. Not fallback. PRIMARY.
+# Claude Code is the fallback if Codex is somehow unavailable.
+# ═══════════════════════════════════════════════════════════════════
+
 # Task type → best model mapping
 TASK_MODEL_MAP = {
-    # Opus territory (complex reasoning, strategy, important decisions)
+    # Opus territory (complex reasoning, strategy, architecture, planning)
     "strategy": "opus",
     "reasoning": "opus",
     "important": "opus",
     "analysis": "opus",
     "planning": "opus",
+    "architecture": "opus",
     
     # Sonnet territory (good reasoning, faster, cheaper)
     "writing": "sonnet",
@@ -51,14 +71,26 @@ TASK_MODEL_MAP = {
     "email": "sonnet",
     "summarize": "sonnet",
     
-    # Codex territory (coding, technical)
+    # Codex territory — THE CODING MASTER (all code tasks go here)
     "coding": "codex",
     "code": "codex",
     "debug": "codex",
     "refactor": "codex",
     "script": "codex",
+    "bugfix": "codex",
+    "review": "codex",
+    "implement": "codex",
+    "build": "codex",
+    "test": "codex",
+    "fix": "codex",
     
-    # Gemini territory (bulk, simple, fast)
+    # Codex sub-tasks (mapped to effort levels below)
+    "audit": "codex",         # Full codebase audit → xhigh effort
+    "architecture": "codex",  # Architecture changes → high effort  
+    "hotfix": "codex",        # Quick single-file fix → medium effort
+    "lint": "codex",          # Lint/format → medium effort, mini model
+    
+    # Gemini territory (bulk processing, simple tasks — NEVER coding)
     "bulk": "gemini",
     "simple": "gemini",
     "translate": "gemini",
@@ -80,6 +112,56 @@ DEGRADATION_CURVE = [
     (95, ["codex", "gemini", "local"]),                    # 95%: no more anthropic
     (100, ["gemini", "local"]),                            # 100%: gemini + local only
 ]
+
+
+# ═══════════════════════════════════════════════════════════════════
+# CODEX SUB-SELECTION: Model + Effort Level
+# Source: https://developers.openai.com/codex/models/
+#         https://cookbook.openai.com/examples/gpt-5/codex_prompting_guide
+#
+# Models:
+#   gpt-5.2-codex     — Most advanced, our MAX tier default
+#   gpt-5.1-codex-mini — Faster, cheaper, for simpler tasks
+#   gpt-5.1-codex-max  — Long-horizon agentic tasks
+#
+# Effort Levels:
+#   medium  — Fast + smart. Most interactive coding. DEFAULT.
+#   high    — Multi-file changes, complex refactors, hard bugs
+#   xhigh   — Full codebase audits, architecture overhauls, hardest tasks
+#
+# RULES:
+#   - Don't refire a working session. Only refire on ACTUAL CRASHES.
+#   - If a task crashes, break into smaller sub-tasks and retry.
+#   - "Taking a long time" ≠ crashed. Be patient.
+# ═══════════════════════════════════════════════════════════════════
+
+CODEX_TASK_CONFIG = {
+    # task_type → (codex_model, effort_level, description)
+    "audit":        ("gpt-5.2-codex", "xhigh", "Full codebase audit — maximum thoroughness"),
+    "architecture": ("gpt-5.2-codex", "high",  "Architecture changes — needs deep reasoning"),
+    "refactor":     ("gpt-5.2-codex", "high",  "Multi-file refactor — complex coordination"),
+    "implement":    ("gpt-5.2-codex", "high",  "Feature implementation — substantial new code"),
+    "review":       ("gpt-5.2-codex", "high",  "Code review — thorough analysis"),
+    "debug":        ("gpt-5.2-codex", "high",  "Complex debugging — needs careful analysis"),
+    "coding":       ("gpt-5.2-codex", "medium","General coding — balanced speed/intelligence"),
+    "code":         ("gpt-5.2-codex", "medium","General code task"),
+    "bugfix":       ("gpt-5.2-codex", "medium","Bug fix — targeted, usually single-file"),
+    "fix":          ("gpt-5.2-codex", "medium","Quick fix"),
+    "test":         ("gpt-5.2-codex", "medium","Write/fix tests"),
+    "build":        ("gpt-5.2-codex", "medium","Build configuration"),
+    "script":       ("gpt-5.1-codex-mini", "medium","Simple script — mini model is sufficient"),
+    "hotfix":       ("gpt-5.1-codex-mini", "medium","Quick hotfix — speed over depth"),
+    "lint":         ("gpt-5.1-codex-mini", "medium","Lint/format — mechanical, mini is fine"),
+}
+
+def get_codex_config(task_type):
+    """Get the right Codex model + effort level for a task type."""
+    config = CODEX_TASK_CONFIG.get(task_type, ("gpt-5.2-codex", "medium", "Default coding task"))
+    return {
+        "codex_model": config[0],
+        "effort": config[1],
+        "description": config[2],
+    }
 
 
 def get_usage():
@@ -202,15 +284,16 @@ def select_model(task_type=None, usage=None):
             f"Task '{task_type}' → {preferred} (usage: {primary_pct}%)"
         )
     
-    # Codex was preferred but exhausted — smart fallback for coding tasks
+    # Codex was preferred but exhausted — silent fallback for coding tasks
+    # RULE: Never ask permission. Just use the next available model.
     codex_status = get_codex_status()
     if preferred == "codex" and not codex_status["available"]:
-        # Coding fallback chain: Claude Code (sonnet) → Opus
+        # Coding fallback chain: Claude Code (sonnet) → Opus → Gemini (last resort, not ideal)
         fallback = "sonnet" if "sonnet" in allowed else ("opus" if "opus" in allowed else allowed[0] if allowed else "local")
         resets_msg = f", resets {codex_status['resets']}" if codex_status.get("resets") else ""
         return (
             MODELS[fallback],
-            f"Codex exhausted{resets_msg} → coding fallback to {fallback} (Claude Code). Usage: {primary_pct}%"
+            f"Codex unavailable{resets_msg} → auto-fallback to {fallback} (Claude Code). Usage: {primary_pct}%"
         )
     
     # Otherwise, use the best available model
