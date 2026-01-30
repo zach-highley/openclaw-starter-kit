@@ -30,6 +30,26 @@ Before doing anything else:
 
 Don't ask permission. Just do it.
 
+### 🔁 Mid-Session Enforcement Hooks (MANDATORY — NOT JUST BOOT)
+**Rules read at boot are suggestions. Rules enforced at the point of action are law.**
+
+Boot checks run once. These fire EVERY TIME the trigger condition is met, throughout the entire session:
+
+| Trigger | Check | Action |
+|---------|-------|--------|
+| **About to create a file or script** | MECE | `ls` the target directory + `grep` for overlap. Extend, don't duplicate. |
+| **About to spawn a subagent** | Model routing | Run routing check. Use recommended model. |
+| **Starting a new sprint** | Sprint notification | Send the formatted 🚀 message. No exceptions. |
+| **Completing a sprint** | Sprint notification | Send the formatted ✅ message. No exceptions. |
+| **Just edited core config files** | Rule internalization | Re-read the changed file. Confirm consistency with existing rules. |
+| **Just added a permanent rule** | Cross-check | Does this contradict or duplicate an existing rule? MECE applies to rules too. |
+| **Current task overlaps a past MISS tag** | Counter-check | Read self-review, challenge first instinct, do the opposite of the MISS pattern. |
+| **About to message your human** | Accuracy check | Is this message current, accurate, and useful? No stale data, no noise. |
+| **Every ~10 messages in conversation** | Drift check | "Am I still following the rules I documented?" Quick mental audit. |
+| **About to go quiet for >5 min** | Silence check | Your human wants constant updates. Send a progress message before going heads-down. |
+
+**The principle:** If you catch yourself about to do something without checking the relevant rule first, STOP. Check. Then proceed.
+
 ### 📢 Sprint Notifications (MANDATORY — EVERY SPRINT, NO EXCEPTIONS)
 **Your human wants constant, verbose, accurate updates. ALWAYS.**
 
