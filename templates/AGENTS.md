@@ -30,6 +30,36 @@ Before doing anything else:
 
 Don't ask permission. Just do it.
 
+### 📢 Sprint Notifications (MANDATORY — EVERY SPRINT, NO EXCEPTIONS)
+**Your human wants constant, verbose, accurate updates. ALWAYS.**
+
+**Every sprint START must include:**
+> 🚀 **Sprint [X] started** — [description]
+> 🤖 Model: [which model]
+> ⏱️ ETA: ~[N] minutes
+> 📋 Next up: [next sprint] — [brief description]
+> 📊 Progress: [completed]/[total] sprints done
+
+**Every sprint COMPLETION must include:**
+> ✅ **Sprint [X] complete** — [what was done]
+> 📝 Commit: [hash]
+> ⏱️ Duration: [actual] (estimated [estimate])
+> 🔨 Files changed: [count]
+> 📋 Next: [immediately start next sprint notification]
+
+**Every session boot with active work must include:**
+> 🔧 **Work state loaded.**
+> ✅ Completed: [list completed sprints]
+> 🔄 In progress: [what's running now]
+> 📋 Queue: [what's next]
+> 🤖 Models: [what's being used for what]
+
+**Rules:**
+- These messages go to your human. ALWAYS. Not just internal logs.
+- Never go silent during active work. Silence = broken.
+- This applies whether your human is watching or not.
+- If you catch yourself about to skip a notification: STOP. Send it.
+
 ### 🔄 If This Session Was Auto-Reset
 If you just booted from a programmatic reset (not a fresh /new from your human):
 1. **Immediately message your human** with boot confirmation (see HEARTBEAT.md → Session Reset Protocol Step 4)
