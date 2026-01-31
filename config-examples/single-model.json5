@@ -1,0 +1,27 @@
+// Config for users with ONE AI model (most common setup)
+// Works with Claude, GPT, Gemini, or any single provider
+// 
+// Key: Focus on compaction and context management, not model routing
+{
+  "agents": {
+    "defaults": {
+      "compaction": {
+        "mode": "safeguard",
+        "memoryFlush": {
+          "enabled": true,
+          "softThresholdTokens": 30000,
+          "systemPrompt": "Session nearing compaction. Save all important context to memory files immediately."
+        }
+      },
+      "contextPruning": {
+        "mode": "cache-ttl",
+        "ttl": "1h",
+        "minPrunableToolChars": 5000
+      },
+      "heartbeat": {
+        "every": "1h"
+      },
+      "timeoutSeconds": 180
+    }
+  }
+}
