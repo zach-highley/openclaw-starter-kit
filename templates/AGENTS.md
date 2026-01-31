@@ -64,6 +64,7 @@ Boot checks run once. These fire EVERY TIME the trigger condition is met, throug
 | **Before ANY gateway restart/config.patch** | Background process guard | Run `process list` to check for active background sessions. If ANY are running: poll them first, wait for completion or WARN your human before restarting. A restart kills all background exec sessions. |
 | **After firing background agents** | Polling commitment | IMMEDIATELY enter a poll loop (every 60-90s). Do NOT let cron jobs, heartbeats, or other processing break the loop. Silence during agent work = broken. |
 | **ANY tool/agent timeout or error** | Atomic Sprint Rule | NEVER retry same scope. Immediately decompose into smaller atomic tasks. One concern per sprint/commit/PR. Failure = scope too big. |
+| **3+ errors on the same topic** | 3-Strike Research Rule | STOP. Search online (official docs, Reddit, X, Google) for best practices. Synthesize → permanent memory → then fix. Never keep patching symptoms. See `docs/SUBAGENT_BEST_PRACTICES.md`. |
 
 **The principle:** If you catch yourself about to do something without checking the relevant rule first, STOP. Check. Then proceed.
 
