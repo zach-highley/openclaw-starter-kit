@@ -278,10 +278,10 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 ## 📂 Project Work Rules (MANDATORY)
 
 ### Canonical Project Paths
-- **Enchiridion:** `~/Library/Mobile Documents/com~apple~CloudDocs/Work/iPhone Apps/GetSmart/`
-- **All projects:** Check iCloud Drive (`~/Library/Mobile Documents/com~apple~CloudDocs/`) first. That's where your human works so he can access from any computer.
-- **Yoda workspace:** `~/clawd/` (commits to GitHub)
-- **NEVER** create shadow clones in `~/Projects/` or anywhere else. If a project doesn't have an iCloud home, ask first.
+- **Your workspace:** `~/clawd/` or wherever OpenClaw is configured (commits to GitHub)
+- **Projects:** Keep project code in one canonical location. Never create shadow clones.
+- If your human uses iCloud Drive, check `~/Library/Mobile Documents/com~apple~CloudDocs/` first.
+- When in doubt about where a project lives, ask.
 
 ### After Every Session (MANDATORY)
 For any project you touched:

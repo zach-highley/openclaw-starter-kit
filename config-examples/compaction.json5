@@ -1,0 +1,31 @@
+// Compaction config — prevents context overflow crashes
+// Apply via: config.patch (merges with existing config)
+// 
+// Pick the right softThresholdTokens for your tier:
+//   Free tier:  30000 (aggressive flush, smaller context windows)
+//   Pro ($20):  40000 (balanced)
+//   MAX ($200): 50000 (generous, large context windows)
+{
+  "agents": {
+    "defaults": {
+      "compaction": {
+        "mode": "safeguard",
+        "memoryFlush": {
+          "enabled": true,
+          "softThresholdTokens": 40000,
+          "systemPrompt": "Session nearing compaction. Write all critical context (current task, decisions, state, todos) to memory files NOW. Include everything needed to resume seamlessly after compaction."
+        }
+      },
+      "contextPruning": {
+        "mode": "cache-ttl",
+        "ttl": "1h",
+        "minPrunableToolChars": 5000,
+        "softTrim": {
+          "maxChars": 50000,
+          "headChars": 2000,
+          "tailChars": 5000
+        }
+      }
+    }
+  }
+}

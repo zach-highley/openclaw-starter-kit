@@ -1,0 +1,49 @@
+// Config for users with MULTIPLE AI models
+// Routes tasks to the right model, with fallback chain
+// 
+// Customize model names for your providers
+{
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "anthropic/claude-sonnet-4",
+        "fallbacks": [
+          "google-gemini-cli/gemini-2.5-pro",
+          "ollama/qwen2.5:14b"
+        ]
+      },
+      "compaction": {
+        "mode": "safeguard",
+        "memoryFlush": {
+          "enabled": true,
+          "softThresholdTokens": 40000,
+          "systemPrompt": "Session nearing compaction. Write all critical context to memory files NOW."
+        }
+      },
+      "contextPruning": {
+        "mode": "cache-ttl",
+        "ttl": "1h",
+        "minPrunableToolChars": 5000,
+        "softTrim": {
+          "maxChars": 50000,
+          "headChars": 2000,
+          "tailChars": 5000
+        }
+      },
+      "heartbeat": {
+        "every": "1h"
+      },
+      "subagents": {
+        "maxConcurrent": 4,
+        "model": {
+          "primary": "openai-codex/gpt-5.2",
+          "fallbacks": [
+            "anthropic/claude-sonnet-4",
+            "google-gemini-cli/gemini-2.5-pro"
+          ]
+        }
+      },
+      "timeoutSeconds": 180
+    }
+  }
+}

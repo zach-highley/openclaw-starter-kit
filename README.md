@@ -120,22 +120,30 @@ These systems were battle-tested building a real iOS app (33 sprints, zero human
 | **🆕 Meta-Monitor** | Watches the watchers — detects when monitoring systems themselves are broken | [docs/META_MONITOR.md](docs/META_MONITOR.md) |
 | **🆕 Hybrid Workflow** | 8-step Claude+Codex pipeline: plan → validate → assess → implement → orchestrate → review → document → next | [docs/HYBRID_CODING_WORKFLOW.md](docs/HYBRID_CODING_WORKFLOW.md) |
 
-**🆕 Latest additions (Jan 30, 2026):**
+**🆕 Latest additions (Jan 31, 2026):**
 
 | System | What It Does | Doc |
 |--------|-------------|-----|
-| **🆕 Codex Status Tracking** | Tracks model exhaustion across sessions, auto-resets on expiry | `scripts/model_router.py --show-all` |
-| **🆕 Session Boot Check-In** | Every session verifies model availability, system health, and work state | AGENTS.md step 7 |
-| **🆕 MECE for Code** | Anti-duplication rules for scripts, state files, and docs (not just markdown) | AGENTS.md |
-| **🆕 System Awareness Table** | 9-system reference so the AI knows all its teammates | AGENTS.md |
+| **🆕 Bot Instructions** | AI-readable integration guide — bots read this when users paste the repo link | [BOT_INSTRUCTIONS.md](BOT_INSTRUCTIONS.md) |
+| **🆕 Config Examples** | Ready-to-use OpenClaw configs for free, single-model, and multi-model setups | [config-examples/](config-examples/) |
+| **🆕 Crash Recovery** | Launchd/cron watchdog — auto-restarts gateway, notifies via Telegram | `scripts/crash_recovery.sh` |
+| **🆕 Context Healer** | Monitors context window usage, notifies before compaction | `scripts/context_healer.py` |
+| **🆕 Message Verify** | Tracks Telegram message delivery, detects gaps | `scripts/message_verify.py` |
+| **🆕 Multi-Model Usage** | Self-contained usage monitor for ALL models (no codexbar needed) | `scripts/check_usage.py` |
 
-**🆕 Latest additions (Jan 30, 2026 — Session 2):**
+**Key insight (Jan 31):** OpenClaw has BUILT-IN compaction with memory flush. Configure it properly and your bot never crashes from context overflow. See [config-examples/compaction.json5](config-examples/compaction.json5).
+
+**Previous additions (Jan 30, 2026):**
 
 | System | What It Does | Doc |
 |--------|-------------|-----|
-| **🆕 Agent Poll Enforcer** | External script that catches AI silence during background agent work — forces notification if >5 min quiet | [docs/AGENT_POLL_ENFORCER.md](docs/AGENT_POLL_ENFORCER.md) |
-| **🆕 Git Push Guard** | Verifies repo visibility (public/private) before every push — prevents accidental public exposure | [docs/GIT_PUSH_SECURITY.md](docs/GIT_PUSH_SECURITY.md) |
-| **🆕 Xcode Cloud Monitor** | Checks multiple Gmail accounts for CI failure emails, auto-diagnoses build errors | [docs/XCODE_CLOUD_MONITOR.md](docs/XCODE_CLOUD_MONITOR.md) |
+| Codex Status Tracking | Tracks model exhaustion across sessions, auto-resets on expiry | `scripts/model_router.py --show-all` |
+| Session Boot Check-In | Every session verifies model availability, system health, and work state | AGENTS.md step 7 |
+| MECE for Code | Anti-duplication rules for scripts, state files, and docs (not just markdown) | AGENTS.md |
+| System Awareness Table | 9-system reference so the AI knows all its teammates | AGENTS.md |
+| Agent Poll Enforcer | External script that catches AI silence during background agent work — forces notification if >5 min quiet | [docs/AGENT_POLL_ENFORCER.md](docs/AGENT_POLL_ENFORCER.md) |
+| Git Push Guard | Verifies repo visibility (public/private) before every push — prevents accidental public exposure | [docs/GIT_PUSH_SECURITY.md](docs/GIT_PUSH_SECURITY.md) |
+| Xcode Cloud Monitor | Checks multiple Gmail accounts for CI failure emails, auto-diagnoses build errors | [docs/XCODE_CLOUD_MONITOR.md](docs/XCODE_CLOUD_MONITOR.md) |
 
 **Key lesson learned: Architecture > Instructions.** If your AI keeps violating a rule despite clear documentation, don't rewrite the rule — build external enforcement that doesn't depend on the AI remembering. The poll enforcer is the poster child: 6 failures of the same rule before we built a script that catches it externally.
 
@@ -226,6 +234,11 @@ The official docs have answers to basically everything:
 ```
 openclaw-starter-kit/
 ├── README.md                      ← You are here (the deep guide)
+├── BOT_INSTRUCTIONS.md            ← 🆕 AI-readable guide (bots start here when users paste the link)
+├── config-examples/               ← 🆕 Ready-to-use OpenClaw config snippets
+│   ├── compaction.json5           — Prevents context overflow crashes (CRITICAL)
+│   ├── single-model.json5        — Config for users with one AI provider
+│   └── multi-model.json5         — Config for multi-model power users
 ├── templates/                     ← Copy these to your workspace
 │   ├── AGENTS.md                  — Operating system for your AI
 │   ├── SOUL.md                    — Personality & identity template
@@ -234,12 +247,18 @@ openclaw-starter-kit/
 ├── scripts/                       ← Drop these in your scripts/ folder
 │   ├── watchdog.sh                — Self-healing watchdog (13 checks, 4 escalation levels)
 │   ├── watchdog_learn.sh          — Incident learning & root cause analysis
+│   ├── crash_recovery.sh          — 🆕 Auto-restart gateway if it crashes
+│   ├── install_crash_recovery.sh  — 🆕 Install crash recovery as system service (macOS + Linux)
+│   ├── check_usage.py             — 🆕 Multi-model usage monitor (self-contained, no dependencies)
+│   ├── context_healer.py          — 🆕 Context window monitor with notifications
+│   ├── message_verify.py          — 🆕 Telegram message delivery verification
 │   ├── security_hound.py          — Learning security monitor (file integrity, network, processes)
-│   ├── check_usage.py             — Rate limit monitoring with threshold alerts
+│   ├── model_router.py            — Intelligent model routing with degradation curve
 │   └── emergency_lockdown.sh      — Break-glass emergency controls
 └── docs/                          ← Reference documentation
     ├── MODEL_ROUTING.md           — Multi-model routing logic
-    └── WATCHDOG_CONCEPTS.md       — Self-healing system architecture
+    ├── WATCHDOG_CONCEPTS.md       — Self-healing system architecture
+    └── (+ 12 more deep-dive docs)
 ```
 
 **How to use it:** Either clone this repo and copy the files manually (Option A in the Get Started section), OR just paste the repo link to your bot on Telegram and let it do the work for you (Option B — no Git needed). Your **workspace** is the folder where OpenClaw stores its files — by default it's `~/clawd/` in your home directory.
