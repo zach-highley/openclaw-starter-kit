@@ -44,6 +44,14 @@ Run `python3 scripts/check_usage.py` and check the result:
 
 ---
 
+## 🔔 Background Completion Watcher (safe, read-only)
+Run `python3 scripts/subagent_watcher.py --json --mark-reported`.
+- If `action_needed` is true: message the user with the `message` field and include the commit(s).
+- This is READ-ONLY. It does not spawn agents, modify sprints, or touch git.
+- Purpose: catch the most common silent failure after restarts, completed work that never gets reported.
+
+---
+
 ## 🐕 Security (every heartbeat — fast)
 Run `python3 scripts/security_hound.py`:
 - Only alert if `should_alert` is true (real threats, not noise)

@@ -26,6 +26,12 @@ Before doing anything else:
    python3 ~/clawd/scripts/meta_monitor.py --check --mode heartbeat  # All 9 systems health
    cat ~/clawd/state/current_work.json                        # Any work in progress?
    ```
+8. **Background work check (MANDATORY):**
+   ```
+   python3 ~/clawd/scripts/subagent_watcher.py --json --mark-reported
+   ```
+   If `action_needed` is true: message your human immediately with what completed.
+   This prevents the #1 failure mode after restarts: finished work that never gets reported.
    This takes 5 seconds and prevents you from: using exhausted models, duplicating work, missing system issues, or being unaware of what's already running.
 
 Don't ask permission. Just do it.
