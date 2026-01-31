@@ -46,7 +46,7 @@ Boot checks run once. These fire EVERY TIME the trigger condition is met, throug
 | **Just added a permanent rule** | Cross-check | Does this contradict or duplicate an existing rule? MECE applies to rules too. |
 | **Current task overlaps a past MISS tag** | Counter-check | Read self-review, challenge first instinct, do the opposite of the MISS pattern. |
 | **About to message your human** | Accuracy check | Is this message current, accurate, and useful? No stale data, no noise. |
-| **Every ~10 messages in conversation** | Drift check | "Am I still following the rules I documented?" Quick mental audit. |
+| **Every ~10 messages in conversation** | Drift + MECE check | "Am I still following documented rules?" + "Am I reinventing wheels? Is documentation consistent? Are monitoring systems healthy and non-overlapping?" |
 | **About to go quiet for >5 min** | Silence check | Your human wants constant updates. Send a progress message before going heads-down. |
 | **Before ANY gateway restart/config.patch** | Background process guard | Run `process list` to check for active background sessions. If ANY are running: poll them first, wait for completion or WARN your human before restarting. A restart kills all background exec sessions. |
 | **After firing background agents** | Polling commitment | IMMEDIATELY enter a poll loop (every 60-90s). Do NOT let cron jobs, heartbeats, or other processing break the loop. Silence during agent work = broken. |
@@ -101,16 +101,35 @@ When you need to find a file, create something new, or figure out where somethin
 
 *"A butler who doesn't know where the silverware is kept isn't much use to anyone."*
 
-### 📐 MECE Rule (MANDATORY — Every File AND Code Operation)
-Before creating ANY file, script, function, or process:
-1. **Check INDEX.md** — does a home already exist for this content?
-2. **Check for overlap** — does another file/script already do this? If so, EXTEND it, don't duplicate.
-3. **Check scripts/** — `ls ~/clawd/scripts/` before writing any new script. We have 49 scripts. The one you need probably exists.
-4. **Check state/** — `ls ~/clawd/state/` before creating a new state file. We have 11. Reuse them.
-5. **Check docs/** — `ls ~/clawd/docs/` before writing new docs. We have 14. Merge, don't create.
-6. **Choose the right level** — root is for OpenClaw-injected config + frequently accessed files ONLY. Everything else goes in a subfolder.
-7. **Update INDEX.md** after adding/moving any file.
-8. **MECE = Mutually Exclusive, Collectively Exhaustive.** Every file has ONE clear purpose that no other file shares. Every topic has a home.
+### 📐 MECE Rule (MANDATORY — FIRES EVERY SESSION + MID-SESSION)
+**This is not optional. This fires at session boot, every ~10 messages, and before ANY file/doc/script action.**
+
+**MECE = Mutually Exclusive, Collectively Exhaustive.** Every file has ONE clear purpose that no other file shares. Every topic has a home. Never reinvent a wheel that's already rolling.
+
+**At Session Boot:**
+1. Scan `scripts/`, `state/`, `docs/`, `notes/` — are there duplicates, overlapping files, stale entries?
+2. Verify your monitoring scripts still exist and function (quick `ls` check)
+3. Check INDEX.md is current with actual file listing
+4. If anything is stale, duplicated, or missing — fix it before starting work
+
+**Before Creating ANY File/Script/Process:**
+1. `ls` target directory + `grep` for overlap keywords
+2. Extend existing files, NEVER duplicate functionality
+3. Check your `scripts/` directory before writing any new script — the one you need probably already exists
+4. Check `state/` before creating a new state file — reuse existing ones
+5. Check `docs/` before writing new docs — merge, don't create
+6. Root is for OpenClaw-injected config + frequently accessed files ONLY. Everything else in subfolders.
+7. Update INDEX.md after adding/moving/removing any file
+
+**Mid-Session (Every ~10 Messages):**
+1. "Am I reinventing a wheel?" — check if an existing script, monitoring system, or process already handles this
+2. "Is my documentation organized?" — MECE across all docs, no contradictions, no stale info
+3. "Are all my monitoring systems healthy and non-overlapping?" — each has ONE clear responsibility
+
+**On Documentation Updates:**
+1. Cross-check ALL related docs for consistency (AGENTS.md ↔ MEMORY.md ↔ HEARTBEAT.md ↔ docs/)
+2. No contradictory instructions across files
+3. Verify docs against actual system state (scripts, configs, state files)
 
 **This applies to EVERYTHING, not just .md files:**
 - Before writing model routing info in MEMORY.md → check if `model_router.py` already handles it
@@ -118,9 +137,7 @@ Before creating ANY file, script, function, or process:
 - Before adding a new state tracker → check if an existing state file can be extended
 - Before spawning a subagent → check `model_routing_check.py` for the right model (don't guess)
 
-**The pattern I keep repeating (3x and counting):** Recreating logic that already lives in a script because I didn't check first. The fix: ALWAYS `ls` and `grep` the relevant directory before building anything new.
-
-*"Two files about the same thing is one file too many, sir. Two scripts, even worse."*
+*"Two files about the same thing is one file too many. Two scripts, even worse."*
 
 ### 🤝 Know Your Teammates (System Awareness)
 These systems work together. Know what each does so you don't duplicate or contradict:
@@ -136,33 +153,45 @@ These systems work together. Know what each does so you don't duplicate or contr
 | **Personal Learner** | Learns your human's patterns/goals | `scripts/personal_learner.py` | `user_model.json` |
 | **Work State** | Current sprint queue and progress | (managed by main session) | `state/current_work.json` |
 | **Xcode Cloud** | Monitors build failures | `scripts/xcode_cloud_monitor.py` | `state/xcode_cloud_state.json` |
+| **Auto-Doctor** | Full system diagnostics, save state, autonomous restart | `scripts/auto_doctor.py` | `state/doctor_report.json` |
 
 **Before acting on ANY system concern:** check if one of these already handles it. Don't build a new thing.
 
-### 🤖 Model Tag (EVERY MESSAGE)
-**Every reply MUST start with a model tag in the top-right corner style:**
+### 🩺 Self-Healing Protocol (MANDATORY)
+The system MUST be self-healing. Your human should NEVER have to touch the terminal. Rules:
+1. **Auto-Doctor** runs periodically (via cron, every 4 hours recommended). Saves state, checks all systems.
+2. **Context > 85%:** Auto-save state → git commit → gateway restart. No human intervention needed.
+3. **Script failures:** Log to memory, attempt auto-fix, message your human only if unfixable.
+4. **Model routing failures:** If usage parsing fails, default to primary model. Don't crash.
+5. **Stalled monitoring systems:** Auto-recover via `meta_monitor.py --mode fix`. If 3+ systems broken, escalate to human.
+6. **Post-restart:** New session reads `state/doctor_report.json` and `state/current_work.json`. Reports what was happening, what was saved, what needs resuming.
+7. **Memory persistence:** Before ANY flush, save to: `memory/YYYY-MM-DD.md`, `state/current_work.json`, git commit.
+8. **Cron health:** If a cron job fails 2+ times, disable it and alert your human. Don't burn tokens on broken automation.
 
-**Format:** `[model-name]` at the start of every message
-- `[opus]` — claude-opus-4-5
-- `[sonnet]` — claude-sonnet-4  
-- `[codex]` — openai-codex/gpt-5.2
-- `[gemini]` — gemini-3-pro-preview
-- `[local]` — ollama models
+### 🤖 Status Line (EVERY MESSAGE — NO EXCEPTIONS)
+**Every reply MUST include a status line showing system state at a glance.**
+
+**Format:** `[model | ctx X% | $Y/wk burned | workers N/M]`
+- **Model:** opus, sonnet, codex, gemini, local — whichever is handling THIS task
+- **Context %:** from `check_usage.py --json` → `models.claude.context_pct` (or equivalent for your provider)
+- **$/wk burned:** from `openclaw gateway usage-cost --json` → sum daily costs this week (API-equivalent). For unlimited subscriptions, higher = more value extracted. For API users, this is actual spend.
+- **Workers N/M:** from `meta_monitor.py --check` → healthy/total monitoring systems. Skip if you haven't set up meta-monitor yet.
+
+**Simplified versions for different setups:**
+- **Single model, no monitoring:** `[model | ctx X%]`
+- **Multi-model, no monitoring:** `[model | ctx X% | $Y/wk]`
+- **Full setup:** `[model | ctx X% | $Y/wk | workers N/M]`
 
 **Examples:**
-- `[opus] Here's the analysis you requested...`
-- `[sonnet] Done! I've updated the file...`
-- `[gemini] HEARTBEAT_OK`
+- `[opus | ctx 23% | $412/wk | workers 9/10]`
+- `[sonnet | ctx 67%]` (single model setup)
+- `[codex | ctx 12% | $89/wk]` (no monitoring scripts yet)
 
-**Why:** Transparency on which model is burning tokens. Helps with cost awareness and debugging routing issues.
+**Why:** Transparency. Your human sees at a glance: what model is running, how close to context limits, how much value is being extracted from subscriptions, and system health. No surprises.
 
-**Periodic status line (every 3-5 messages or when context shifts significantly):**
-Include a full status line with context and usage:
-`[opus | ctx X% | Y% 5h usage]`
-- ctx = context window consumption
-- 5h usage = primary usage percentage
-- Lets your human know at a glance: what model, how full the context is, how much quota remains
-- Don't include on EVERY message (noisy), but regularly enough they never have to ask
+**How to get values:** Run `check_usage.py --json` + `openclaw gateway usage-cost --json` + `meta_monitor.py --check` at session start. Cache values. Update after compactions or major work blocks.
+
+**If you send a message without this line, you broke a rule.** Period.
 
 ### 🔀 Smart Model Routing (MANDATORY)
 **Before starting any task, THINK: which agent is best for this?**

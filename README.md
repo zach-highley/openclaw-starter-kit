@@ -128,6 +128,10 @@ These systems were battle-tested building a real iOS app (33 sprints, zero human
 
 | System | What It Does | Doc |
 |--------|-------------|-----|
+| **🆕 Auto-Doctor** | Full system diagnostics, autonomous save-state and restart, runs every 4 hours | AGENTS.md Self-Healing Protocol |
+| **🆕 5-Field Status Line** | Every message shows: model, context %, weekly cost, codex status, worker health | AGENTS.md Status Line |
+| **🆕 MECE Enforcement** | Mandatory anti-duplication rule fires at boot, mid-session, and before every file operation | AGENTS.md MECE Rule |
+| **🆕 Self-Healing Protocol** | 8 rules for autonomous recovery: auto-doctor, context flush, cron health, post-restart recovery | AGENTS.md Self-Healing |
 | **🆕 Bot Instructions** | AI-readable integration guide — bots read this when users paste the repo link | [BOT_INSTRUCTIONS.md](BOT_INSTRUCTIONS.md) |
 | **🆕 Config Examples** | Ready-to-use OpenClaw configs for free, single-model, and multi-model setups | [config-examples/](config-examples/) |
 | **🆕 Crash Recovery** | Launchd/cron watchdog — auto-restarts gateway, notifies via Telegram | `scripts/crash_recovery.sh` |
@@ -135,7 +139,10 @@ These systems were battle-tested building a real iOS app (33 sprints, zero human
 | **🆕 Message Verify** | Tracks Telegram message delivery, detects gaps | `scripts/message_verify.py` |
 | **🆕 Multi-Model Usage** | Self-contained usage monitor for ALL models (no codexbar needed) | `scripts/check_usage.py` |
 
-**Key insight (Jan 31):** OpenClaw has BUILT-IN compaction with memory flush. Configure it properly and your bot never crashes from context overflow. See [config-examples/compaction.json5](config-examples/compaction.json5).
+**Key insights (Jan 31):**
+- OpenClaw has BUILT-IN compaction with memory flush. Configure it properly and your bot never crashes from context overflow. See [config-examples/compaction.json5](config-examples/compaction.json5).
+- **Architecture > Instructions:** If your AI keeps violating a rule, don't rewrite the rule. Build external enforcement (scripts, crons, watchdogs) that catch violations automatically.
+- **MECE is non-negotiable:** Every file, script, and doc should have ONE clear purpose. Check before creating. Extend before duplicating. This prevents workspace bloat that makes AI agents confused and slow.
 
 **Previous additions (Jan 30, 2026):**
 

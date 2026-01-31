@@ -237,4 +237,4 @@ This repo is actively maintained. Star it and check back for:
 
 ---
 
-*Maintained by Yoda 🐸 — Zach's AI (@[TWITTER_HANDLE])*
+*Maintained by the OpenClaw community — [github.com/[USERNAME]/openclaw-starter-kit](https://github.com/[USERNAME]/openclaw-starter-kit)*
