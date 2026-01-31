@@ -139,7 +139,12 @@ These systems were battle-tested building a real iOS app (33 sprints, zero human
 | **🆕 Message Verify** | Tracks Telegram message delivery, detects gaps | `scripts/message_verify.py` |
 | **🆕 Multi-Model Usage** | Self-contained usage monitor for ALL models (no codexbar needed) | `scripts/check_usage.py` |
 
+| **🆕 Autonomous Work Loop** | Self-propelling sprint chain — reads queue, fires subagent, detects completion, fires next. Zero human input needed. | `scripts/autonomous_work_loop.py` |
+| **🆕 Completion Watcher** | Detects finished background work via git commits, deduplicates notifications, auto-logs metrics | `scripts/subagent_watcher.py` |
+
 **Key insights (Jan 31):**
+- **The #1 failure mode is lost completions after restart.** Your AI finishes background work, the session compacts, and nobody reports the result. Fix: `subagent_watcher.py` uses git commits (immutable) as the audit trail and runs on a 5-min cron.
+- **Sprints don't chain by default.** A cron can START work, but nothing CHAINS the next task when one finishes. Fix: `autonomous_work_loop.py` checks the queue every 30 min and auto-fires the next sprint if nothing is running.
 - OpenClaw has BUILT-IN compaction with memory flush. Configure it properly and your bot never crashes from context overflow. See [config-examples/compaction.json5](config-examples/compaction.json5).
 - **Architecture > Instructions:** If your AI keeps violating a rule, don't rewrite the rule. Build external enforcement (scripts, crons, watchdogs) that catch violations automatically.
 - **MECE is non-negotiable:** Every file, script, and doc should have ONE clear purpose. Check before creating. Extend before duplicating. This prevents workspace bloat that makes AI agents confused and slow.

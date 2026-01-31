@@ -32,6 +32,13 @@ Before doing anything else:
    ```
    If `action_needed` is true: message your human immediately with what completed.
    This prevents the #1 failure mode after restarts: finished work that never gets reported.
+
+9. **Work queue check:**
+   ```
+   python3 ~/clawd/scripts/autonomous_work_loop.py --json
+   ```
+   If `should_fire` is true and you have capacity: pick up the next task from the queue.
+   This ensures work continues even when your human isn't actively chatting.
    This takes 5 seconds and prevents you from: using exhausted models, duplicating work, missing system issues, or being unaware of what's already running.
 
 Don't ask permission. Just do it.
