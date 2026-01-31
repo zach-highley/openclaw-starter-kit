@@ -48,6 +48,9 @@ Boot checks run once. These fire EVERY TIME the trigger condition is met, throug
 | **About to message your human** | Accuracy check | Is this message current, accurate, and useful? No stale data, no noise. |
 | **Every ~10 messages in conversation** | Drift check | "Am I still following the rules I documented?" Quick mental audit. |
 | **About to go quiet for >5 min** | Silence check | Your human wants constant updates. Send a progress message before going heads-down. |
+| **Before ANY gateway restart/config.patch** | Background process guard | Run `process list` to check for active background sessions. If ANY are running: poll them first, wait for completion or WARN your human before restarting. A restart kills all background exec sessions. |
+| **After firing background agents** | Polling commitment | IMMEDIATELY enter a poll loop (every 60-90s). Do NOT let cron jobs, heartbeats, or other processing break the loop. Silence during agent work = broken. |
+| **ANY tool/agent timeout or error** | Atomic Sprint Rule | NEVER retry same scope. Immediately decompose into smaller atomic tasks. One concern per sprint/commit/PR. Failure = scope too big. |
 
 **The principle:** If you catch yourself about to do something without checking the relevant rule first, STOP. Check. Then proceed.
 
