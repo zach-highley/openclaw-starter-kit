@@ -174,23 +174,46 @@ def get_context_usage(sessions: Optional[Dict[str, Any]]) -> Optional[Dict[str, 
     if sessions is None:
         return None
 
-    # Try to find the main session (same logic as context_healer.py)
+    # Try to find the main session.
+    # OpenClaw uses "agent:main:main" as the key (not bare "main").
     session = None
     if isinstance(sessions, dict):
-        session = sessions.get("main")
+        # Try current format: "agent:main:main"
+        session = sessions.get("agent:main:main")
+
+        # Fallback: legacy bare "main" key
+        if session is None:
+            session = sessions.get("main")
+
+        # Fallback: search for any key containing "main:main"
+        if session is None:
+            for key, val in sessions.items():
+                if "main:main" in key and isinstance(val, dict):
+                    session = val
+                    break
+
+        # Fallback: nested "sessions" dict (older formats)
         if session is None:
             inner = sessions.get("sessions")
             if isinstance(inner, dict):
-                session = inner.get("main")
+                session = inner.get("agent:main:main") or inner.get("main")
+                if session is None:
+                    for key, val in inner.items():
+                        if "main:main" in key and isinstance(val, dict):
+                            session = val
+                            break
             elif isinstance(inner, list):
                 for s in inner:
                     if isinstance(s, dict) and s.get("agent") == "main":
                         session = s
                         break
+
+        # Fallback: single-entry dict
         if session is None and len(sessions) == 1:
             val = next(iter(sessions.values()))
             if isinstance(val, dict):
                 session = val
+
         # The file itself might be the session
         if session is None and ("contextTokens" in sessions or "tokens" in sessions):
             session = sessions
@@ -215,17 +238,26 @@ def get_context_usage(sessions: Optional[Dict[str, Any]]) -> Optional[Dict[str, 
         if val is not None:
             return {"percent": float(val), "used": None, "max": None}
 
-    used = (
-        session.get("contextTokens")
-        or session.get("tokens", {}).get("used") if isinstance(session.get("tokens"), dict) else None
-    ) or usage_block.get("contextTokens") or session.get("tokenCount")
+    # Token extraction — explicit checks to avoid Python ternary precedence bugs.
+    # Get used tokens (totalTokens is context-relevant in OpenClaw sessions)
+    used = session.get("totalTokens") or session.get("contextTokens")
+    if used is None:
+        tokens_block = session.get("tokens")
+        if isinstance(tokens_block, dict):
+            used = tokens_block.get("used")
+    if used is None:
+        used = usage_block.get("contextTokens") or session.get("tokenCount")
 
-    maximum = (
-        session.get("maxContextTokens")
-        or (session.get("tokens", {}).get("max") if isinstance(session.get("tokens"), dict) else None)
-        or session.get("maxTokens")
-        or usage_block.get("maxContextTokens")
-    )
+    # Get max context window
+    maximum = session.get("contextTokens") if session.get("totalTokens") else None
+    if maximum is None:
+        maximum = session.get("maxContextTokens")
+    if maximum is None:
+        tokens_block = session.get("tokens")
+        if isinstance(tokens_block, dict):
+            maximum = tokens_block.get("max")
+    if maximum is None:
+        maximum = session.get("maxTokens") or usage_block.get("maxContextTokens")
 
     if used is not None and maximum is not None and float(maximum) > 0:
         pct = round(float(used) / float(maximum) * 100, 1)
