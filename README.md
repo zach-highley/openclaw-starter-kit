@@ -1,7 +1,7 @@
 # 🐸 The OpenClaw Starter Kit
 ### Turn OpenClaw Into a Self-Healing, Multi-Model Autonomous AI System
 
-> **🔄 Migrating from Clawdbot or Moltbot?** Read [MIGRATION-FROM-CLAWDBOT.md](docs/MIGRATION-FROM-CLAWDBOT.md) first. It's a 2-minute upgrade, not a reinstall. Your config, memory, and sessions migrate automatically. Tested and verified.
+> **🔄 Migrating or Upgrading?** Read the [Migration & Upgrade Guide](docs/MIGRATION.md). Covers Clawdbot → OpenClaw, Moltbot → OpenClaw, and upgrading from older OpenClaw versions. 2-minute process, fully reversible, nothing gets lost.
 >
 > **🤖 Bot Health Checks:** Point your AI agent at [BOT-HEALTH-CHECKS.md](docs/BOT-HEALTH-CHECKS.md) to auto-verify updates, memory plugin, auth, compaction, and crash recovery. Updated frequently.
 
