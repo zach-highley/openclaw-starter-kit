@@ -2,6 +2,8 @@
 ### Turn OpenClaw Into a Self-Healing, Multi-Model Autonomous AI System
 
 > **🔄 Migrating from Clawdbot or Moltbot?** Read [MIGRATION-FROM-CLAWDBOT.md](docs/MIGRATION-FROM-CLAWDBOT.md) first. It's a 2-minute upgrade, not a reinstall. Your config, memory, and sessions migrate automatically. Tested and verified.
+>
+> **🤖 Bot Health Checks:** Point your AI agent at [BOT-HEALTH-CHECKS.md](docs/BOT-HEALTH-CHECKS.md) to auto-verify updates, memory plugin, auth, compaction, and crash recovery. Updated frequently.
 
 **What is OpenClaw?** It's a free, open-source tool that connects AI models (like Claude, ChatGPT, Gemini) to your phone via Telegram, WhatsApp, or Discord. Instead of going to a website to chat with AI, it comes to YOU — in your pocket, 24/7. This starter kit turns that basic chatbot into an autonomous AI employee.
 
