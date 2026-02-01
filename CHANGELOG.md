@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-02-01
+
+### Added
+- `docs/SIMPLIFICATION_GUIDE.md` — comprehensive guide to cutting bloat: 75 scripts → 25, 18 crons → 10, replacing custom monitoring with OpenClaw built-in tools (`openclaw doctor`, `openclaw status --deep`). Based on OpenClaw creator's philosophy.
+
+### Changed
+- Archived 11 outdated docs (meta-monitor, watchdog, agent poll enforcer, sprint system, etc.) to `docs/archive/`
+- Docs now reflect simplified approach: fewer scripts, built-in tools, minimal heartbeat
+
+### Removed
+- References to "Council" pattern (named monitoring scripts watching each other)
+- Over-engineered self-healing protocols (OpenClaw handles this natively)
+
 ## [2.2.0] - 2026-02-01
 
 ### Added
