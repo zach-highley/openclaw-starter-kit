@@ -23,10 +23,10 @@ import subprocess
 from pathlib import Path
 from datetime import datetime, timezone
 
-# === CONFIGURE THESE ===
-CLAWD = Path.home() / "clawd"  # Your workspace root
-STATE_FILE = CLAWD / "state" / "poll_enforcer_state.json"
-WORK_STATE = CLAWD / "state" / "current_work.json"
+# === WORKSPACE ===
+WORKSPACE = Path(os.environ.get("OPENCLAW_WORKSPACE", Path(__file__).resolve().parents[1])).expanduser().resolve()
+STATE_FILE = WORKSPACE / "state" / "poll_enforcer_state.json"
+WORK_STATE = WORKSPACE / "state" / "current_work.json"
 MAX_SILENCE_SEC = 300  # 5 minutes — adjust to taste
 
 def load_json(path):

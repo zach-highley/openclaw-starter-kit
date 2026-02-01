@@ -13,7 +13,7 @@ work and deduplicate notifications.
 
 What it does
 ------------
-- Detects the workspace directory (OPENCLAW_WORKSPACE → ~/clawd → ~/.openclaw/workspace → cwd)
+- Detects the workspace directory (OPENCLAW_WORKSPACE → ~/.openclaw/workspace → cwd)
 - Checks one or more git repos for commits in the last N minutes
 - Deduplicates commits already reported via a state file
 - Emits:
@@ -56,8 +56,8 @@ from typing import Any, Dict, List, Optional
 def detect_workspace() -> Path:
     env = os.environ.get("OPENCLAW_WORKSPACE")
     if env:
-        return Path(env)
-    for candidate in [Path.home() / "clawd", Path.home() / ".openclaw" / "workspace"]:
+        return Path(env).expanduser().resolve()
+    for candidate in [Path.home() / ".openclaw" / "workspace"]:
         if candidate.is_dir():
             return candidate
     return Path.cwd()
