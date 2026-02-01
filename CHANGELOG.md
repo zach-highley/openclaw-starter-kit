@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-02-01
+
+### Added
+- `docs/EMAIL_IMESSAGE_AUTOMATION.md` — comprehensive guide: Gmail MECE labels, server-side filters, Apple Mail Smart Mailboxes (with correct sub-label matching), Apple Mail Rules cleanup, iMessage security policy, VIP email scanner pattern
+- `docs/SECURITY_AUDIT_TEMPLATE.md` — template for running full security audits (secrets, permissions, network, dashboards, public repos)
+
+### Fixed
+- Documented common Apple Mail Smart Mailbox mistake: criteria must match **leaf** mailbox names (e.g., "Reply") not parent label paths (e.g., "Action/Reply")
+
 ## [2.1.0] - 2026-02-01
 
 ### Added
