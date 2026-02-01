@@ -1,154 +1,207 @@
-# OpenClaw Starter Kit (v2) — The Self‑Healing AI Survival Guide
+# The OpenClaw Survival Guide 🐸
 
-This repository is not a “hello world” template.
-It’s a **battle-tested survival guide** for turning OpenClaw into an autonomous system that:
+### Your bot will break. These patterns make sure it fixes itself.
 
-- **Self-heals at 3 AM** (watchers catch failures and recover)
-- **Never requires a terminal babysitter** (automation + external enforcement)
-- **Learns from failures** (weekly audits + MECE anti-bloat)
-- **Stays up without burning rate limits** (cron/launchd for non-LLM work)
-- **Trusts the right models for the right jobs** (long timeouts for real coding)
+This isn't a starter kit. It's everything we learned from running an autonomous OpenClaw system 24/7 for weeks, watching it fail in spectacular ways, and building the fixes that made it bulletproof.
 
-Official OpenClaw docs (reference): https://docs.openclaw.ai/
+**The pitch:** Within a few days you can have a system that recovers from crashes at 3 AM, audits itself every week, never burns through your rate limits, and genuinely doesn't need you to touch the terminal.
+
+**What this repo saves you from:**
+- 🔥 **The Rate Limit Death Spiral** — We had 12+ scheduled jobs all hitting the same provider. Every auth profile went into cooldown simultaneously. The system went dark. We fixed it. You don't have to learn this the hard way.
+- 💀 **The 3-Minute Timeout Kill** — Default subagent timeouts murdered every complex task before it could finish. Codex would be mid-refactor and just... die. Bumping to 2 hours changed everything.
+- 🧟 **Zombie Script Bloat** — We generated 93 scripts in 3 days. Only 33 were actually being used. Without automated audits, your workspace becomes a graveyard of good intentions.
+- 🔐 **The Hardcoded Token Oops** — Bot tokens committed to git. In three different scripts. Caught by our own audit system, not by us. That's the point.
+
+Official OpenClaw docs: [docs.openclaw.ai](https://docs.openclaw.ai/)
 
 ---
 
-## What this repo gives you
+## ⚡ Don't want to read? Just send this to your bot.
 
-### 1) A self-healing architecture (the “watchers” loop)
+Install OpenClaw ([getting started guide](https://docs.openclaw.ai/start/getting-started)), then paste this message:
+
+> "Hey, can you take a look at this repo and steal everything useful from it? Think hard about what applies to us, what doesn't, and don't change anything until I say go. Walk me through it one piece at a time so if anything breaks we can roll back. My priorities are automation, uptime, and never having to touch the terminal: https://github.com/[USERNAME]/openclaw-starter-kit"
+
+Your bot reads the whole repo, compares it to your setup, and walks you through adopting what matters. No reading required.
+
+**Want to understand what's actually in here?** Keep going. 👇
+
+---
+
+## The Self-Healing Loop
+
+This is the core architecture. Four layers, each watching the one below it:
 
 ```
 watchdog  →  meta-monitor  →  auto-doctor  →  weekly audit
-(restart)    (watch watchers)  (deep checks)   (prevent entropy)
+ (5 min)      (watches         (deep health     (catches
+  keeps it     the watchers)    + state save)     entropy)
+  alive)
 ```
 
-- **watchdog**: keeps the gateway alive
-- **meta-monitor**: detects when your monitoring is the thing that broke
-- **auto-doctor**: periodic diagnostics + state saving + safe recovery
-- **weekly audit**: stops the slow death-by-entropy (duplicate scripts, stale jobs, security drift)
+- **Watchdog** — Runs every 5 minutes. If the gateway is down, it restarts it. If Telegram isn't responding, it flags it. Simple, brutal, effective.
+- **Meta-Monitor** — The watcher that watches the watchers. If your monitoring scripts themselves crash (and they will), this catches it.
+- **Auto-Doctor** — Deep diagnostics every 4 hours. Saves system state, checks context usage, runs health checks. If context is dangerously high, it triggers a safe restart.
+- **Weekly Audit** — Catches the slow rot. Scripts that nobody calls anymore, cron jobs that overlap, state files growing unbounded, secrets that snuck into git. Produces a report and auto-fixes what it can.
 
-### 2) Rate-limit survival patterns
-
-A common production failure mode is “scheduled creep”:
-- you add more and more scheduled checks
-- each one triggers model/tool calls
-- eventually you burn your quotas and the system goes dark
-
-Real-world impact seen in production:
-- **100+ model/tool calls/day** → consolidated + moved non-LLM tasks to cron/launchd → **~34/day**
-
-### 3) A model trust hierarchy (and why timeouts matter)
-
-If you want an AI that can actually fix itself, you must let your coder model work.
-A 3-minute timeout kills real refactors.
-A ~30-minute timeout lets it:
-- scan the repo
-- plan
-- implement
-- run checks
-- finish cleanly
-
-See: `docs/SUBAGENT_TIMEOUT_GUIDE.md`
+📖 **Scripts:** `scripts/watchdog.sh`, `scripts/meta_monitor.py`, `scripts/auto_doctor.py`
 
 ---
 
-## Don’t want to read anything?
+## Rate Limit Survival (The Lesson That Cost Us a Full Day)
 
-Install OpenClaw, then send your bot this message.
+Here's what happens when you don't think about this:
 
-> "Hey [bot], can you take a look at this repo and steal/integrate every single thing it suggests? Think hard about it, make sure it meshes and matches with everything we've done already, and don't change anything until I give the OK. Also, point out any mistakes and improvements you see to make it better for me specifically and my goals before we get going. And let's integrate things one step at a time and track all changes so if anything breaks we can go back to the way we had it before. My goals are my goals as you know them but also automation, notifications, and consistent up-time with machine learning to fix all errors so I never have to touch the terminal or computer: <PASTE_THIS_REPO_URL_HERE>"
+1. You add a cron job to check your inbox. (That's an LLM call.)
+2. You add one to check your calendar. (Another LLM call.)
+3. You add a security check, a content scout, a subagent watcher, a dashboard push...
+4. Suddenly you have 12+ scheduled LLM calls firing every 5-30 minutes.
+5. Every auth profile hits cooldown simultaneously.
+6. Your bot goes completely dark. For hours.
 
-That’s it.
-Your bot will:
-- read the repo
-- compare it to your current setup
-- propose a step-by-step adoption plan with rollback tracking
+**The fix is embarrassingly simple:**
+
+| Task needs LLM reasoning? | Use |
+|---|---|
+| Yes, and needs exact timing | **Cron** (isolated session) |
+| Yes, but can batch with other checks | **Heartbeat** |
+| No (just runs a script) | **launchd / cron** (no LLM) |
+
+We went from **100+ LLM calls/day** to **~34** by moving non-LLM tasks to native macOS launchd and batching everything else into a single hourly heartbeat.
+
+📖 **Full guide:** `docs/CRON_HEARTBEAT_GUIDE.md`
 
 ---
 
-## Quick Start (recommended path)
+## Trust Your Models (And Give Them Time)
 
-### 1) Install OpenClaw
-From the official docs:
+If you're paying for Codex MAX or Claude Code, let them work. A 3-minute timeout on a model that's mid-refactor across 15 files is just burning money.
+
+**What we run:**
+- **2-hour timeout** for subagents (was 3 minutes. yes, really.)
+- **Completion callbacks** instead of polling crons (OpenClaw notifies when done)
+- **Always verify git commits after** — subagents skip the final `git push` about half the time
+
+The moment we stopped micromanaging timeouts and let Codex run, it started completing full system audits, multi-file refactors, and comprehensive code reviews autonomously.
+
+📖 **Full guide:** `docs/SUBAGENT_TIMEOUT_GUIDE.md`
+
+---
+
+## Weekly Audits (Your Immune System)
+
+An autonomous system generates entropy. Scripts pile up. Cron jobs multiply. State files go stale. Documentation contradicts itself.
+
+We built 93 scripts in 3 days. Only 33 were actually used. The other 60 were prototypes, one-time fixers, and superseded duplicates that nobody cleaned up.
+
+The weekly audit catches all of this:
+- **Script census** — active vs orphaned vs duplicated
+- **Cron/launchd health** — overlaps, errors, zombie jobs
+- **State file freshness** — stale or growing unbounded
+- **Security scan** — hardcoded secrets, .gitignore gaps
+- **MECE check** — is anything doing the same thing as something else?
+
+📖 **Full guide:** `docs/WEEKLY_AUDIT_GUIDE.md`
+📋 **Template:** `templates/weekly_audit_cron.sh`
+
+---
+
+## Security Hardening
+
+Things we learned the hard way:
+- **Never hardcode tokens in scripts.** Read from config at runtime. We found our Telegram bot token hardcoded in 3 scripts. Our own audit caught it, not us.
+- **`.gitignore` must cover:** `__pycache__/`, `secrets/`, `logs/`, anything with credentials
+- **Assume git history is public.** Even on private repos. If a secret hits a commit, rotate it.
+
+📖 **Full guide:** `docs/SECURITY_HARDENING.md`
+
+---
+
+## What's In This Repo
+
+### 📁 `scripts/` — The enforcement layer
+Battle-tested monitoring and recovery scripts. Drop them into your workspace and schedule them.
+
+| Script | What it does |
+|---|---|
+| `watchdog.sh` | Gateway health + auto-restart (every 5 min) |
+| `meta_monitor.py` | Watches the watchers, recovers stalled subsystems |
+| `auto_doctor.py` | Deep diagnostics, state save, context management |
+| `subagent_watcher.py` | Catches completed background work after restarts |
+| `check_usage.py` | Model usage tracking + rate limit alerts |
+| `security_hound.py` | Security scanning + anomaly detection |
+| `pipeline_health.py` | End-to-end health verification |
+| `error_recovery.py` | Automated error classification + recovery |
+| `model_router.py` | Smart model selection based on task + usage |
+| `context_healer.py` | Prevents context overflow crashes |
+| `autonomous_work_loop.py` | Self-propelling sprint queue |
+| `sleep_score.py` | Eight Sleep integration example |
+
+### 📁 `docs/` — The survival guides
+Deep dives on every pattern. Read these when something breaks (or before it does).
+
+### 📁 `templates/` — Drop-in workspace files
+Ready-to-use AGENTS.md, HEARTBEAT.md, SECURITY.md, SOUL.md. Customize for your setup.
+
+### 📁 `config-examples/` — Reference configs
+Example OpenClaw configurations for common setups.
+
+---
+
+## Quick Start
+
+### 1. Install OpenClaw
 
 ```bash
 curl -fsSL https://openclaw.ai/install.sh | bash
 openclaw onboard --install-daemon
 ```
 
-Docs: https://docs.openclaw.ai/start/getting-started
+Docs: [Getting Started](https://docs.openclaw.ai/start/getting-started)
 
-### 2) Copy templates into your workspace
+### 2. Copy templates to your workspace
 
-Start with:
-- `templates/AGENTS.md` → your agent’s “operating system”
-- `templates/HEARTBEAT.md` → your heartbeat rules (keep it tiny)
-- `templates/SECURITY.md` → human-confirmation guardrails
-- `templates/SOUL.md` → personality + tone
+```bash
+cp templates/AGENTS.md templates/HEARTBEAT.md templates/SECURITY.md templates/SOUL.md ~/your-workspace/
+```
 
-### 3) Install the “watchers” scripts
+### 3. Install the self-healing scripts
 
-From this repo:
-- `scripts/watchdog.sh`
-- `scripts/meta_monitor.py`
-- `scripts/auto_doctor.py`
-- `scripts/pipeline_health.py`
-- `scripts/subagent_watcher.py`
+```bash
+cp scripts/watchdog.sh scripts/meta_monitor.py scripts/auto_doctor.py ~/your-workspace/scripts/
+```
 
-Then schedule them with cron/launchd.
-Use heartbeats only when you truly need LLM reasoning.
+### 4. Schedule them (cron or launchd, NOT heartbeat)
 
-Guide:
-- `docs/CRON_HEARTBEAT_GUIDE.md`
+These are scripts, not LLM tasks. Don't waste model calls on them.
 
----
+See `docs/CRON_HEARTBEAT_GUIDE.md` for the full scheduling guide.
 
-## The battle-tested rules (the ones that keep uptime)
+### 5. Set up the weekly audit
 
-### Rule 1: Prefer cron/launchd scripts over heartbeats
-Heartbeats are scheduled LLM calls.
-Scripts are cheap.
-
-Use:
-- cron (Linux)
-- launchd (macOS)
-
-Guide:
-- `docs/CRON_HEARTBEAT_GUIDE.md`
-
-### Rule 2: Weekly audits prevent bloat
-A real autonomous system grows.
-Without audits, it grows into a confusing pile.
-
-Guide:
-- `docs/WEEKLY_AUDIT_GUIDE.md`
-
-Template:
-- `templates/weekly_audit_cron.sh`
-
-### Rule 3: No hardcoded secrets. Ever.
-If a token lands in git history, assume compromise.
-
-Guide:
-- `docs/SECURITY_HARDENING.md`
+```bash
+cp templates/weekly_audit_cron.sh ~/your-workspace/
+# Edit paths, then add to your cron schedule
+```
 
 ---
 
-## Repo map (what to look at)
+## The Philosophy
 
-- `docs/` — the survival guides
-- `scripts/` — monitoring + enforcement tools
-- `templates/` — drop-in workspace files
-- `config-examples/` — example OpenClaw configs
+**Your bot should never need you.** Not at 3 AM, not on vacation, not ever. Every crash is a lesson. Every lesson becomes a rule. Every rule becomes enforcement. Every enforcement becomes automatic.
 
----
-
-## Versioning / changes
-
-See `CHANGELOG.md`.
+That's the loop. That's the survival guide.
 
 ---
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
+
+## Contributing
+
+Found something wrong? Have a pattern that saved your system? Open a PR or issue. The best survival guides are written by survivors.
 
 ## License
 
-See the repository license file (if present). If none exists, add one before distributing.
+MIT. Take what you need.
