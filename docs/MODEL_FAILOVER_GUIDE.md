@@ -63,25 +63,24 @@ Fallback triggers when ALL profiles for the primary provider fail. Not on every 
 
 ## Recommended Patterns
 
-### Pattern 1: Two subscriptions, same provider (best for MAX users)
+### Pattern 1: Single subscription with emergency fallback chain
 ```json5
 {
-  "auth": {
-    "order": {
-      "anthropic": ["anthropic:primary", "anthropic:secondary"]
-    }
-  },
   "agents": {
     "defaults": {
       "model": {
         "primary": "anthropic/claude-opus-4-5",
-        "fallbacks": []  // intentionally empty — don't fall to worse models
+        "fallbacks": [
+          "anthropic/claude-sonnet-4",     // same provider, cheaper model
+          "nvidia-nim/moonshotai/kimi-k2.5", // free tier emergency
+          "ollama/qwen2.5:14b"             // local, always available
+        ]
       }
     }
   }
 }
 ```
-Two MAX accounts = double the rate limits. When one is cooling down, the other takes over seamlessly.
+Failover only triggers when the provider returns rate limit errors and ALL profiles are in cooldown. Your primary model stays active until it physically can't respond. This means the "shittier" models in the chain only activate in genuine emergencies.
 
 ### Pattern 2: Multi-provider fallback chain
 ```json5
@@ -132,7 +131,9 @@ This prevents surprises. If you can see you're at 90% of weekly usage on Tuesday
 
 ## Key Insight: Subscription Users
 
-If you're on MAX/Pro subscriptions, **auth profile rotation is more valuable than model fallback.** Two accounts on the same excellent model beats one account with fallback to a worse model. The rate limits are per-account, so two accounts = 2x the throughput before any degradation.
+If you have multiple accounts on the same provider, **auth profile rotation gives you more runway before failover kicks in.** Rate limits are per-account, so two accounts = 2x throughput before degradation. But even with a single account, OpenClaw's cooldown + exponential backoff means your primary model gets every possible chance before falling to a backup.
+
+The failover chain is your safety net, not your daily driver. Keep your best model as primary and let OpenClaw's built-in retry logic handle transient rate limits. The fallbacks are for when things are genuinely exhausted.
 
 ## Reference
 - [Model Failover docs](https://docs.openclaw.ai/concepts/model-failover)
