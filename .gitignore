@@ -1,8 +1,8 @@
-__pycache__/
-*.pyc
-.DS_Store
-*.log
-state/*.json
 !state/*.example.json
 !state/.gitkeep
+*.log
+*.pyc
+.DS_Store
+__pycache__/
 scripts/__pycache__/
+state/*.json
