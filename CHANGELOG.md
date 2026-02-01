@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-02-01
+
+### Added
+- `docs/CONTENT_GENERATION_GUIDE.md` — how to use OpenClaw sub-agents for bulk structured content generation (JSON articles, curriculum, educational content). Includes schema design, parallel dispatch, fact-checking, token economics, and common pitfalls.
+
 ## [2.3.0] - 2026-02-01
 
 ### Added
