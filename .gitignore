@@ -5,3 +5,4 @@ __pycache__/
 state/*.json
 !state/*.example.json
 !state/.gitkeep
+scripts/__pycache__/
