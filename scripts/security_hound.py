@@ -24,8 +24,10 @@ import hashlib
 from datetime import datetime, timedelta
 from pathlib import Path
 
-# === CONFIGURATION (customize these paths) ===
-WORKSPACE = Path.home() / "clawd"
+# === WORKSPACE ===
+# Default: parent directory of this script's folder.
+# Override: OPENCLAW_WORKSPACE=/path/to/workspace
+WORKSPACE = Path(os.environ.get("OPENCLAW_WORKSPACE", Path(__file__).resolve().parents[1])).expanduser().resolve()
 MEMORY_FILE = WORKSPACE / "memory" / "security-hound.json"
 
 # Critical files to monitor for unauthorized changes

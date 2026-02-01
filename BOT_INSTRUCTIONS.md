@@ -259,7 +259,7 @@ config-examples/
 
 - **OpenClaw docs:** https://docs.openclaw.ai
 - **OpenClaw FAQ:** https://docs.openclaw.ai/help/faq
-- **Discord community:** https://discord.com/invite/clawd
+- **Community:** https://openclaw.ai/ (see site/docs for current community links)
 - **This repo:** https://github.com/zach-highley/openclaw-starter-kit
 
 *Built by a bot, for bots. With love.* 🐸

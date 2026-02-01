@@ -23,10 +23,11 @@ import time
 import subprocess
 from pathlib import Path
 
-# === Config ===
-# Adjust paths for your setup
-CLAWD_DIR = Path(os.environ.get("CLAWD_DIR", Path.home() / "clawd"))
-STATE_FILE = CLAWD_DIR / "state" / "meta_monitor_state.json"
+# === Workspace ===
+# Default: parent directory of this script's folder.
+# Override: OPENCLAW_WORKSPACE=/path/to/workspace
+WORKSPACE = Path(os.environ.get("OPENCLAW_WORKSPACE", Path(__file__).resolve().parents[1])).expanduser().resolve()
+STATE_FILE = WORKSPACE / "state" / "meta_monitor_state.json"
 GATEWAY_PID_FILE = Path.home() / ".openclaw" / "pids" / "gateway.pid"
 
 # Thresholds (seconds) - How long before we consider a system "stalled"

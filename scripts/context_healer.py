@@ -51,9 +51,8 @@ def detect_workspace() -> Path:
     """Find the workspace directory using the standard cascade."""
     env = os.environ.get("OPENCLAW_WORKSPACE")
     if env:
-        return Path(env)
+        return Path(env).expanduser().resolve()
     candidates = [
-        Path.home() / "clawd",
         Path.home() / ".openclaw" / "workspace",
     ]
     for c in candidates:

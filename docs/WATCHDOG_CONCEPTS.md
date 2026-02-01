@@ -128,10 +128,10 @@ When you use multiple auth profiles for the same provider and hit rate limits, A
 
 ## Quickstart
 
-1.  Ensure scripts are in your scripts directory (e.g. `~/clawd/scripts/`).
+1.  Ensure scripts are in your workspace `scripts/` directory (e.g. `$OPENCLAW_WORKSPACE/scripts/`).
 2.  Add `watchdog.sh` to your crontab or launchd (every 5 mins).
     ```bash
-    */5 * * * * /bin/bash ~/clawd/scripts/watchdog.sh
+    */5 * * * * /bin/bash "$OPENCLAW_WORKSPACE/scripts/watchdog.sh"
     ```
 3.  (Optional) Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` for direct Telegram fallback.
 4.  Relax. If it breaks, it fixes itself. And it'll tell you about it.

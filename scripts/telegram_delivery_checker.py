@@ -14,7 +14,7 @@ SETUP:
     TELEGRAM_CHAT_ID    — Your Telegram chat ID
   
   Or configure in your watchdog.sh:
-    DELIVERY_CHECKER="$HOME/clawd/scripts/telegram_delivery_checker.py"
+    DELIVERY_CHECKER="$OPENCLAW_WORKSPACE/scripts/telegram_delivery_checker.py"
 """
 
 import json
@@ -25,10 +25,10 @@ import time
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
-# === Config (set via environment variables or edit defaults) ===
-CLAWD_DIR = Path(os.environ.get("CLAWD_DIR", Path.home() / "clawd"))
-STATE_FILE = CLAWD_DIR / "state" / "telegram_delivery_state.json"
-LOG_FILE = Path.home() / ".openclaw/logs/watchdog.log"
+# === Workspace ===
+WORKSPACE = Path(os.environ.get("OPENCLAW_WORKSPACE", Path(__file__).resolve().parents[1])).expanduser().resolve()
+STATE_FILE = WORKSPACE / "state" / "telegram_delivery_state.json"
+LOG_FILE = Path.home() / ".openclaw" / "logs" / "watchdog.log"
 
 BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "YOUR_BOT_TOKEN_HERE")
 CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "YOUR_CHAT_ID_HERE")
