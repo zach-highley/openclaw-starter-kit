@@ -43,6 +43,17 @@ watchdog  →  meta-monitor  →  auto-doctor  →  weekly audit
 
 Scripts: `scripts/watchdog.sh`, `scripts/meta_monitor.py`, `scripts/auto_doctor.py`
 
+### Beginner-friendly option: safe out-of-band watchdog (recommended)
+
+If you just want something **simple** and **security-first** that can restart the gateway even when OpenClaw is down, use the **safe-dumb out-of-band watchdog**.
+
+- Docs: `docs/WATCHDOG_OOB_SAFE.md`
+- Install (opt-in):
+
+```bash
+./tools/watchdog/install_launchd.sh
+```
+
 ---
 
 ## Rate limit survival

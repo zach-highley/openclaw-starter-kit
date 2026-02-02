@@ -10,33 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `docs/AUTONOMY_CADENCE.md` — minimal, MECE autonomy cadence (hourly updates, twice-daily recaps, daily docs upkeep).
 - `docs/DELIVERY_GOTCHAS.md` — how to avoid the "job ran but nothing delivered" failure mode (systemEvent vs agentTurn).
 - `docs/PRIME_DIRECTIVE.md` — public-safe operating philosophy.
-- `docs/TELEGRAM_SETUP.md` — robust Telegram runbook: numeric chat IDs, topics/thread IDs, typing indicators, safe restart/doctor flows.
-- `docs/RESCUE_BOT_PROFILE.md` — optional second isolated Gateway profile for recovery when the main instance bricks.
-- `docs/NIGHT_SHIFT.md` — overnight autonomy + high-signal update templates.
-- `docs/WORKSTREAMS.md` — best-practice pattern: one canonical chat + single source of truth workstreams file (SSOT).
-- `templates/WORKSTREAMS_TEMPLATE.md` — copy-paste SSOT template for new setups.
 - `config-examples/autonomy-cadence.json5` — safe, user-agnostic config snippet (timezone, typing indicators, heartbeat + messaging defaults).
-- `scripts/auto_update.py` — optional weekly Homebrew update helper (dry-run unless `--apply`).
-- `scripts/auto_cleanup.py` — optional weekly cleanup helper (workspace-scoped; dry-run unless `--apply`).
-- `scripts/fix_readme_typo.py` — minimal, safe "autofix" helper used by the GitHub issue triage example.
-- `scripts/archive/.gitkeep` — placeholder directory for archived scripts (anti-bloat).
-- `scripts/changelog_guard.sh` — lightweight guard that requires `CHANGELOG.md` updates when `docs/` or `scripts/` change.
-- `templates/githooks/pre-commit` — optional pre-commit hook template that runs the changelog guard.
-- `docs/CHANGELOG_GUARD.md` — instructions for enabling the guard locally or in CI.
-
-### Changed
-- `scripts/watchdog.sh` rewritten to be **single-gateway-safe** (uses `openclaw gateway status/start/restart`, avoids `nohup`/`pkill`).
-- `docs/BOT-HEALTH-CHECKS.md` rewritten to align with docs.openclaw.ai (strict schema validation, correct plugin guidance, correct Telegram CLI target requirements).
-- `docs/DELIVERY_GOTCHAS.md` expanded with Telegram specifics: `openclaw message send` requires `--target`, topics require `--thread-id`/`:topic:` encoding.
-- `scripts/meta_monitor.py` rewritten to be minimal and non-crashing; compat with `auto_doctor.py` calling conventions.
-- `config-examples/memory-optimized.json5` rewritten to be schema-aligned.
-- Removed Claude Sonnet assumptions across starter-kit docs and examples; default guidance is Opus primary with cross-provider fallbacks.
-- Updated multi-model config example to: Opus → Codex → Gemini → Kimi → Ollama.
-- `docs/NIGHT_SHIFT.md` now links to the workstreams pattern.
-- `docs/SYSTEM_MAINTENANCE.md` updated to match shipped scripts and safe defaults (`--apply` gates changes).
-- `BOT_INSTRUCTIONS.md` updated to remove references to non-shipped crash recovery installers; points to OpenClaw's built-in gateway service control.
-- Archived docs in `docs/archive/` now clearly marked as archived, with broken cross-links and removed-script references cleaned up.
-- Changelog file paths updated to reflect archived doc locations.
+- Safe out-of-band gateway watchdog package (opt-in): `tools/watchdog/*` + docs `docs/WATCHDOG_OOB_SAFE.md`.
 
 ## [2.4.0] - 2026-02-01
 
@@ -95,7 +70,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `docs/WEEKLY_AUDIT_GUIDE.md` — automated weekly self-audits with feedback loops
 - `docs/SECURITY_HARDENING.md` — patterns for preventing hardcoded secrets and secure git workflows
 - `docs/SUBAGENT_BEST_PRACTICES.md` — comprehensive guide to spawning, monitoring, and recovering subagents
-- `docs/archive/SELF_REVIEW.md` — self-review and HIT/MISS tracking patterns (archived)
+- `docs/SELF_REVIEW.md` — self-review and HIT/MISS tracking patterns
 - `scripts/auto_doctor.py` — full system diagnostics (sanitized from production)
 - `scripts/pipeline_health.py` — multi-pipeline health checks
 - `scripts/error_recovery.py` — automated error recovery patterns
@@ -121,18 +96,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 - `docs/COMMUNICATION_PATTERNS.md` — background process guard, polling, atomic sprints
-- `docs/archive/AGENT_POLL_ENFORCER.md` — enforcing background agent polling (archived)
+- `docs/AGENT_POLL_ENFORCER.md` — enforcing background agent polling
 - `docs/GIT_PUSH_SECURITY.md` — security patterns for git workflows
-- `docs/archive/XCODE_CLOUD_MONITOR.md` — Xcode Cloud CI/CD monitoring (archived)
-- `docs/archive/HYBRID_CODING_WORKFLOW.md` — 8-step multi-model coding pipeline (archived)
+- `docs/XCODE_CLOUD_MONITOR.md` — Xcode Cloud CI/CD monitoring
+- `docs/HYBRID_CODING_WORKFLOW.md` — 8-step multi-model coding pipeline (Claude + Codex)
 - `docs/MODEL_ROUTING.md` — intelligent model orchestration with degradation curves
-- `docs/archive/SPRINT_SYSTEM.md` — sprint management and notification patterns (archived)
-- `docs/archive/META_MONITOR.md` — meta-monitoring concepts (archived)
-- `docs/archive/META_LEARNING.md` — learning from failures automatically (archived)
-- `docs/archive/BUILD_MONITOR.md` — build monitoring patterns (archived)
-- `docs/archive/WATCHDOG_CONCEPTS.md` — self-healing and self-learning watchdog design (archived)
+- `docs/SPRINT_SYSTEM.md` — sprint management and notification patterns
+- `docs/META_MONITOR.md` — meta-monitoring concepts (watching the watchers)
+- `docs/META_LEARNING.md` — learning from failures automatically
+- `docs/BUILD_MONITOR.md` — build monitoring patterns
+- `docs/WATCHDOG_CONCEPTS.md` — self-healing and self-learning watchdog design
 - `docs/BOT-HEALTH-CHECKS.md` — comprehensive bot health check guide
-- `docs/archive/WORK_LOOP.md` — autonomous work loop design (archived)
+- `docs/WORK_LOOP.md` — autonomous work loop design
 - `docs/SYSTEM_MAINTENANCE.md` — weekly auto-maintenance tasks
 - `scripts/agent_poll_enforcer.py` — enforces subagent polling intervals
 - `scripts/git_push_guard.sh` — pre-push security checks
@@ -159,6 +134,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 - Hardened language throughout: "recommended" → "required", enforcement not suggestions
+
+## [Unreleased]
+
+### Added
+- `docs/NIGHT_SHIFT.md` — overnight autonomy + high-signal update templates
+- `docs/WORKSTREAMS.md` — best-practice pattern: one canonical chat + single source of truth workstreams file (SSOT)
+- `templates/WORKSTREAMS_TEMPLATE.md` — copy-paste SSOT template for new setups
+
+### Changed
+- Removed Claude Sonnet assumptions across starter-kit docs/examples, default guidance is now Opus primary with cross-provider fallbacks.
+- Updated multi-model config example to: Opus → Codex → Gemini → Kimi → Ollama.
+- `docs/NIGHT_SHIFT.md` now links to the workstreams pattern.
 
 ## [0.1.0] - 2026-01-28
 
