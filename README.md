@@ -14,7 +14,12 @@ Official docs: [docs.openclaw.ai](https://docs.openclaw.ai/)
 
 ## Quick start (no reading required)
 
-Install OpenClaw ([getting started](https://docs.openclaw.ai/start/getting-started)), then paste this to your bot:
+Install OpenClaw ([getting started](https://docs.openclaw.ai/start/getting-started)).
+
+If you are upgrading from older bots or older OpenClaw, start here:
+- **docs/MIGRATION.md**
+
+Then paste this to your bot:
 
 > "Read this repo and tell me what's useful for our setup. Don't change anything yet, just walk me through it: https://github.com/zach-highley/openclaw-starter-kit"
 
