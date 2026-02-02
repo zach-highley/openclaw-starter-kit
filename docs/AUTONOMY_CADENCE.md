@@ -74,3 +74,4 @@ Related docs:
 - Heartbeat: https://docs.openclaw.ai/gateway/heartbeat
 - Cron: https://docs.openclaw.ai/cli/cron
 - Hooks: https://docs.openclaw.ai/cli/hooks
+- CLI backends: https://docs.openclaw.ai/gateway/cli-backends
