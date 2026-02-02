@@ -74,6 +74,8 @@ Guide: `docs/CRON_HEARTBEAT_GUIDE.md`
 
 Night shift updates (overnight autonomy + high-signal Telegram templates): `docs/NIGHT_SHIFT.md`
 
+Last-resort fallback (text-only, tools disabled): `docs/CLI_BACKENDS.md`
+
 ---
 
 ## Subagent timeouts
