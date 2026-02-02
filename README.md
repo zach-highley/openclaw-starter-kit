@@ -67,6 +67,8 @@ I went from 100+ LLM calls/day to ~34 by moving non-LLM tasks to launchd and bat
 
 Guide: `docs/CRON_HEARTBEAT_GUIDE.md`
 
+Night shift updates (overnight autonomy + high-signal Telegram templates): `docs/NIGHT_SHIFT.md`
+
 ---
 
 ## Subagent timeouts
