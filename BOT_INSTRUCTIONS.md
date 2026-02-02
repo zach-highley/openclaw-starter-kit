@@ -132,6 +132,14 @@ Add to your OpenClaw config:
 
 Copy `templates/HEARTBEAT.md` to your workspace. Customize the checks for YOUR setup. Remove checks for tools you don't have.
 
+### Make updates actually fire (recommended)
+Most people get bitten by a simple failure mode: "the job ran but nothing was delivered".
+
+Read these docs before adding lots of automation:
+- `docs/AUTONOMY_CADENCE.md` — a minimal cadence (hourly + 2x daily + docs upkeep)
+- `docs/DELIVERY_GOTCHAS.md` — systemEvent vs agentTurn, deliver vs silent runs
+- `docs/PRIME_DIRECTIVE.md` — the operating philosophy
+
 ### Step 5: Integrate Level 3 (Machine)
 
 **Crash recovery (CRITICAL):**

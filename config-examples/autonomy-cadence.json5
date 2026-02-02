@@ -1,0 +1,55 @@
+// Autonomy cadence example (safe, user-agnostic)
+//
+// NOTE: Replace placeholders:
+// - <YOUR_TELEGRAM_ID>
+// - <YOUR_CHANNEL>
+//
+// This example focuses on:
+// - heartbeat for periodic awareness
+// - cron for guaranteed scheduled reporting
+
+{
+  agents: {
+    defaults: {
+      userTimezone: "America/New_York", // change to your timezone
+      envelopeTimezone: "user",
+      timeFormat: "12",
+
+      // Typing indicators: set to "instant" if you want maximum liveness.
+      typingMode: "instant",
+      typingIntervalSeconds: 4,
+
+      heartbeat: {
+        every: "60m",
+        target: "last",
+      },
+    },
+  },
+
+  // Channels: keep it simple. Start with ONE.
+  channels: {
+    telegram: {
+      enabled: true,
+      // token via onboarding or channels add
+      // botToken: "...",
+      dmPolicy: "pairing",
+      groupPolicy: "allowlist",
+      streamMode: "off",
+    },
+  },
+
+  messages: {
+    queue: {
+      mode: "collect",
+      byChannel: {
+        telegram: "collect",
+      },
+    },
+    inbound: {
+      debounceMs: 1500,
+      byChannel: {
+        telegram: 4000,
+      },
+    },
+  },
+}

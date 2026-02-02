@@ -67,6 +67,11 @@ I went from 100+ LLM calls/day to ~34 by moving non-LLM tasks to launchd and bat
 
 Guide: `docs/CRON_HEARTBEAT_GUIDE.md`
 
+### Autonomy cadence (that actually fires)
+- Hourly “I’m alive” progress updates: `docs/AUTONOMY_CADENCE.md`
+- Make sure scheduled jobs actually send: `docs/DELIVERY_GOTCHAS.md`
+- Prime directive philosophy: `docs/PRIME_DIRECTIVE.md`
+
 Night shift updates (overnight autonomy + high-signal Telegram templates): `docs/NIGHT_SHIFT.md`
 
 ---
