@@ -1,14 +1,18 @@
-// Config for users with MULTIPLE AI models
-// Routes tasks to the right model, with fallback chain
-// 
-// Customize model names for your providers
+// Config for users with MULTIPLE models
+// Goal: never get locked out when one provider is rate-limited.
+// - Primary: Claude Opus (conversation + strategy)
+// - Cross-provider fallbacks: Codex → Gemini → Kimi → Local
+//
+// Apply via `config.patch` (preferred) so you do not clobber existing config.
 {
   "agents": {
     "defaults": {
       "model": {
-        "primary": "anthropic/claude-sonnet-4",
+        "primary": "anthropic/claude-opus-4-5",
         "fallbacks": [
-          "google-gemini-cli/gemini-2.5-pro",
+          "openai-codex/gpt-5.2",
+          "google-gemini-cli/gemini-3-pro-preview",
+          "nvidia-nim/moonshotai/kimi-k2.5",
           "ollama/qwen2.5:14b"
         ]
       },
@@ -31,15 +35,16 @@
         }
       },
       "heartbeat": {
-        "every": "1h"
+        "every": "55m"
       },
       "subagents": {
         "maxConcurrent": 4,
         "model": {
           "primary": "openai-codex/gpt-5.2",
           "fallbacks": [
-            "anthropic/claude-sonnet-4",
-            "google-gemini-cli/gemini-2.5-pro"
+            "google-gemini-cli/gemini-3-pro-preview",
+            "nvidia-nim/moonshotai/kimi-k2.5",
+            "ollama/qwen2.5:14b"
           ]
         }
       },

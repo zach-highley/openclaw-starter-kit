@@ -101,7 +101,7 @@ def discover_models(config: Optional[Dict[str, Any]]) -> List[Dict[str, str]]:
     """
     Walk the openclaw.json config and collect every model reference.
 
-    Returns a list of dicts: {"id": "anthropic/claude-sonnet-4", "role": "primary", "label": "Anthropic"}
+    Returns a list of dicts: {"id": "anthropic/claude-opus-4-5", "role": "primary", "label": "Anthropic"}
     """
     if config is None:
         return []
