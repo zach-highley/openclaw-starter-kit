@@ -132,10 +132,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 - `docs/NIGHT_SHIFT.md` — overnight autonomy + high-signal update templates
+- `docs/WORKSTREAMS.md` — best-practice pattern: one canonical chat + single source of truth workstreams file (SSOT)
+- `templates/WORKSTREAMS_TEMPLATE.md` — copy-paste SSOT template for new setups
 
 ### Changed
 - Removed Claude Sonnet assumptions across starter-kit docs/examples, default guidance is now Opus primary with cross-provider fallbacks.
 - Updated multi-model config example to: Opus → Codex → Gemini → Kimi → Ollama.
+- `docs/NIGHT_SHIFT.md` now links to the workstreams pattern.
 
 ## [0.1.0] - 2026-01-28
 

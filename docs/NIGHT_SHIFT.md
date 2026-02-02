@@ -71,5 +71,6 @@ Option B (advanced): cron → isolated `agentTurn`
 - A dedicated isolated night-shift agent compiles progress from git + state files and sends the update.
 
 See also:
+- `docs/WORKSTREAMS.md` (canonical chat + SSOT workstreams)
 - `docs/CRON_HEARTBEAT_GUIDE.md`
 - `docs/COMMUNICATION_PATTERNS.md`
