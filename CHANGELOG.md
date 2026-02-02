@@ -128,6 +128,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 - Hardened language throughout: "recommended" → "required", enforcement not suggestions
 
+## [Unreleased]
+
+### Added
+- `docs/NIGHT_SHIFT.md` — overnight autonomy + high-signal update templates
+
+### Changed
+- Removed Claude Sonnet assumptions across starter-kit docs/examples, default guidance is now Opus primary with cross-provider fallbacks.
+- Updated multi-model config example to: Opus → Codex → Gemini → Kimi → Ollama.
+
 ## [0.1.0] - 2026-01-28
 
 ### Added
