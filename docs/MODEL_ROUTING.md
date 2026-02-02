@@ -1,22 +1,24 @@
-# MODEL_ROUTING.md — Intelligent Model Orchestration
+# MODEL_ROUTING.md — Intelligent Model Routing (No Lockouts)
 
 ## TL;DR
 
-**Multiple models, one brain.** Your orchestrator model picks the best specialist for each task. Background tasks never touch the main model. Local fallback means you can't hit zero.
+**One brain, multiple specialists.** Keep Claude Opus as your primary conversational model, route coding to Codex, and always keep cross-provider fallbacks so you never get trapped in a single provider cooldown.
 
-## The Stack
+## Recommended Stack
 
 | Tier | Role | Model | When It's Used |
 |------|------|-------|----------------|
-| T0 | 🧠 Orchestrator | Claude Opus | Strategy, reasoning, decisions, main chat |
-| T1 | 💻 Code Specialist | OpenAI Codex | Code generation, refactoring, scripts |
-| T2 | 📡 Background/Bulk | Google Gemini | Heartbeats, summarization, bulk processing |
-| T3 | ⚡ Fallback | Claude Sonnet | Cheaper reasoning, coding fallback |
-| T4 | 🏠 Local Emergency | Ollama | Offline, all cloud exhausted |
+| T0 | 🧠 Primary chat | Claude Opus (`anthropic/claude-opus-4-5`) | Strategy, reasoning, day-to-day conversation |
+| T1 | 💻 Code specialist | Codex (`openai-codex/gpt-5.2`) | Implementation, refactors, scripts |
+| T2 | 📡 Bulk/background | Gemini (`google-gemini-cli/gemini-3-pro-preview`) | Summaries, bulk processing, routine heartbeats |
+| T3 | ⚡ Cloud fallback | Kimi (`nvidia-nim/moonshotai/kimi-k2.5`) | When Anthropic/OpenAI are rate-limited |
+| T4 | 🏠 Local emergency | Ollama (`ollama/qwen2.5:14b`) | Offline or all cloud exhausted |
 
-## Smart Routing
+**Explicit design choice:** this repo does **not** rely on Claude Sonnet. If you want Sonnet, add it yourself. The starter kit default is: *Opus always, then cross-provider fallbacks*.
 
-The model router (`scripts/model_router.py`) handles all routing decisions:
+## Router Script
+
+The model router (`scripts/model_router.py`) is a lightweight helper for humans and bots:
 
 ```bash
 # Show all model statuses
@@ -24,43 +26,26 @@ python3 scripts/model_router.py --show-all
 
 # Get recommendation for a task
 python3 scripts/model_router.py --task-type coding
-
-# Mark a model as exhausted (persists across sessions)
-python3 scripts/model_router.py --set-codex-status exhausted --codex-resets "2026-02-03"
-
-# Check before spawning any subagent
-python3 scripts/model_routing_check.py --task coding --json
 ```
-
-## Codex CLI vs Codex Code Review
-
-**These are different products with separate quotas:**
-
-| Product | What it does | Quota |
-|---------|-------------|-------|
-| Codex CLI/API | Writes code, executes tasks | ChatGPT Plus weekly messages |
-| Codex Code Review | Reviews PRs on GitHub | Separate quota entirely |
-
-When Codex CLI is exhausted, the router automatically falls back to Claude Code (Sonnet) for coding tasks. The status persists in `state/codex_status.json` and auto-resets when the expiry date passes.
 
 ## Degradation Curve
 
-As usage increases, cheaper models take priority:
+As usage or rate limits kick in, prefer models that keep the system alive:
 
-| Usage % | Available Models |
-|---------|-----------------|
-| 0-70% | All models |
-| 70-80% | All (watching) |
-| 80-90% | Sonnet, Codex, Gemini, Local |
-| 90-95% | Sonnet, Codex, Gemini, Local |
-| 95-100% | Codex, Gemini, Local |
-| 100% | Gemini, Local only |
+| Claude usage % | Allowed models |
+|---------------|----------------|
+| 0-80% | Opus, Codex, Gemini, Kimi, Local |
+| 80-95% | Codex, Gemini, Kimi, Local |
+| 95-100% | Gemini, Kimi, Local |
+| 100% | Local only (or whatever still authenticates) |
 
 ## Session Boot
 
 Every new session should run:
+
 ```bash
 python3 scripts/model_router.py --show-all
-python3 scripts/check_usage.py
+python3 scripts/check_usage.py --json
 ```
-This prevents using exhausted models or wasting tokens on the wrong specialist.
+
+This prevents accidentally using a provider that is already in cooldown.
