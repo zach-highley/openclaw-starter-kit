@@ -106,6 +106,16 @@ Guide: `docs/WEEKLY_AUDIT_GUIDE.md` | Template: `templates/weekly_audit_cron.sh`
 
 ---
 
+## GitHub issue triage bot (optional)
+
+A conservative, **opt-in** triage loop that uses the `gh` CLI to list open issues and either:
+- comments with clarifying questions (signed as **Yoda (automation bot)**), or
+- opens a PR for label-driven “autofix” rules (disabled by default)
+
+Guide: `docs/GITHUB_ISSUE_TRIAGE_BOT.md`
+
+---
+
 ## Security
 
 Things I found the hard way:

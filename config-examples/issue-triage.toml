@@ -1,0 +1,39 @@
+# GitHub issue triage bot config
+#
+# Copy to: ./issue-triage.toml (recommended: keep it out of git)
+# Then run:
+#   python3 scripts/gh_issue_triage.py --dry-run
+#   python3 scripts/gh_issue_triage.py --apply
+#
+# The gh CLI must be authenticated and have repo permissions.
+
+[repo]
+# REQUIRED: "owner/name" (example below)
+full_name = "zach-highley/openclaw-starter-kit"
+# Usually "main" but make it match your repo
+default_branch = "main"
+
+[bot]
+# Used for git commits created by the autofix flow.
+# NOTE: GitHub issue comments will be authored by whichever account your GH token belongs to.
+# These values only affect commit metadata + the signature inside comments.
+git_name = "Yoda (automation bot)"
+git_email = "yoda-bot@users.noreply.github.com"
+comment_signature = "— Yoda (automation bot)"
+
+[autofix]
+# Safety switch. If false, bot will NOT open PRs or commit anything.
+enabled = false
+
+# Autofix rules are opt-in and label-driven.
+# The bot will only run a rule if the issue has the matching label.
+#
+# Example:
+#
+# [[autofix.rules]]
+# name = "readme-typo"
+# issue_label = "autofix:readme-typo"
+# commands = [
+#   "python3 scripts/some_fix_script.py",
+#   "python3 -m compileall -q .",
+# ]
