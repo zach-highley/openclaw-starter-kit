@@ -1,6 +1,7 @@
 {
-  "available": false,
-  "resets_at": "2026-02-03T09:46:00",
-  "reason": "ChatGPT Plus weekly quota exhausted",
-  "updated_at": "2026-01-30T08:00:00"
+  "available": true,
+  "resets_at": null,
+  "reason": "Example: Codex subscription active",
+  "tier": "max",
+  "updated_at": "2026-01-01T00:00:00Z"
 }

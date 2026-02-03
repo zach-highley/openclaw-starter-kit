@@ -173,7 +173,7 @@ Key docs:
 
 AGENTS.md, HEARTBEAT.md, SECURITY.md, SOUL.md. Customize for your setup.
 
-### `config-examples/` — Reference Configs
+### `config/examples/` — Reference Configs
 
 ---
 

@@ -28,7 +28,7 @@ The script signs its comments as **“Yoda (automation bot)”**.
 1) Copy the config example:
 
 ```bash
-cp config-examples/issue-triage.toml ./issue-triage.toml
+cp config/examples/issue-triage.toml ./issue-triage.toml
 # edit repo.full_name
 $EDITOR ./issue-triage.toml
 ```

@@ -248,7 +248,7 @@ docs/
   archive/HYBRID_CODING_WORKFLOW.md — Historical multi-model pipeline (archived)
   (and more — read as needed)
 
-config-examples/
+config/examples/
   compaction.json5         — Compaction config for different tiers
   single-model.json5       — Config for single-model users
   multi-model.json5        — Config for multi-model power users

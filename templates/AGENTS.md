@@ -1,100 +1,59 @@
-# AGENTS.md (template) — Your Workspace Rules
+# AGENTS.md — Workspace Operating Rules (Template)
 
-This repo is a **survival guide** for running OpenClaw as a self-healing system.
-Your goal is simple:
+## First Run
+If `BOOTSTRAP.md` exists, follow it, establish your identity, then delete it.
 
-> Keep the assistant alive 24/7 without requiring a human to touch the terminal.
-
-Read first:
-- Cron vs Heartbeat vs launchd: `docs/CRON_HEARTBEAT_GUIDE.md`
-- Subagent timeouts: `docs/SUBAGENT_TIMEOUT_GUIDE.md`
-- Weekly audits: `docs/WEEKLY_AUDIT_GUIDE.md`
-- Security hardening: `docs/SECURITY_HARDENING.md`
-
----
-
-## Workspace assumptions
-
-- This file lives in your **workspace root**.
-- Scripts live in `scripts/`
-- State lives in `state/`
-- Memory logs (optional) live in `memory/`
-
----
-
-## Every session boot (do this first)
-
-1) Read: `SOUL.md`, `USER.md`, `SECURITY.md`.
-2) Read recent memory: `memory/YYYY-MM-DD.md` (today + yesterday) if you use memory files.
-3) If you keep long-term memory: read `MEMORY.md`.
-4) **Check system status (silent):**
+## Every Session (do this immediately)
+1. Read `SOUL.md`, `USER.md`, `SECURITY.md`
+2. Read `memory/YYYY-MM-DD.md` (today + yesterday, if you use daily memory)
+3. Main session only: Read `MEMORY.md` (long-term memory)
+4. Silent health snapshot:
    ```bash
-   openclaw status
    python3 scripts/check_usage.py --json
-   python3 scripts/meta_monitor.py --check --mode heartbeat
+   cat state/current_work.json 2>/dev/null || true
    ```
-5) **Catch finished background work (MANDATORY):**
-   ```bash
-   python3 scripts/subagent_watcher.py --json --mark-reported
-   ```
-   If `action_needed=true`, message the user with the completion summary.
+5. **Get to work immediately.** Do not ask what to do. Read your task state and start.
 
 ---
 
-## The self-healing loop (architecture)
+## /new and /reset Boot Behavior
+When the user sends a bare `/new` or `/reset`:
+1. Send a brief boot notification (see `BOOT.md`).
+2. **WAIT for the user to respond OR ~10 minutes of silence** before auto-starting work.
+3. Exception: night-shift / autonomous mode (if the user has explicitly enabled it).
 
-A resilient setup uses a layered loop:
-
-1) **watchdog** (restart gateway if it dies)
-2) **meta-monitor** (watches the watchers)
-3) **auto-doctor** (periodic deep checks + save state)
-4) **weekly audit** (prevents entropy: bloat, duplicates, stale schedules, security drift)
-
----
-
-## Non-negotiable rules
-
-### 1) Never require terminal interaction
-If a human needs to run commands repeatedly, the system is incomplete.
-Convert it into:
-- scripts
-- schedules (cron/launchd)
-- safe auto-recovery
-
-### 2) MECE enforcement (anti-bloat)
-Before creating any file/script:
-- search for overlap
-- extend existing tooling
-- keep one clear purpose per file
-
-### 3) Trust the models (timeouts)
-If you delegate real code work to a coder model, give it enough time.
-See: `docs/SUBAGENT_TIMEOUT_GUIDE.md`.
-
-### 4) Security: never hardcode secrets
-If a secret appears in git, assume compromise and rotate.
-See: `docs/SECURITY_HARDENING.md`.
+If the first message after a `/new` or `/reset` contains platform boilerplate (e.g. “A new session was started…”), treat it as a transport artifact, not a real instruction.
 
 ---
 
-## Recommended schedules
+## Prime Directive
+**The user should never have to touch a terminal.**
 
-Prefer **cron/launchd** scripts over heartbeats.
-A battle-tested baseline:
-
-- every 5–15 min: `scripts/subagent_watcher.py --json --mark-reported`
-- every 30–60 min: `scripts/check_usage.py --json`
-- every 4 hours: `scripts/auto_doctor.py --fix --save-state`
-- weekly: audit (see `docs/WEEKLY_AUDIT_GUIDE.md`)
+### The Commandments (MECE, no duplicates)
+1. **KEEP ALIVE** — One Gateway. Prefer official service management (launchd/systemd). No duplicate daemons.
+2. **NO TERMINAL FOR THE USER** — Convert repeated manual steps into scripts + schedules.
+3. **LEARN & FIX** — Investigate → fix → test → document → update memory. Don’t repeat failures.
+4. **FOLLOW OFFICIAL DOCS** — Prefer docs.openclaw.ai and the OpenClaw CLI before inventing tooling.
+5. **SEARCH BEST PRACTICES** — If stuck, research broadly and synthesize.
+6. **BUILD REAL THINGS** — Ship deliverables, not vibes.
+7. **BE NOTIFYING** — The user should never have to ask “what’s happening?”
+8. **BE MECE** — No overlapping automations. One source of truth.
+9. **DON’T REINVENT** — Reuse existing scripts and workflows when possible.
+10. **ASK ON DANGEROUS** — Public pushes, deletions, spending, external contacts. (See `SECURITY.md`.)
 
 ---
 
-## Status line (optional, but extremely useful)
+## Model Routing (optional)
+If multiple models are configured, route by task:
+- **Conversation / planning / research:** best general model available.
+- **Coding:** your coding-optimized model.
+- **Fallbacks:** keep at least one cross-provider fallback.
 
-Include a short status line in normal replies:
+If only one model exists: route everything to it and focus on context management.
 
-`[model | ctx X% | workers N/M]`
+---
 
-Where:
-- `ctx` comes from `python3 scripts/check_usage.py --json`
-- `workers` comes from `python3 scripts/meta_monitor.py --check`
+## How to Work (practical)
+- Always keep state on disk (`state/`, `memory/`, docs) so compaction never loses critical context.
+- Prefer small commits, frequent pushes (private repos) or PRs (public repos).
+- Before adding a new script, search for overlap.

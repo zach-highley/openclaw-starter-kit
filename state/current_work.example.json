@@ -1,23 +1,28 @@
 {
-  "_comment": "Copy this to current_work.json and fill in your project details",
-  "active": true,
-  "task": "my-project-sprints",
-  "description": "Autonomous sprint queue for my project",
-  "queue": ["S1", "S2", "S3"],
-  "completed": [],
-  "inProgress": null,
-  "specFiles": {
-    "S1": "/path/to/your/project/SPRINT_S1_SPEC.md",
-    "S2": "/path/to/your/project/SPRINT_S2_SPEC.md",
-    "S3": "/path/to/your/project/SPRINT_S3_SPEC.md"
-  },
-  "project": "/path/to/your/project",
-  "notifyUser": true,
-  "retryOnRateLimit": true,
-  "rateLimitRetryMinutes": 15,
-  "maxRetries": 3,
-  "autoNewAfterSprints": 3,
-  "createdAt": "2026-01-01T00:00:00Z",
-  "lastUpdated": "2026-01-01T00:00:00Z",
-  "log": []
+  "updated": "2026-01-01T00:00:00Z",
+  "focus": "Example: Week 1 — Setup + Reliability",
+  "completed": [
+    "Example: Installed OpenClaw Gateway",
+    "Example: Set up Telegram delivery"
+  ],
+  "running": [
+    {
+      "id": "TASK-001",
+      "title": "Example: Configure compaction + heartbeat",
+      "status": "IN_PROGRESS",
+      "notes": "Keep critical state on disk before compaction."
+    }
+  ],
+  "next": [
+    {
+      "id": "TASK-002",
+      "title": "Example: Add weekly audit",
+      "status": "QUEUED"
+    }
+  ],
+  "metrics": {
+    "commits_today": 0,
+    "docs_updated_today": 0,
+    "scripts_updated_today": 0
+  }
 }

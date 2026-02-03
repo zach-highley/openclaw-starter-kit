@@ -1,12 +1,30 @@
-# BOOT.md - Gateway Restart Startup
+# BOOT.md — Startup / Gateway Restart Hook (Template)
 
-On gateway restart, verify critical systems are healthy:
+Runs on Gateway startup via the `boot-md` hook.
 
-1. Check state files exist and are valid JSON
-2. Run background work watcher — report any completions
-3. Verify memory files exist: `memory/$(date +%Y-%m-%d).md`, `MEMORY.md`
-4. **ALWAYS message the user** confirming restart is complete (context %, worker health, any issues)
-5. **IMMEDIATELY resume work** — read your task list, pick the highest-priority incomplete item, and start executing. Restarts are invisible speed bumps, not stop signs. The restart notification and first work action happen in the SAME response.
-6. If anything failed, include failure details in your message
+## Goal
+Confirm the system is alive, state is readable, and the next action is clear.
 
-Keep this tiny. Full checks happen in HEARTBEAT.md.
+## Boot Checklist
+1. Read `state/current_work.json` (if present) and determine:
+   - what is currently running
+   - what should resume next
+2. Run a quick usage snapshot:
+   ```bash
+   python3 scripts/check_usage.py --json
+   ```
+3. Send a brief **boot notification** to the user:
+   - Gateway restarted/healthy
+   - Context/usage snapshot (brief)
+   - “Resuming: <task>” or “Standing by”
+4. If there is an in-progress task, resume it.
+5. If there is no task, stand by for instructions.
+
+## Important
+- Keep this file small. Deep checks belong in `HEARTBEAT.md`.
+- Do not hardcode chat IDs or tokens in this repo.
+
+## Gateway Rules (critical)
+- Prefer `openclaw gateway status|start|restart|stop`.
+- Avoid running duplicate gateways.
+- If you suspect multiple processes exist, verify and reconcile before doing anything else.

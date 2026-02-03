@@ -1,20 +1,24 @@
 #!/bin/bash
 # git_push_guard.sh — Verify repo visibility before pushing
-# Run before any git push to confirm private/public status
+# Called before any git push to confirm private/public status
+# Usage: git_push_guard.sh /path/to/repo
 #
 # Exit 0 = private (safe to push)
-# Exit 1 = public (STOP — needs security confirmation)  
+# Exit 1 = public (STOP — needs security confirmation)
 # Exit 2 = error (couldn't determine — treat as public)
 
 REPO_DIR="${1:-.}"
 cd "$REPO_DIR" || exit 2
 
+# Get remote URL
 REMOTE_URL=$(git remote get-url origin 2>/dev/null)
 if [ -z "$REMOTE_URL" ]; then
     echo "ERROR: No git remote found"
     exit 2
 fi
 
+# Extract owner/repo from URL
+# Handles: https://github.com/owner/repo.git, git@github.com:owner/repo.git
 REPO_SLUG=$(echo "$REMOTE_URL" | sed -E 's|.*github\.com[:/]([^/]+/[^/.]+)(\.git)?$|\1|')
 
 if [ -z "$REPO_SLUG" ]; then
@@ -22,6 +26,7 @@ if [ -z "$REPO_SLUG" ]; then
     exit 2
 fi
 
+# Check visibility via gh CLI
 VISIBILITY=$(gh repo view "$REPO_SLUG" --json visibility -q '.visibility' 2>/dev/null)
 
 if [ "$VISIBILITY" = "PRIVATE" ]; then

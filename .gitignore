@@ -1,9 +1,34 @@
+# === Starter-kit defaults ===
+
+# Keep example state tracked
 !state/*.example.json
 !state/.gitkeep
-*.log
-*.pyc
+
+# OS / editor
 .DS_Store
+.idea/
+.vscode/
+
+# Python
 __pycache__/
-scripts/__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+
+# Logs
+*.log
+
+# Secrets / env
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local state (never commit real state)
 state/*.json
+
+# User-local config (copy from config/examples)
 /issue-triage.toml

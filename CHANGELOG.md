@@ -40,7 +40,7 @@ The new approach: Trust the platform. Launchd IS the watchdog. One cron for main
 - `docs/AUTONOMY_CADENCE.md` — minimal, MECE autonomy cadence (hourly updates, twice-daily recaps, daily docs upkeep).
 - `docs/DELIVERY_GOTCHAS.md` — how to avoid the "job ran but nothing delivered" failure mode (systemEvent vs agentTurn).
 - `docs/PRIME_DIRECTIVE.md` — public-safe operating philosophy.
-- `config-examples/autonomy-cadence.json5` — safe, user-agnostic config snippet (timezone, typing indicators, heartbeat + messaging defaults).
+- `config/examples/autonomy-cadence.json5` — safe, user-agnostic config snippet (timezone, typing indicators, heartbeat + messaging defaults).
 - Safe out-of-band gateway watchdog package (opt-in): `tools/watchdog/*` + docs `docs/WATCHDOG_OOB_SAFE.md`.
 
 ### Changed
@@ -81,7 +81,7 @@ The new approach: Trust the platform. Launchd IS the watchdog. One cron for main
 - `docs/MODEL_FAILOVER_GUIDE.md` — subscription patterns, cooldown behavior, auth rotation for single and multi-account setups
 - `docs/OPENCLAW_FAQ_AUDIT.md` — FAQ and common gotchas audited against docs.openclaw.ai
 - `templates/BOOT.md` — new session boot template for first-run onboarding
-- `config-examples/memory-optimized.json5` — config tuned for memory-heavy workloads
+- `config/examples/memory-optimized.json5` — config tuned for memory-heavy workloads
 
 ### Changed
 - Rewrote `README.md` — honest, technical, solo dev voice. No marketing fluff.
@@ -157,9 +157,9 @@ The new approach: Trust the platform. Launchd IS the watchdog. One cron for main
 - Codex sub-selection (model + effort level per task type)
 - Hard-gate model availability checks for coding tasks
 - Periodic status line with context% and usage%
-- `config-examples/single-model.json5` — minimal single-model config
-- `config-examples/multi-model.json5` — multi-model with failover
-- `config-examples/compaction.json5` — compaction-tuned config
+- `config/examples/single-model.json5` — minimal single-model config
+- `config/examples/multi-model.json5` — multi-model with failover
+- `config/examples/compaction.json5` — compaction-tuned config
 - `templates/AGENTS.md` — workspace rules template
 - `templates/HEARTBEAT.md` — heartbeat template
 - `templates/SECURITY.md` — security rules template
@@ -172,14 +172,25 @@ The new approach: Trust the platform. Launchd IS the watchdog. One cron for main
 ## [Unreleased]
 
 ### Added
+- `templates/USER.md` — user profile template for fast personalization.
 - `docs/NIGHT_SHIFT.md` — overnight autonomy + high-signal update templates
 - `docs/WORKSTREAMS.md` — best-practice pattern: one canonical chat + single source of truth workstreams file (SSOT)
 - `templates/WORKSTREAMS_TEMPLATE.md` — copy-paste SSOT template for new setups
 
 ### Changed
+- Moved `config-examples/` → `config/examples/` and updated all references.
+- Updated `templates/AGENTS.md` to match current workspace operating rules (sanitized, user-agnostic).
+- Updated `templates/BOOT.md` and `templates/HEARTBEAT.md` to remove hardcoded chat IDs and reflect current best practices.
+- Updated `state/current_work.example.json` schema to match the current “focus + completed + running + next + metrics” pattern.
+- Updated `state/codex_status.example.json` to include `tier` and current fields.
+- Replaced `scripts/check_usage.py` and `scripts/git_push_guard.sh` with the current versions from the working setup.
+- Hardened `.gitignore` to prevent committing secrets (`.env`, keys) and build artifacts (`__pycache__`, `.venv`).
 - Removed Claude Sonnet assumptions across starter-kit docs/examples, default guidance is now Opus primary with cross-provider fallbacks.
 - Updated multi-model config example to: Opus → Codex → Gemini → Kimi → Ollama.
 - `docs/NIGHT_SHIFT.md` now links to the workstreams pattern.
+
+### Fixed
+- Removed stray local build artifacts (`__pycache__/`, `*.pyc`, `.DS_Store`) from the repo working tree.
 
 ## [0.1.0] - 2026-01-28
 

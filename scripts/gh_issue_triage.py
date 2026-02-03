@@ -13,7 +13,7 @@ Requires:
 - git
 
 Config:
-- TOML file (see config-examples/issue-triage.toml)
+- TOML file (see config/examples/issue-triage.toml)
 
 "Yoda (automation bot)" is a signature inside comments/commits; the GitHub user
 that actually posts is whichever account your GH token belongs to.
@@ -334,7 +334,7 @@ def main() -> int:
     cfg_path: Path = args.config
     if not cfg_path.exists():
         print(
-            f"Config not found: {cfg_path}. Copy config-examples/issue-triage.toml and edit repo.full_name.",
+            f"Config not found: {cfg_path}. Copy config/examples/issue-triage.toml and edit repo.full_name.",
             file=sys.stderr,
         )
         return 2

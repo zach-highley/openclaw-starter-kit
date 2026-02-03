@@ -7,7 +7,7 @@ This is intentionally simple:
 
 Why this exists:
 - The issue triage bot supports label-driven autofix rules.
-- Examples in docs and config-examples should reference real files in this repo.
+- Examples in docs and config/examples should reference real files in this repo.
 
 Usage:
   python3 scripts/fix_readme_typo.py --path README.md --old 'teh' --new 'the' --apply
