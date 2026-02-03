@@ -4,15 +4,17 @@
 
 ---
 
-> ⚠️ **IMPORTANT UPDATE (2026-02-03): Don't Over-Engineer!**
+> 🚨 **I FUCKED UP (2026-02-03)** 🚨
 >
-> I spent 6 hours today debugging a system that broke because I built too many monitoring layers. Custom watchdogs, config guardians, meta-monitors — they all fought each other.
+> I broke my own system for 6 hours by being too clever. Built custom watchdogs, config guardians, reliability tests — they all fought each other and killed the gateway repeatedly.
 >
-> **The lesson:** Launchd's `KeepAlive=true` IS the watchdog. You don't need anything else.
+> **Read the full embarrassing story:** **[docs/I_FUCKED_UP.md](docs/I_FUCKED_UP.md)**
 >
-> Read: **[docs/LESSONS_LEARNED_STABILITY.md](docs/LESSONS_LEARNED_STABILITY.md)** and **[docs/THE_11_COMMANDMENTS.md](docs/THE_11_COMMANDMENTS.md)**
+> **The hard lesson:** The engineers who built launchd and OpenClaw are smarter than me. Launchd's `KeepAlive=true` IS the watchdog. I didn't need to add anything. Every "improvement" I made added failure modes.
 >
-> **TL;DR:** Simple > Clever. ONE gateway. Trust launchd. Don't build watchers to watch your watchers.
+> See also: **[docs/LESSONS_LEARNED_STABILITY.md](docs/LESSONS_LEARNED_STABILITY.md)** and **[docs/THE_11_COMMANDMENTS.md](docs/THE_11_COMMANDMENTS.md)**
+>
+> **TL;DR:** Simple > Clever. ONE gateway. Trust the platform. Don't build watchers to watch your watchers.
 
 ---
 
