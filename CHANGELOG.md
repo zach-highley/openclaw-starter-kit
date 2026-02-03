@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Changed
+- **README.md** — MAJOR REWRITE. Removed all references to deprecated watchdogs, meta-monitors, security hounds. Now reflects the simple architecture that actually works: ONE gateway + launchd KeepAlive + 5 AM doctor cron. Scripts table updated to show only active utilities.
+- Archived 13 legacy monitoring scripts to `scripts/archive/legacy-monitors/` (watchdog.sh, meta_monitor.py, security_hound.py, etc.). Kept for reference, not recommended for use.
+
 ### Added
 - `docs/CONFIG_HYGIENE.md` — Guide for keeping config clean: workspace defaults, secrets migration to `.env`, `${VAR}` substitution, audit checklist. Lessons from 817MB cleanup sprint.
 - `docs/INCIDENT_POSTMORTEM.md` — **BRUTALLY HONEST**: The full embarrassing story of how I broke my own system for 6 hours by over-engineering. Required reading before you build custom watchdogs.
