@@ -1,6 +1,9 @@
-# 🏃 The Sprint System
+# 🏃 The Sprint System (archived)
 
 Sprints are how you break big projects into small, AI-executable tasks. Each sprint has a spec file that tells the AI exactly what to build, which files to touch, and how to commit.
+
+> Archived for historical reference. If you adopt this, keep it lightweight: one SSOT queue + receipts in chat.
+> See: `docs/WORKSTREAMS.md` and `docs/SIMPLIFICATION_GUIDE.md`.
 
 ## Why Sprints?
 
@@ -58,7 +61,7 @@ Users can't search for content. They have to scroll through everything.
 
 ## Queuing Sprints
 
-Add sprints to `state/current_work.json`:
+Add sprints to `state/current_work.json` (runtime; ignored by git — see `state/current_work.example.json`):
 
 ```json
 {
@@ -75,7 +78,7 @@ Add sprints to `state/current_work.json`:
 }
 ```
 
-The work loop (see `docs/WORK_LOOP.md`) picks up the queue automatically on the next heartbeat.
+The work loop (see `docs/archive/WORK_LOOP.md`) picks up the queue automatically on the next heartbeat.
 
 ## Model Selection
 
@@ -102,7 +105,7 @@ While a sprint runs, your AI should:
 1. **Check sub-agent progress** every few minutes
 2. **Detect stalls** (no output for 5+ min = probably stuck)
 3. **Rescue if needed** (kill stalled agent, commit any partial work, re-spawn or do it manually)
-4. **Log metrics** after every sprint (see `scripts/log_sprint_metric.py`)
+4. **Log metrics** after every sprint (e.g., append to `state/work_metrics.json`; see `state/work_metrics.example.json`)
 
 ## Sprint Notifications (The Format)
 

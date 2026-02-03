@@ -1,6 +1,8 @@
-# 🔄 The Autonomous Work Loop
+# 🔄 The Autonomous Work Loop (archived)
 
-The work loop is the core engine that lets your AI work through a queue of tasks autonomously — spawning sub-agents, tracking progress, recovering from failures, and reporting results. It survives crashes, session resets, and context clears because everything is stored in a JSON state file.
+The work loop is the core engine that lets your AI work through a queue of tasks autonomously — spawning sub-agents, tracking progress, recovering from failures, and reporting results.
+
+> Archived for historical reference. This pattern can be powerful, but it’s easy to over-automate. Prefer the simpler SSOT pattern (`docs/WORKSTREAMS.md`) + OpenClaw built-ins (`openclaw doctor`, `openclaw status --deep`) unless you truly need a full work-queue engine.
 
 ## How It Works (Simple Version)
 
@@ -11,7 +13,7 @@ monitors progress → logs result → picks next task → repeat
 
 That's it. You go shower, sleep, or work on other things. Your AI keeps building.
 
-## The State File: `state/current_work.json`
+## The State File: `state/current_work.json` (runtime; ignored by git)
 
 This is the brain. Everything the work loop needs to know lives here:
 
@@ -116,7 +118,7 @@ When a model hits its usage cap:
 
 ## Metrics & Learning
 
-Every sprint logs to `state/work_metrics.json`:
+Every sprint logs to `state/work_metrics.json` (runtime; ignored by git — see `state/work_metrics.example.json`):
 - Which agent was used
 - How long it took
 - Success or failure
@@ -127,7 +129,22 @@ Over time, you learn:
 - Average completion times (for better ETAs)
 - Failure patterns to avoid
 
-Use `python3 scripts/log_sprint_metric.py --summary` to see your stats.
+To summarize, use a quick one-liner (or your own script). Example:
+
+```bash
+python3 - <<'PY'
+import json
+from pathlib import Path
+p = Path('state/work_metrics.json')
+if not p.exists():
+    print('No state/work_metrics.json yet')
+    raise SystemExit(0)
+rows = json.loads(p.read_text()) if p.read_text().strip() else []
+print('entries:', len(rows))
+PY
+```
+
+(See `state/work_metrics.example.json` for the intended shape.)
 
 ## Session Reset Protocol
 
@@ -140,7 +157,7 @@ When context gets full (~85%), the work loop:
 
 ## Getting Started
 
-1. Write sprint spec files (see `docs/SPRINT_SYSTEM.md`)
+1. Write sprint spec files (see `docs/archive/SPRINT_SYSTEM.md`)
 2. Create `state/current_work.json` (see `state/current_work.example.json`)
 3. Add the work loop check to your `HEARTBEAT.md`
 4. Let it run!

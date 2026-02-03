@@ -1,4 +1,7 @@
-# Xcode Cloud Build Monitor
+# Xcode Cloud Build Monitor (archived)
+
+> Archived design note. The reference implementation scripts are **not shipped** in this starter kit.
+> Prefer the Xcode Cloud UI + notifications, and use OpenClaw to summarize/follow up instead of auto-pushing fixes.
 
 ## What It Does
 
@@ -24,7 +27,7 @@ Add to your HEARTBEAT.md:
 
 ```markdown
 ## Xcode Cloud Build Monitor (every heartbeat)
-Run `python3 scripts/xcode_cloud_monitor.py` and check:
+Run your Xcode Cloud monitor and check:
 - If `has_failures` is true AND `is_repeat` is false: auto-fix with Codex
 - If `is_repeat` is true: escalate to user (avoid infinite fix loops)
 - Max 2 auto-fix attempts per unique error set
@@ -50,4 +53,4 @@ The monitor searches all accounts and deduplicates by thread ID.
 - HTML email parsing is fragile — the `XcodeEmailParser` handles Apple's specific format but may need updating if Apple changes their email template
 - **Always run a local build** (`xcodebuild`) to verify fixes before pushing — Xcode Cloud builds are slow and you don't want another failure email
 
-See `scripts/build_monitor.py` for the sanitized template.
+See `docs/archive/BUILD_MONITOR.md` for the (archived) high-level design.

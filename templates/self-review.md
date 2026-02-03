@@ -13,4 +13,4 @@ FIX|KEEP: what to do about it
 
 <!-- Your agent will populate this automatically during heartbeat self-reviews. -->
 <!-- First entries appear after your bot has been running for a few hours. -->
-<!-- See docs/SELF_REVIEW.md for the full guide. -->
+<!-- See docs/archive/SELF_REVIEW.md for the full (archived) guide. -->

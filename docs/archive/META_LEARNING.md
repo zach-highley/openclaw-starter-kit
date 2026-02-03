@@ -1,6 +1,10 @@
-# Meta-Learning Systems
+# Meta-Learning Systems (archived)
 
 How your AI learns from mistakes, adapts to patterns, and gets smarter over time.
+
+> Archived for historical reference. This design can be *high-bloat* and many teams are better served by OpenClaw built-ins (`openclaw doctor`, `openclaw status --deep`) plus a small heartbeat.
+> 
+> See: `docs/SIMPLIFICATION_GUIDE.md`.
 
 ---
 
@@ -75,7 +79,7 @@ Your system doesn't just fix problems. It learns *which fixes work*, tracks succ
 
 ## Layer 3: Personal Learner
 
-**Script:** `scripts/personal_learner.py` (reference implementation)
+**Script:** (not shipped in this starter kit — write your own personal learner if you really need one)
 
 **What it does:** Scans memory files for patterns about the user:
 - Goal mentions (which goals are active vs forgotten)
@@ -148,7 +152,7 @@ FIX: Don't rewrite rules for weak models — remove their access to dangerous ac
 - Escalation at 3+ simultaneous system failures
 - Context usage tracking
 
-See `docs/META_MONITOR.md` for full setup.
+See `docs/archive/META_MONITOR.md` for full setup.
 
 ---
 
@@ -202,7 +206,7 @@ These rules were extracted from real incidents:
 
 1. All of the above, plus:
 2. **Deploy meta-monitor** — `scripts/meta_monitor.py` watches everything
-3. **Add personal learner** — `scripts/personal_learner.py` learns user patterns
+3. **Add personal learner** — build your own user-pattern learner (optional; easy to overdo)
 4. **Track fix success rates** — watchdog metrics accumulate automatically
 5. **Set counter-check rules** — AI reviews past MISSes before acting on similar tasks
 

@@ -1,6 +1,9 @@
-# 🔨 CI/CD Build Failure Monitor
+# 🔨 CI/CD Build Failure Monitor (archived)
 
-Automatically detect build failures from email notifications, parse the exact errors, and spawn an AI agent to fix them. No manual intervention needed.
+Automatically detect build failures from email notifications, parse the exact errors, and spawn an AI agent to fix them.
+
+> Archived design note. The reference implementation script is **not shipped** in this starter kit.
+> If you want build monitoring today, prefer first-class vendor tooling (GitHub Actions UI + notifications, Xcode Cloud UI, Sentry) and use OpenClaw to summarize/triage rather than auto-committing fixes.
 
 ## The Loop
 
@@ -57,12 +60,12 @@ If the same errors appear after a fix attempt:
 ## Setup
 
 ### Prerequisites
-- `gog` CLI installed and authenticated (`brew install steipete/tap/gogcli`)
-- Gmail account that receives CI/CD notifications
+- A notification source for build failures (email, GitHub notifications, Xcode Cloud emails, etc.)
+- A repo checkout (if you ever want to open PRs)
 - A coding agent (Codex, Claude Code, etc.)
 
 ### Configuration
-Set environment variables or edit `scripts/build_monitor.py`:
+Set environment variables for **your** build monitor implementation (script not included in this kit):
 
 ```bash
 export BUILD_MONITOR_EMAIL="you@gmail.com"
@@ -73,7 +76,7 @@ export BUILD_MONITOR_QUERY='from:noreply@apple.com subject:"failed" newer_than:1
 In your `HEARTBEAT.md`:
 ```markdown
 ## Build Monitor (every heartbeat)
-Run `python3 scripts/build_monitor.py` and check the result:
+Run your build monitor and check the result:
 - If `has_failures` is true AND `should_auto_fix` is true:
   1. Message user about the failure
   2. Spawn coding agent with the `fix_task`
@@ -85,7 +88,7 @@ Run `python3 scripts/build_monitor.py` and check the result:
 
 ## State Tracking
 
-State is stored in `state/build_monitor_state.json`:
+One simple approach is to store state in `state/build_monitor_state.json` (runtime; ignored by git):
 ```json
 {
   "lastChecked": "2026-01-29T14:40:00Z",
