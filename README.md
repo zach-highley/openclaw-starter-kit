@@ -156,6 +156,18 @@ Guide: **[docs/TELEGRAM_SETUP.md](docs/TELEGRAM_SETUP.md)**
 | `model_router.py` | Model selection based on task |
 | `changelog_guard.sh` | Pre-commit changelog enforcement |
 
+### `scripts/advanced/` — Advanced scripts (optional)
+
+These are *examples* of higher-autonomy workflows. They are safe-by-default and require explicit env var configuration.
+
+| Script | Purpose |
+|---|---|
+| `scripts/advanced/daily_planner.py` | Generate a daily plan prompt + snapshot |
+| `scripts/advanced/daily_review.py` | End-of-day review + optional Telegram summary |
+| `scripts/advanced/overnight_queue.py` | Manage overnight build queue |
+| `scripts/advanced/overnight_builder.py` | Execute overnight queue items |
+| `scripts/advanced/dashboard_push_template.py` | Minimal dashboard push integration |
+
 ### `scripts/archive/legacy-monitors/` — Deprecated
 
 Old watchdog, meta-monitor, and security hound scripts. Kept for reference/learning. **Do not use** — they caused more problems than they solved.
@@ -163,11 +175,15 @@ Old watchdog, meta-monitor, and security hound scripts. Kept for reference/learn
 ### `docs/` — Guides
 
 Key docs:
+- **[docs/README.md](docs/README.md)** — index (CORE + ADVANCED)
 - **[LESSONS_LEARNED_STABILITY.md](docs/LESSONS_LEARNED_STABILITY.md)** — Why simple wins
 - **[INCIDENT_POSTMORTEM.md](docs/INCIDENT_POSTMORTEM.md)** — The day everything broke
 - **[CONFIG_HYGIENE.md](docs/CONFIG_HYGIENE.md)** — Configuration best practices
 - **[CRON_HEARTBEAT_GUIDE.md](docs/CRON_HEARTBEAT_GUIDE.md)** — When to use what
 - **[THE_11_COMMANDMENTS.md](docs/THE_11_COMMANDMENTS.md)** — Operating rules
+
+Advanced playbook:
+- **[docs/ADVANCED/README.md](docs/ADVANCED/README.md)** — Night shift, trust ladder, email MECE, token burn, overnight pipeline, dashboard patterns
 
 ### `templates/` — Workspace Files
 

@@ -173,6 +173,19 @@ The new approach: Trust the platform. Launchd IS the watchdog. One cron for main
 
 ### Added
 - `templates/USER.md` — user profile template for fast personalization.
+- `docs/README.md` — doc index (CORE + ADVANCED).
+- `docs/ADVANCED/` — advanced playbook folder.
+- `docs/ADVANCED/TRUST_LADDER.md` — 5-level autonomy policy.
+- `docs/ADVANCED/TOKEN_BURN_STRATEGY.md` — pacing + parallel agents.
+- `docs/ADVANCED/OVERNIGHT_BUILD_PIPELINE.md` — queue → execution → morning summary.
+- `docs/ADVANCED/DAILY_RHYTHM.md` — daily planner + review loop.
+- `docs/ADVANCED/DASHBOARD_INTEGRATION_PATTERNS.md` — safe integration patterns.
+- `docs/ADVANCED/EMAIL_LABEL_MIGRATE_MECE_RUNBOOK.md` — email MECE migration patterns.
+- `docs/ADVANCED/EMAIL_IMAP_APPLE_MAIL.md` — IMAP visibility + Apple Mail workflow.
+- `docs/ADVANCED/IOS_APP_BUILD_WORKFLOW.md` — iOS build workflow with Codex.
+- `docs/ADVANCED/FELIXCRAFT_PATTERNS.md` — FelixCraft-inspired patterns.
+- `scripts/advanced/` — optional higher-autonomy scripts.
+- `scripts/advanced/dashboard_push_template.py` — minimal dashboard push example.
 - `docs/NIGHT_SHIFT.md` — overnight autonomy + high-signal update templates
 - `docs/WORKSTREAMS.md` — best-practice pattern: one canonical chat + single source of truth workstreams file (SSOT)
 - `templates/WORKSTREAMS_TEMPLATE.md` — copy-paste SSOT template for new setups
