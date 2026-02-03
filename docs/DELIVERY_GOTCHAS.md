@@ -39,6 +39,38 @@ If you want “tell me only if something needs attention”:
 3) `openclaw status --deep` (is the channel healthy?)
 4) `openclaw logs --follow` (look for tool errors)
 
+## Telegram-specific delivery gotchas
+
+### 1) Message CLI requires `--target`
+
+This is an easy mistake in scripts.
+
+```bash
+openclaw message send --channel telegram --target "-1001234567890" --message "hi"
+```
+
+### 2) Prefer numeric chat IDs
+
+For reliability, prefer numeric chat ids:
+- DMs: positive integer
+- Groups/supergroups: negative integer like `-1001234567890`
+
+How to find it: see `docs/TELEGRAM_SETUP.md` (or the official Telegram channel docs).
+
+### 3) Topics need a thread id
+
+Telegram forums use topics (message_thread_id). For proactive sends:
+
+```bash
+openclaw message send --channel telegram \
+  --target "-1001234567890" \
+  --thread-id "123" \
+  --message "hello topic"
+```
+
+Cron delivery can encode topics in `--to`:
+- `-1001234567890:topic:123`
+
 ## Avoiding redundancy
 
 - Don’t have both a heartbeat and a cron job do the same check.

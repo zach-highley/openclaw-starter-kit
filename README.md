@@ -70,6 +70,7 @@ Guide: `docs/CRON_HEARTBEAT_GUIDE.md`
 ### Autonomy cadence (that actually fires)
 - Hourly “I’m alive” progress updates: `docs/AUTONOMY_CADENCE.md`
 - Make sure scheduled jobs actually send: `docs/DELIVERY_GOTCHAS.md`
+- Telegram setup + chat IDs / targets: `docs/TELEGRAM_SETUP.md`
 - Prime directive philosophy: `docs/PRIME_DIRECTIVE.md`
 
 Night shift updates (overnight autonomy + high-signal Telegram templates): `docs/NIGHT_SHIFT.md`
@@ -154,8 +155,12 @@ AGENTS.md, HEARTBEAT.md, SECURITY.md, SOUL.md. Customize for your setup.
 ## Setup
 
 ```bash
-# 1. Install OpenClaw
-curl -fsSL https://openclaw.ai/install.sh | bash
+# 1. Install OpenClaw (official docs recommend npm/pnpm)
+# https://docs.openclaw.ai/start/getting-started
+npm install -g openclaw@latest
+# or: pnpm add -g openclaw@latest
+
+# 2. Onboard + install the Gateway service
 openclaw onboard --install-daemon
 
 # 2. Copy templates
