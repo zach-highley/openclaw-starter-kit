@@ -1,99 +1,179 @@
 #!/usr/bin/env python3
+"""meta_monitor.py — Watcher-of-watchers (minimal, schema-aligned).
+
+This repo historically included a "meta monitor" concept, but the original
+implementation drifted and became crash-prone.
+
+This version is intentionally simple:
+- Checks that the *other* automation scripts are updating their state files.
+- Optionally attempts a safe fix by restarting the Gateway service.
+
+It does NOT try to outsmart OpenClaw. Prefer built-ins:
+- openclaw doctor
+- openclaw gateway status / restart
+
+Exit codes:
+- 0: healthy
+- 1: issues detected
+
+Compatibility:
+- Accepts legacy flags used by scripts/auto_doctor.py: --check --mode heartbeat
+  ("mode" is ignored unless it is "check" or "fix").
 """
-Meta-Monitor (The Watcher of Watchers)
 
-Monitors your automation systems to ensure THEY are running.
-If the watchdog dies, who watches the watchdog? This script.
+from __future__ import annotations
 
-Features:
-- Fencing tokens (prevents multiple scripts from fighting over gateway restarts)
-- Stall detection (notifies if a system hasn't updated in X seconds)
-- Auto-fix (can restart stalled services)
-- Context monitoring (triggers reset if context > 85%)
-
-USAGE:
-  python3 meta_monitor.py --check
-  python3 meta_monitor.py --fix
-"""
-
+import argparse
 import json
 import os
+import subprocess
 import sys
 import time
-import subprocess
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Dict, List, Optional
 
-# === Workspace ===
-# Default: parent directory of this script's folder.
-# Override: OPENCLAW_WORKSPACE=/path/to/workspace
-WORKSPACE = Path(os.environ.get("OPENCLAW_WORKSPACE", Path(__file__).resolve().parents[1])).expanduser().resolve()
-STATE_FILE = WORKSPACE / "state" / "meta_monitor_state.json"
-GATEWAY_PID_FILE = Path.home() / ".openclaw" / "pids" / "gateway.pid"
 
-# Thresholds (seconds) - How long before we consider a system "stalled"
-THRESHOLDS = {
-    "watchdog": 600,          # 10 mins (runs every 5)
-    "error_recovery": 1800,   # 30 mins
-    "security_hound": 7200,   # 2 hours
-    "heartbeat": 7200,        # 2 hours
-}
+def _workspace_root() -> Path:
+    raw = os.environ.get("OPENCLAW_WORKSPACE") or os.environ.get("OPENCLAW_STARTER_WORKSPACE")
+    if raw:
+        return Path(raw).expanduser().resolve()
+    return Path(__file__).resolve().parents[1]
 
-def load_state():
-    if STATE_FILE.exists():
-        try:
-            with open(STATE_FILE) as f:
-                return json.load(f)
-        except:
-            pass
-    return {"last_checks": {}, "fencing_token": None}
 
-def save_state(state):
-    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    with open(STATE_FILE, "w") as f:
-        json.dump(state, f, indent=2)
+WORKSPACE = _workspace_root()
 
-def check_system_age(name, file_path):
-    """Returns seconds since file was last modified."""
-    path = Path(file_path)
+
+@dataclass
+class SystemCheck:
+    name: str
+    path: Path
+    threshold_seconds: int
+
+
+def _age_seconds(path: Path) -> Optional[int]:
     if not path.exists():
         return None
-    return time.time() - path.stat().st_mtime
+    try:
+        return int(time.time() - path.stat().st_mtime)
+    except OSError:
+        return None
 
-def run_check(mode="check"):
-    state = load_state()
-    issues = []
-    
-    # Check each system
-    # Note: specific paths depend on where your scripts write their state/logs
-    # This is a reference implementation.
-    systems = {
-        "watchdog": Path.home() / ".openclaw" / "logs" / "watchdog-state.json",
-        "heartbeat": CLAWD_DIR / "memory" / "heartbeat-state.json",
-    }
-    
-    for name, path in systems.items():
-        age = check_system_age(name, path)
+
+def _run(cmd: List[str], timeout_s: int = 15) -> subprocess.CompletedProcess:
+    return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout_s)
+
+
+def check_files(checks: List[SystemCheck]) -> List[str]:
+    issues: List[str] = []
+    for c in checks:
+        age = _age_seconds(c.path)
         if age is None:
-            # File missing, might be okay if just started
+            # Missing state is "unknown" rather than failing hard; many users
+            # won't install all scripts.
             continue
-            
-        threshold = THRESHOLDS.get(name, 3600)
-        if age > threshold:
-            issues.append(f"{name} stalled (last update {int(age)}s ago)")
+        if age > c.threshold_seconds:
+            issues.append(f"{c.name} stalled (last update {age}s ago; threshold {c.threshold_seconds}s)")
+    return issues
 
-    # Report
-    if issues:
-        print(f"⚠️ Issues detected: {', '.join(issues)}")
-        if mode == "fix":
-            print("🔧 Attempting auto-fixes...")
-            # Add your restart logic here
-    else:
+
+def check_gateway() -> Optional[str]:
+    """Returns an issue string if gateway status fails, else None.
+
+    We keep this intentionally weakly-coupled: if openclaw isn't installed or
+    the command isn't available, we don't treat it as an issue.
+    """
+
+    try:
+        p = _run(["openclaw", "gateway", "status", "--json"], timeout_s=15)
+        if p.returncode != 0:
+            return "gateway status probe failed"
+        # Best-effort parse; schema may evolve.
+        try:
+            data = json.loads(p.stdout or "{}")
+            # If the CLI surfaced an explicit unhealthy flag, respect it.
+            if isinstance(data, dict):
+                ok = data.get("ok")
+                if ok is False:
+                    return "gateway unhealthy"
+        except Exception:
+            pass
+        return None
+    except FileNotFoundError:
+        return None
+    except subprocess.TimeoutExpired:
+        return "gateway status timed out"
+    except Exception:
+        return "gateway status error"
+
+
+def try_fix(issues: List[str]) -> bool:
+    """Safe-ish fix: restart gateway service."""
+    if not issues:
+        return True
+    try:
+        p = _run(["openclaw", "gateway", "restart"], timeout_s=60)
+        return p.returncode == 0
+    except Exception:
+        return False
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description="Watcher-of-watchers")
+    ap.add_argument("--check", action="store_true", help="run checks (default)")
+    ap.add_argument("--fix", action="store_true", help="attempt safe fixes")
+
+    # Legacy/compat flags. auto_doctor.py calls: --check --mode heartbeat
+    ap.add_argument("--mode", default="check", help="legacy/compat; accepts check|fix or an ignored label")
+    args = ap.parse_args()
+
+    # Interpret legacy mode
+    if args.mode == "fix":
+        args.fix = True
+    if not args.check and not args.fix:
+        args.check = True
+
+    checks = [
+        SystemCheck(
+            name="watchdog",
+            path=Path.home() / ".openclaw" / "logs" / "watchdog-state.json",
+            threshold_seconds=10 * 60,
+        ),
+        SystemCheck(
+            name="auto_doctor",
+            path=WORKSPACE / "state" / "doctor_report.json",
+            threshold_seconds=6 * 60 * 60,
+        ),
+        SystemCheck(
+            name="usage",
+            path=WORKSPACE / "state" / "usage_state.json",
+            threshold_seconds=2 * 60 * 60,
+        ),
+    ]
+
+    issues = check_files(checks)
+
+    gw_issue = check_gateway()
+    if gw_issue:
+        issues.append(gw_issue)
+
+    if not issues:
         print("✅ All systems healthy")
+        return 0
+
+    print("⚠️ Issues detected:")
+    for i in issues:
+        # AutoDoctor counts these symbols.
+        print(f"❌ {i}")
+
+    if args.fix:
+        print("🔧 Attempting safe fix: openclaw gateway restart")
+        ok = try_fix(issues)
+        print("✅ Fix applied" if ok else "⚠️ Fix failed")
+        return 0 if ok else 1
+
+    return 1
+
 
 if __name__ == "__main__":
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=["check", "fix"], default="check")
-    args = parser.parse_args()
-    
-    run_check(args.mode)
+    raise SystemExit(main())

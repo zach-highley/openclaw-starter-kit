@@ -1,37 +1,46 @@
-// Memory-optimized config: hybrid search, session indexing, embedding cache
-// Apply AFTER basic setup. These settings improve memory recall significantly.
+// Memory-optimized config: hybrid search, optional session indexing, embedding cache
 //
-// Hybrid search = vector similarity + BM25 keyword matching
-// Session indexing = makes past conversations searchable
-// Embedding cache = faster reindexing after restarts
+// This example is aligned with the current OpenClaw config schema.
+// Reference: https://docs.openclaw.ai/concepts/memory
+//
+// Notes:
+// - memorySearch lives under agents.defaults (NOT top-level).
+// - Session transcript indexing is experimental and must be explicitly enabled.
 {
-  "memorySearch": {
-    "sources": ["memory", "sessions"],
-    "query": {
-      "hybrid": {
-        "enabled": true,
-        "vectorWeight": 0.7,
-        "textWeight": 0.3,
-        "candidateMultiplier": 4
-      }
+  agents: {
+    defaults: {
+      // Vector + keyword hybrid retrieval (BM25 + embeddings)
+      memorySearch: {
+        sources: ["memory", "sessions"],
+        experimental: { sessionMemory: true },
+
+        query: {
+          hybrid: {
+            enabled: true,
+            vectorWeight: 0.7,
+            textWeight: 0.3,
+            candidateMultiplier: 4,
+          },
+        },
+
+        // Cache chunk embeddings so reindexing doesn't re-embed unchanged text.
+        cache: {
+          enabled: true,
+          maxEntries: 50000,
+        },
+      },
+
+      // Optional: compaction "memory flush" reminder just before compaction.
+      compaction: {
+        memoryFlush: {
+          enabled: true,
+          softThresholdTokens: 4000,
+          systemPrompt:
+            "Session nearing compaction. Save durable context to memory/YYYY-MM-DD.md and any structured state files.",
+          prompt:
+            "Write lasting notes to memory files and state files. Reply with NO_REPLY when done.",
+        },
+      },
     },
-    "cache": {
-      "maxEntries": 50000
-    }
   },
-  "experimental": {
-    "sessionMemory": true
-  },
-  "agents": {
-    "defaults": {
-      "compaction": {
-        "memoryFlush": {
-          "enabled": true,
-          "softThresholdTokens": 4000,
-          "systemPrompt": "Session nearing compaction. Save durable context to memory/YYYY-MM-DD.md AND any structured state files. Include: active tasks, decisions made, things to remember.",
-          "prompt": "Write lasting notes to memory files and state files. Reply with NO_REPLY when done."
-        }
-      }
-    }
-  }
 }
