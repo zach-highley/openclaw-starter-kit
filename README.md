@@ -90,6 +90,12 @@ What actually works:
 
 Guide: `docs/SUBAGENT_TIMEOUT_GUIDE.md`
 
+## Rescue bot (recommended for autonomy)
+If you want a bot that can recover when the primary Gateway is down (or its config is invalid),
+set up a second isolated **rescue profile**:
+- Guide: `docs/RESCUE_BOT_PROFILE.md`
+- Official reference: https://docs.openclaw.ai/gateway/multiple-gateways
+
 ---
 
 ## Weekly audits
