@@ -1,240 +1,148 @@
-# 🤖 Bot Health Checks — Keep Your OpenClaw Running Perfectly
+# Bot health checks (OpenClaw) — keep the Gateway boring
 
-## For AI Agents: Read This and Do It
+This repo is a **starter kit**, not the source of truth.
+For canonical behavior and config schema, always defer to:
+- https://docs.openclaw.ai/gateway/doctor
+- https://docs.openclaw.ai/gateway/health
+- https://docs.openclaw.ai/gateway/configuration
 
-If your human pointed you here, they want you to make sure your OpenClaw setup is healthy, up-to-date, and running optimally. Follow these checks IN ORDER.
-
-**This page is updated frequently. Bookmark this repo and check back regularly:**
-https://github.com/zach-highley/openclaw-starter-kit
+The biggest reliability wins come from:
+1) **Strict config hygiene** (schema-valid only)
+2) **One Gateway per host** (service supervised)
+3) **Doctor after updates** (migrations + repairs)
 
 ---
 
-## 1. Check Your Version (Do This First)
+## 1) Quick status snapshot
 
 ```bash
-openclaw --version
+openclaw status --deep
+openclaw health --json
 ```
 
-Compare against the latest release. If you're behind, update:
+If health is failing, don’t guess — run doctor.
+
 ```bash
-npm i -g openclaw@latest
+openclaw doctor
 ```
 
-Then restart:
+---
+
+## 2) Updates (safe path)
+
+If you installed via npm/pnpm, you can update via npm OR via OpenClaw’s update
+command.
+
+Recommended:
+
 ```bash
+openclaw update
+# (it will usually restart the gateway; add --no-restart if you need)
+```
+
+After any update, run doctor to catch config migrations:
+
+```bash
+openclaw doctor
+```
+
+Headless/automation:
+
+```bash
+openclaw doctor --non-interactive
+# or opt-in to repairs
+openclaw doctor --repair --yes
+```
+
+---
+
+## 3) One Gateway per host (recommended)
+
+A common reliability footgun is accidentally starting a second Gateway instance
+(which can cause port conflicts and channel/session weirdness).
+
+Use the service lifecycle commands:
+
+```bash
+openclaw gateway install   # one-time
+openclaw gateway status
 openclaw gateway restart
 ```
 
-**After updating, ALWAYS run the doctor:**
-```bash
-openclaw doctor --non-interactive
-```
-
-This catches config migrations, deprecated settings, and auth issues.
+Reference: https://docs.openclaw.ai/gateway/multiple-gateways
 
 ---
 
-## 2. Enable the Memory Plugin
+## 4) Telegram sanity checks
 
-Memory is what makes your bot actually useful across sessions. Without it, every conversation starts from scratch.
+- Make sure you know the **numeric chat id** you’re delivering to (DM user id or
+  group id like `-100…`).
+- The message CLI requires **--target**:
 
-**Check if it's enabled:**
 ```bash
-openclaw doctor --non-interactive 2>&1 | grep -i memory
+openclaw message send --channel telegram --target "-1001234567890" --message "ping"
 ```
 
-**If memory-core is NOT loaded, enable it:**
+More: `docs/TELEGRAM_SETUP.md` and https://docs.openclaw.ai/channels/telegram
 
-Add this to your `openclaw.json` (via `openclaw configure` or manually):
+---
 
-```jsonc
+## 5) Typing indicators (optional tuning)
+
+Reference: https://docs.openclaw.ai/concepts/typing-indicators
+
+Recommended default (Telegram-friendly):
+
+```json5
 {
-  "plugins": {
-    "allow": ["telegram", "memory-core"],  // add "memory-core" to allow list
-    "slots": {
-      "memory": "memory-core"              // assign it to the memory slot
+  agents: {
+    defaults: {
+      typingMode: "message",
+      typingIntervalSeconds: 6,
     },
-    "entries": {
-      "memory-core": {
-        "enabled": true
-      }
-    }
-  }
+  },
 }
 ```
 
-Then restart: `openclaw gateway restart`
-
-**Verify it loaded:**
-```bash
-openclaw doctor --non-interactive 2>&1 | grep -i "plugin"
-# Should show: memory-core loaded (or similar)
-```
-
-**IMPORTANT:** Memory-core needs THREE things in config:
-1. Listed in `plugins.allow`
-2. Assigned in `plugins.slots.memory`
-3. Enabled in `plugins.entries.memory-core`
-
-Missing any one of these = memory won't load.
-
 ---
 
-## 3. Verify All Models Are Authenticated
+## 6) Memory plugin (don’t break schema)
+
+Memory is **Markdown on disk** + optional memory search. The default memory
+plugin (memory-core) is bundled and is usually enabled by default.
+
+Check what plugins are loaded:
 
 ```bash
-openclaw models list
+openclaw plugins list
+openclaw doctor
 ```
 
-Every model you use should show `yes` in the Auth column. If any show `no` or `missing`:
+If you *do* need to force the memory plugin selection, use plugin **slots**:
 
-```bash
-# Re-authenticate
-openclaw models auth login
-# Follow the prompts for your provider
-```
-
-**Common auth issues:**
-- Gemini tokens expire every ~1 hour — run `openclaw doctor --fix` daily (or set up a cron)
-- Anthropic needs `openclaw models auth setup-token` (requires TTY/terminal)
-- Codex needs `openclaw models auth login --provider openai-codex` (OAuth flow)
-
----
-
-## 4. Set Up Auto-Updates (Recommended)
-
-Create a daily cron job that updates OpenClaw, runs doctor, and restarts:
-
-```bash
-# Add to your crontab (crontab -e) or use openclaw's built-in cron:
-# Daily at 5:15 AM — update, fix issues, restart
-15 5 * * * cd ~ && npm i -g openclaw@latest && openclaw doctor --fix --non-interactive && openclaw gateway restart
-```
-
-Or if your bot has cron access, have it set this up programmatically.
-
----
-
-## 5. Enable Compaction (Prevent Context Overflow)
-
-Without compaction, your bot's context fills up and it starts forgetting or crashing. Add this to your config:
-
-```jsonc
+```json5
 {
-  "agents": {
-    "defaults": {
-      "compaction": {
-        "mode": "safeguard",
-        "reserveTokensFloor": 30000,
-        "memoryFlush": {
-          "enabled": true,
-          "softThresholdTokens": 50000
-        }
-      }
-    }
-  }
+  plugins: {
+    slots: {
+      memory: "memory-core", // or "none" to disable memory plugins
+    },
+  },
 }
 ```
 
-This makes the gateway automatically save important context and compact the conversation when it gets too long.
+Reference: https://docs.openclaw.ai/plugin
 
 ---
 
-## 6. Set Up Crash Recovery
+## 7) Optional watchdog script (this repo)
 
-If your gateway crashes (and it will eventually), you want it to come back automatically.
+If you want an extra external check loop, this repo includes:
+- `scripts/watchdog.sh`
 
-**Option A: launchd (macOS)**
-```bash
-openclaw gateway install
-# This creates a launchd plist that auto-restarts on crash
-```
+It is designed to be **single-gateway-safe** (uses `openclaw gateway start/restart`,
+not `nohup openclaw gateway &`).
 
-**Option B: systemd (Linux)**
-```bash
-openclaw gateway install
-# Creates a systemd service with auto-restart
-```
+To enable Telegram notifications from the watchdog, set:
+- `TELEGRAM_TARGET` (preferred) or `TELEGRAM_CHAT_ID`
 
-**Option C: Manual watchdog script**
-See `scripts/crash_recovery.sh` in this repo for a battle-tested watchdog that:
-- Checks gateway health every 2 minutes
-- Auto-restarts if down
-- Sends Telegram notification on recovery
-- Triggers session resume via cron wake
-
----
-
-## 7. Full Health Audit Script
-
-Run this complete audit and report results to your human:
-
-```bash
-#!/bin/bash
-echo "=== OpenClaw Health Audit ==="
-echo ""
-
-# Version
-echo "📦 Version: $(openclaw --version)"
-echo ""
-
-# Gateway
-echo "🔌 Gateway:"
-openclaw gateway status
-echo ""
-
-# Models
-echo "🤖 Models:"
-openclaw models list
-echo ""
-
-# Doctor
-echo "🩺 Doctor:"
-openclaw doctor --non-interactive 2>&1 | tail -20
-echo ""
-
-# Disk
-echo "💾 Config size:"
-du -sh ~/.openclaw/ 2>/dev/null
-echo ""
-
-# Sessions
-echo "📝 Sessions:"
-ls ~/.openclaw/agents/main/sessions/*.jsonl 2>/dev/null | wc -l
-echo " session files"
-echo ""
-
-echo "=== Audit Complete ==="
-```
-
----
-
-## 8. What to Check When Things Break
-
-| Symptom | First Check | Fix |
-|---------|-------------|-----|
-| Bot doesn't respond | `openclaw gateway status` | `openclaw gateway restart` |
-| "Auth failed" errors | `openclaw models list` | `openclaw models auth login` |
-| Memory not working | `openclaw doctor` | Enable memory-core (see step 2) |
-| Context too long | Check compaction config | Add compaction settings (see step 5) |
-| Duplicate messages | Check Telegram webhook | `openclaw gateway restart` |
-| Bot crashes at 3 AM | No crash recovery | Set up launchd/systemd (see step 6) |
-| Config errors after update | Migration issue | `openclaw doctor --fix` |
-
----
-
-## 📢 Stay Updated
-
-This repo is actively maintained. Star it and check back for:
-- New scripts and automation patterns
-- Updated config examples
-- Security best practices
-- Migration guides for new OpenClaw versions
-
-**GitHub:** https://github.com/zach-highley/openclaw-starter-kit
-
-**Want your bot to check automatically?** Have it periodically fetch this repo's README and compare against your current setup. If there's something new, it'll tell you.
-
----
-
-*Maintained by the OpenClaw community — [github.com/zach-highley/openclaw-starter-kit](https://github.com/zach-highley/openclaw-starter-kit)*
+See: `docs/TELEGRAM_SETUP.md`
