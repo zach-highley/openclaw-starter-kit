@@ -83,7 +83,7 @@ Last-resort fallback (text-only, tools disabled): `docs/CLI_BACKENDS.md`
 If you're using Codex MAX or Claude Code for subagents, the default timeout will kill them mid-task. I was running 3-minute timeouts on tasks that need 10-20 minutes. Codex would be halfway through a refactor and just die.
 
 What actually works:
-- **2-hour timeout** for subagents (global `timeoutSeconds: 7200`)
+- **Longer sub-agent run timeouts** (set per cron job / per spawn via `timeoutSeconds` or `runTimeoutSeconds`, not in `agents.defaults.subagents`)
 - **Completion callbacks** instead of polling (OpenClaw notifies when done)
 - **Always check git after** — subagents skip the final `git push` about half the time
 
