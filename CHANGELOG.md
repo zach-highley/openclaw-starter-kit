@@ -16,6 +16,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `docs/WORKSTREAMS.md` — best-practice pattern: one canonical chat + single source of truth workstreams file (SSOT).
 - `templates/WORKSTREAMS_TEMPLATE.md` — copy-paste SSOT template for new setups.
 - `config-examples/autonomy-cadence.json5` — safe, user-agnostic config snippet (timezone, typing indicators, heartbeat + messaging defaults).
+- `scripts/auto_update.py` — optional weekly Homebrew update helper (dry-run unless `--apply`).
+- `scripts/auto_cleanup.py` — optional weekly cleanup helper (workspace-scoped; dry-run unless `--apply`).
+- `scripts/fix_readme_typo.py` — minimal, safe "autofix" helper used by the GitHub issue triage example.
+- `scripts/archive/.gitkeep` — placeholder directory for archived scripts (anti-bloat).
 
 ### Changed
 - `scripts/watchdog.sh` rewritten to be **single-gateway-safe** (uses `openclaw gateway status/start/restart`, avoids `nohup`/`pkill`).
@@ -23,9 +27,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `docs/DELIVERY_GOTCHAS.md` expanded with Telegram specifics: `openclaw message send` requires `--target`, topics require `--thread-id`/`:topic:` encoding.
 - `scripts/meta_monitor.py` rewritten to be minimal and non-crashing; compat with `auto_doctor.py` calling conventions.
 - `config-examples/memory-optimized.json5` rewritten to be schema-aligned.
-- Removed Claude Sonnet assumptions across starter-kit docs/examples; default guidance is Opus primary with cross-provider fallbacks.
+- Removed Claude Sonnet assumptions across starter-kit docs and examples; default guidance is Opus primary with cross-provider fallbacks.
 - Updated multi-model config example to: Opus → Codex → Gemini → Kimi → Ollama.
 - `docs/NIGHT_SHIFT.md` now links to the workstreams pattern.
+- `docs/SYSTEM_MAINTENANCE.md` updated to match shipped scripts and safe defaults (`--apply` gates changes).
+- `BOT_INSTRUCTIONS.md` updated to remove references to non-shipped crash recovery installers; points to OpenClaw's built-in gateway service control.
+- Archived docs in `docs/archive/` now clearly marked as archived, with broken cross-links and removed-script references cleaned up.
+- Changelog file paths updated to reflect archived doc locations.
 
 ## [2.4.0] - 2026-02-01
 
@@ -84,7 +92,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `docs/WEEKLY_AUDIT_GUIDE.md` — automated weekly self-audits with feedback loops
 - `docs/SECURITY_HARDENING.md` — patterns for preventing hardcoded secrets and secure git workflows
 - `docs/SUBAGENT_BEST_PRACTICES.md` — comprehensive guide to spawning, monitoring, and recovering subagents
-- `docs/SELF_REVIEW.md` — self-review and HIT/MISS tracking patterns
+- `docs/archive/SELF_REVIEW.md` — self-review and HIT/MISS tracking patterns (archived)
 - `scripts/auto_doctor.py` — full system diagnostics (sanitized from production)
 - `scripts/pipeline_health.py` — multi-pipeline health checks
 - `scripts/error_recovery.py` — automated error recovery patterns
@@ -110,18 +118,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 - `docs/COMMUNICATION_PATTERNS.md` — background process guard, polling, atomic sprints
-- `docs/AGENT_POLL_ENFORCER.md` — enforcing background agent polling
+- `docs/archive/AGENT_POLL_ENFORCER.md` — enforcing background agent polling (archived)
 - `docs/GIT_PUSH_SECURITY.md` — security patterns for git workflows
-- `docs/XCODE_CLOUD_MONITOR.md` — Xcode Cloud CI/CD monitoring
-- `docs/HYBRID_CODING_WORKFLOW.md` — 8-step multi-model coding pipeline (Claude + Codex)
+- `docs/archive/XCODE_CLOUD_MONITOR.md` — Xcode Cloud CI/CD monitoring (archived)
+- `docs/archive/HYBRID_CODING_WORKFLOW.md` — 8-step multi-model coding pipeline (archived)
 - `docs/MODEL_ROUTING.md` — intelligent model orchestration with degradation curves
-- `docs/SPRINT_SYSTEM.md` — sprint management and notification patterns
-- `docs/META_MONITOR.md` — meta-monitoring concepts (watching the watchers)
-- `docs/META_LEARNING.md` — learning from failures automatically
-- `docs/BUILD_MONITOR.md` — build monitoring patterns
-- `docs/WATCHDOG_CONCEPTS.md` — self-healing and self-learning watchdog design
+- `docs/archive/SPRINT_SYSTEM.md` — sprint management and notification patterns (archived)
+- `docs/archive/META_MONITOR.md` — meta-monitoring concepts (archived)
+- `docs/archive/META_LEARNING.md` — learning from failures automatically (archived)
+- `docs/archive/BUILD_MONITOR.md` — build monitoring patterns (archived)
+- `docs/archive/WATCHDOG_CONCEPTS.md` — self-healing and self-learning watchdog design (archived)
 - `docs/BOT-HEALTH-CHECKS.md` — comprehensive bot health check guide
-- `docs/WORK_LOOP.md` — autonomous work loop design
+- `docs/archive/WORK_LOOP.md` — autonomous work loop design (archived)
 - `docs/SYSTEM_MAINTENANCE.md` — weekly auto-maintenance tasks
 - `scripts/agent_poll_enforcer.py` — enforces subagent polling intervals
 - `scripts/git_push_guard.sh` — pre-push security checks

@@ -67,8 +67,9 @@ curl -s -o /dev/null -w "%{http_code}" https://your-dashboard.com/api/private
 ### 9. Script Permissions
 ```bash
 # Security-sensitive scripts should be 700 (owner only)
-chmod 700 ~/your-workspace/scripts/secure_*.sh
-chmod 700 ~/your-workspace/scripts/passphrase_*.py
+# Example patterns (customize to your naming):
+chmod 700 ~/your-workspace/scripts/*secure*.sh
+chmod 700 ~/your-workspace/scripts/*passphrase*.py
 ```
 
 ### 10. LaunchD Agents

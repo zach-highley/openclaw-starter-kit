@@ -34,6 +34,7 @@ enabled = false
 # name = "readme-typo"
 # issue_label = "autofix:readme-typo"
 # commands = [
-#   "python3 scripts/some_fix_script.py",
+#   # Example: fix a known typo (customize for your repo)
+#   "python3 scripts/fix_readme_typo.py --path README.md --old 'teh' --new 'the' --apply",
 #   "python3 -m compileall -q .",
 # ]

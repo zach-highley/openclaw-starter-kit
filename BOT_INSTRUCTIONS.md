@@ -142,13 +142,15 @@ Read these docs before adding lots of automation:
 
 ### Step 5: Integrate Level 3 (Machine)
 
-**Crash recovery (CRITICAL):**
+**Gateway restarts (optional):**
 
-Copy `scripts/crash_recovery.sh` and `scripts/install_crash_recovery.sh` to your workspace.
+OpenClaw already ships a first-class gateway service and repair flow.
 
-Run: `bash scripts/install_crash_recovery.sh`
+- Prefer `openclaw doctor --fix` for safe repairs.
+- Prefer `openclaw gateway status|start|restart` for service control.
+- If you want OS-level supervision (launchd/systemd): follow the **official** docs instead of shipping custom installers in your workspace.
 
-This installs a launchd plist (macOS) that checks gateway health every 2 minutes. If the gateway dies, it auto-restarts and notifies your human. On Linux, adapt to a cron job or systemd timer.
+This starter kit intentionally does **not** ship `install_*` launchd/systemd scripts — they rot fast and tend to spawn duplicate gateways.
 
 **Self-healing watchdog:**
 
@@ -227,8 +229,8 @@ templates/
 scripts/
   check_usage.py           — Multi-model usage monitoring
   model_router.py          — Intelligent model routing with degradation
-  crash_recovery.sh        — Auto-restart gateway if it crashes
-  install_crash_recovery.sh — Install crash recovery as system service
+  auto_update.py           — Optional weekly package updates (safe defaults)
+  auto_cleanup.py          — Optional weekly cleanup (safe defaults)
   watchdog.sh              — 13-check self-healing watchdog
   watchdog_learn.sh        — Incident learning + root cause analysis
   security_hound.py        — Learning security monitor
@@ -238,9 +240,12 @@ scripts/
   git_push_guard.sh        — Prevents accidental public repo exposure
 
 docs/
-  MODEL_ROUTING.md         — Full model routing reference
-  WATCHDOG_CONCEPTS.md     — Self-healing architecture
-  HYBRID_CODING_WORKFLOW.md — Multi-model coding pipeline
+  BEGINNER_START_HERE.md   — Human-facing entrypoint
+  BOT-HEALTH-CHECKS.md     — The canonical runbook (aligned with docs.openclaw.ai)
+  MODEL_ROUTING.md         — Model routing patterns
+  SIMPLIFICATION_GUIDE.md  — How to avoid building a monitoring “council”
+  archive/WATCHDOG_CONCEPTS.md — Historical self-healing architecture (archived)
+  archive/HYBRID_CODING_WORKFLOW.md — Historical multi-model pipeline (archived)
   (and more — read as needed)
 
 config-examples/

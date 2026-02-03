@@ -62,7 +62,8 @@ enabled = true
 name = "readme-typo"
 issue_label = "autofix:readme-typo"
 commands = [
-  "python3 scripts/fix_readme_typo.py"
+  # Replace a known typo (example). Customize for your repo.
+  "python3 scripts/fix_readme_typo.py --path README.md --old 'teh' --new 'the' --apply"
 ]
 ```
 

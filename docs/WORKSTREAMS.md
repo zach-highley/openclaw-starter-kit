@@ -27,7 +27,7 @@ Avoid:
 ### 2) SSOT workstreams file (repo)
 Create a file such as:
 - `docs/WORKSTREAMS.md` (this file)
-- or `state/current_work.json` (machine-readable queue)
+- or `state/current_work.json` (machine-readable queue; typically ignored by git — see `state/current_work.example.json`)
 
 Each workstream should have:
 - **Goal**
