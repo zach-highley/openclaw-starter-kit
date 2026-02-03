@@ -4,11 +4,11 @@
 
 ---
 
-> 🚨 **I FUCKED UP (2026-02-03)** 🚨
+> 🚨 **Incident Postmortem (2026-02-03)** 🚨
 >
 > I broke my own system for 6 hours by being too clever. Built custom watchdogs, config guardians, reliability tests — they all fought each other and killed the gateway repeatedly.
 >
-> **Read the full embarrassing story:** **[docs/I_FUCKED_UP.md](docs/I_FUCKED_UP.md)**
+> **Read the full story:** **[docs/INCIDENT_POSTMORTEM.md](docs/INCIDENT_POSTMORTEM.md)**
 >
 > **The hard lesson:** The engineers who built launchd and OpenClaw are smarter than me. Launchd's `KeepAlive=true` IS the watchdog. I didn't need to add anything. Every "improvement" I made added failure modes.
 >
@@ -56,7 +56,7 @@ Then paste this to your bot:
 ```
 watchdog  →  meta-monitor  →  auto-doctor  →  weekly audit
  (5 min)      (watches         (deep health     (catches
-  keeps it     the watchers)    + state save)     entropy)
+  keeps it     the watchers)    + state save)    entropy)
   alive)
 ```
 
@@ -110,7 +110,7 @@ I went from 100+ LLM calls/day to ~34 by moving non-LLM tasks to launchd and bat
 Guide: `docs/CRON_HEARTBEAT_GUIDE.md`
 
 ### Autonomy cadence (that actually fires)
-- Hourly “I’m alive” progress updates: `docs/AUTONOMY_CADENCE.md`
+- Hourly "I'm alive" progress updates: `docs/AUTONOMY_CADENCE.md`
 - Make sure scheduled jobs actually send: `docs/DELIVERY_GOTCHAS.md`
 - Telegram setup + chat IDs / targets: `docs/TELEGRAM_SETUP.md`
 - Prime directive philosophy: `docs/PRIME_DIRECTIVE.md`
@@ -159,7 +159,7 @@ Guide: `docs/WEEKLY_AUDIT_GUIDE.md` | Template: `templates/weekly_audit_cron.sh`
 
 A conservative, **opt-in** triage loop that uses the `gh` CLI to list open issues and either:
 - comments with clarifying questions (signed as **Yoda (automation bot)**), or
-- opens a PR for label-driven “autofix” rules (disabled by default)
+- opens a PR for label-driven "autofix" rules (disabled by default)
 
 Guide: `docs/GITHUB_ISSUE_TRIAGE_BOT.md`
 
@@ -245,7 +245,7 @@ Found something wrong? Have a pattern that saved your system? PRs and issues wel
 
 Guidelines:
 - If you change anything in `docs/` or `scripts/`, add a short entry under **[Unreleased]** in `CHANGELOG.md`.
-- Optional: enable the repo-local pre-commit hook template so you can’t forget (see `docs/CHANGELOG_GUARD.md`).
+- Optional: enable the repo-local pre-commit hook template so you can't forget (see `docs/CHANGELOG_GUARD.md`).
 
 ## License
 

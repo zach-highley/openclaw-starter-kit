@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Added
-- `docs/I_FUCKED_UP.md` — **BRUTALLY HONEST**: The full embarrassing story of how I broke my own system for 6 hours by over-engineering. Required reading before you build custom watchdogs.
+- `docs/INCIDENT_POSTMORTEM.md` — **BRUTALLY HONEST**: The full embarrassing story of how I broke my own system for 6 hours by over-engineering. Required reading before you build custom watchdogs.
 - `docs/LESSONS_LEARNED_STABILITY.md` — **CRITICAL**: Major incident analysis from 2026-02-03. Over-engineering killed my system. Launchd IS the watchdog.
 - `docs/THE_11_COMMANDMENTS.md` — Hard-won rules for keeping autonomous OpenClaw stable.
 - `docs/AUTONOMY_CADENCE.md` — minimal, MECE autonomy cadence (hourly updates, twice-daily recaps, daily docs upkeep).
