@@ -4,6 +4,26 @@
 
 ---
 
+## ⚠️ Disclaimer
+
+**This is one person's notes, not official documentation.**
+
+I'm a solo developer figuring this out in real time. I break stuff constantly. Yesterday's "best practice" might be tomorrow's "what was I thinking?"
+
+**No guarantees. No warranties. No support.**
+
+- This repo is provided "as is"
+- I am not affiliated with OpenClaw/Moltbot
+- Following this guide might break your system (it's broken mine many times)
+- You are responsible for your own setup, security, and backups
+- If your bot goes rogue and orders 47 pizzas, that's on you
+
+**Always back up your config before trying anything from this repo.**
+
+For actual documentation: [docs.openclaw.ai](https://docs.openclaw.ai/)
+
+---
+
 ## The Core Philosophy
 
 **Simple > Clever. Always.**
@@ -19,8 +39,6 @@ Launchd IS the watchdog. You don't need scripts watching scripts watching script
 
 > "Don't waste your time on RAG, subagents, agents 2.0 or other things that are mostly just charade. Just talk to it."  
 > — Peter Steinberger (OpenClaw creator)
-
-Official docs: [docs.openclaw.ai](https://docs.openclaw.ai/)
 
 ---
 
@@ -140,7 +158,7 @@ Guide: **[docs/TELEGRAM_SETUP.md](docs/TELEGRAM_SETUP.md)**
 
 ### `scripts/archive/legacy-monitors/` — Deprecated
 
-Old watchdog, meta-monitor, and security hound scripts. Kept for reference only. **Do not use.**
+Old watchdog, meta-monitor, and security hound scripts. Kept for reference/learning. **Do not use** — they caused more problems than they solved.
 
 ### `docs/` — Guides
 
@@ -159,14 +177,16 @@ AGENTS.md, HEARTBEAT.md, SECURITY.md, SOUL.md. Customize for your setup.
 
 ---
 
-## Known Issues
+## Known Issues (Being Honest)
 
-- **It still crashes.** Gateway restarts happen. Launchd handles it.
-- **Subagents are unreliable.** They skip commits, fall back to wrong models. Always verify.
-- **Rate limits are real.** Plan for cooldowns during heavy use.
-- **Context window is a hard ceiling.** Save state early, restart often.
+- **It still crashes.** Gateway restarts happen. Launchd handles most of it, but not all.
+- **Subagents are unreliable.** They skip commits, fall back to wrong models, produce garbage. Always verify.
+- **Rate limits are real.** Even with careful batching, heavy use triggers cooldowns.
+- **Context window is a hard ceiling.** Long sessions degrade. Save state early, restart often.
+- **I break things regularly.** This repo reflects my current understanding, which changes weekly.
+- **Scripts may have bugs.** I wrote most of these at 2 AM. Test in a safe environment first.
 
-This is more like maintaining a car than using an app. But it gets better every day.
+This is more like maintaining a car than using an app. Expect to get your hands dirty.
 
 ---
 
@@ -194,8 +214,14 @@ See **[CHANGELOG.md](CHANGELOG.md)**.
 
 ## Contributing
 
-PRs and issues welcome. Add entries to CHANGELOG.md under `[Unreleased]` for any changes.
+PRs and issues welcome. If you found a better way, I want to know.
+
+Add entries to CHANGELOG.md under `[Unreleased]` for any changes.
 
 ## License
 
-MIT.
+MIT — Do whatever you want with this. No warranty, no liability, no guarantees.
+
+---
+
+**Made with 🐸 and too much coffee by [@[TWITTER_HANDLE]](https://twitter.com/ZachHighley)**

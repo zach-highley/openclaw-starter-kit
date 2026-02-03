@@ -6,9 +6,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-02-03
+
+### ⚠️ BREAKING: Philosophy Shift
+
+This release represents a fundamental change in approach. **Simple > Clever.**
+
+The old approach (v1-v2) recommended building layers of monitoring: watchdogs, meta-monitors, security hounds, config guardians. **That was wrong.** Those systems fought each other and caused more downtime than they prevented.
+
+The new approach: Trust the platform. Launchd IS the watchdog. One cron for maintenance. That's it.
+
 ### Changed
-- **README.md** — MAJOR REWRITE. Removed all references to deprecated watchdogs, meta-monitors, security hounds. Now reflects the simple architecture that actually works: ONE gateway + launchd KeepAlive + 5 AM doctor cron. Scripts table updated to show only active utilities.
-- Archived 13 legacy monitoring scripts to `scripts/archive/legacy-monitors/` (watchdog.sh, meta_monitor.py, security_hound.py, etc.). Kept for reference, not recommended for use.
+- **README.md** — Complete rewrite. Added honest disclaimer (no guarantees, I break stuff, not affiliated with OpenClaw). Removed all references to deprecated monitoring systems. Now documents what actually works.
+- Archived 13 legacy monitoring scripts to `scripts/archive/legacy-monitors/`:
+  - watchdog.sh, watchdog_learn.sh
+  - meta_monitor.py
+  - security_hound.py
+  - auto_doctor.py
+  - autonomous_work_loop.py
+  - subagent_watcher.py
+  - context_healer.py
+  - error_recovery.py
+  - pipeline_health.py
+  - agent_poll_enforcer.py
+  - session_reset_monitor.py
+  - telegram_delivery_checker.py
 
 ### Added
 - `docs/CONFIG_HYGIENE.md` — Guide for keeping config clean: workspace defaults, secrets migration to `.env`, `${VAR}` substitution, audit checklist. Lessons from 817MB cleanup sprint.
