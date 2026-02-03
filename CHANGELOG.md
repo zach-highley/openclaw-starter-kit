@@ -20,6 +20,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `scripts/auto_cleanup.py` — optional weekly cleanup helper (workspace-scoped; dry-run unless `--apply`).
 - `scripts/fix_readme_typo.py` — minimal, safe "autofix" helper used by the GitHub issue triage example.
 - `scripts/archive/.gitkeep` — placeholder directory for archived scripts (anti-bloat).
+- `scripts/changelog_guard.sh` — lightweight guard that requires `CHANGELOG.md` updates when `docs/` or `scripts/` change.
+- `templates/githooks/pre-commit` — optional pre-commit hook template that runs the changelog guard.
+- `docs/CHANGELOG_GUARD.md` — instructions for enabling the guard locally or in CI.
 
 ### Changed
 - `scripts/watchdog.sh` rewritten to be **single-gateway-safe** (uses `openclaw gateway status/start/restart`, avoids `nohup`/`pkill`).
