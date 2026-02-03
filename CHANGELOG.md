@@ -10,7 +10,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `docs/AUTONOMY_CADENCE.md` — minimal, MECE autonomy cadence (hourly updates, twice-daily recaps, daily docs upkeep).
 - `docs/DELIVERY_GOTCHAS.md` — how to avoid the "job ran but nothing delivered" failure mode (systemEvent vs agentTurn).
 - `docs/PRIME_DIRECTIVE.md` — public-safe operating philosophy.
+- `docs/TELEGRAM_SETUP.md` — robust Telegram runbook: numeric chat IDs, topics/thread IDs, typing indicators, safe restart/doctor flows.
+- `docs/RESCUE_BOT_PROFILE.md` — optional second isolated Gateway profile for recovery when the main instance bricks.
+- `docs/NIGHT_SHIFT.md` — overnight autonomy + high-signal update templates.
+- `docs/WORKSTREAMS.md` — best-practice pattern: one canonical chat + single source of truth workstreams file (SSOT).
+- `templates/WORKSTREAMS_TEMPLATE.md` — copy-paste SSOT template for new setups.
 - `config-examples/autonomy-cadence.json5` — safe, user-agnostic config snippet (timezone, typing indicators, heartbeat + messaging defaults).
+
+### Changed
+- `scripts/watchdog.sh` rewritten to be **single-gateway-safe** (uses `openclaw gateway status/start/restart`, avoids `nohup`/`pkill`).
+- `docs/BOT-HEALTH-CHECKS.md` rewritten to align with docs.openclaw.ai (strict schema validation, correct plugin guidance, correct Telegram CLI target requirements).
+- `docs/DELIVERY_GOTCHAS.md` expanded with Telegram specifics: `openclaw message send` requires `--target`, topics require `--thread-id`/`:topic:` encoding.
+- `scripts/meta_monitor.py` rewritten to be minimal and non-crashing; compat with `auto_doctor.py` calling conventions.
+- `config-examples/memory-optimized.json5` rewritten to be schema-aligned.
+- Removed Claude Sonnet assumptions across starter-kit docs/examples; default guidance is Opus primary with cross-provider fallbacks.
+- Updated multi-model config example to: Opus → Codex → Gemini → Kimi → Ollama.
+- `docs/NIGHT_SHIFT.md` now links to the workstreams pattern.
 
 ## [2.4.0] - 2026-02-01
 
@@ -133,18 +148,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 - Hardened language throughout: "recommended" → "required", enforcement not suggestions
-
-## [Unreleased]
-
-### Added
-- `docs/NIGHT_SHIFT.md` — overnight autonomy + high-signal update templates
-- `docs/WORKSTREAMS.md` — best-practice pattern: one canonical chat + single source of truth workstreams file (SSOT)
-- `templates/WORKSTREAMS_TEMPLATE.md` — copy-paste SSOT template for new setups
-
-### Changed
-- Removed Claude Sonnet assumptions across starter-kit docs/examples, default guidance is now Opus primary with cross-provider fallbacks.
-- Updated multi-model config example to: Opus → Codex → Gemini → Kimi → Ollama.
-- `docs/NIGHT_SHIFT.md` now links to the workstreams pattern.
 
 ## [0.1.0] - 2026-01-28
 
