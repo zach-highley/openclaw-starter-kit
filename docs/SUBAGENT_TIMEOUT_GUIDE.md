@@ -60,6 +60,9 @@ Instead of keeping timeouts tiny, keep timeouts reasonable and add guardrails:
    - Prefer 3 x 20-minute runs with checkpoints over 1 giant run with no check-ins.
 
 ## Where to configure timeouts
+Important: **do not** set `timeoutSeconds` under `agents.defaults.subagents`.
+That key is not part of the Gateway config schema in current OpenClaw versions and will prevent the Gateway from starting (strict validation).
+
 OpenClaw timeouts can be set in a few places depending on how you spawn sub-agents:
 
 - **Cron jobs** (`gateway cron`): set the job’s `timeoutSeconds` (or equivalent) for agent runs.
