@@ -7,11 +7,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Added
+- `docs/LESSONS_LEARNED_STABILITY.md` — **CRITICAL**: Major incident analysis from 2026-02-03. Over-engineering killed my system. Launchd IS the watchdog.
+- `docs/THE_11_COMMANDMENTS.md` — Hard-won rules for keeping autonomous OpenClaw stable.
 - `docs/AUTONOMY_CADENCE.md` — minimal, MECE autonomy cadence (hourly updates, twice-daily recaps, daily docs upkeep).
 - `docs/DELIVERY_GOTCHAS.md` — how to avoid the "job ran but nothing delivered" failure mode (systemEvent vs agentTurn).
 - `docs/PRIME_DIRECTIVE.md` — public-safe operating philosophy.
 - `config-examples/autonomy-cadence.json5` — safe, user-agnostic config snippet (timezone, typing indicators, heartbeat + messaging defaults).
 - Safe out-of-band gateway watchdog package (opt-in): `tools/watchdog/*` + docs `docs/WATCHDOG_OOB_SAFE.md`.
+
+### Changed
+- **README.md** — Major update with warning about over-engineering. Added prominent notice pointing to LESSONS_LEARNED_STABILITY.md.
+- Self-healing loop section now recommends simple approach (launchd + 5 AM cron) over complex multi-layer monitoring.
 
 ## [2.4.0] - 2026-02-01
 

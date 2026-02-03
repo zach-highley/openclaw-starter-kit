@@ -2,11 +2,32 @@
 
 ### Patterns for keeping an autonomous OpenClaw system running.
 
-I've been running OpenClaw 24/7 for about a week. It breaks constantly. The gateway crashes at 3 AM, subagents die mid-task, rate limits hit when you least expect it, and scripts pile up faster than you can track them.
+---
 
-But it's getting better. Every failure teaches you something, and if you encode those lessons into scripts and rules, the system starts fixing itself. That's what this repo is: the stuff I learned the hard way so you don't have to.
+> ⚠️ **IMPORTANT UPDATE (2026-02-03): Don't Over-Engineer!**
+>
+> I spent 6 hours today debugging a system that broke because I built too many monitoring layers. Custom watchdogs, config guardians, meta-monitors — they all fought each other.
+>
+> **The lesson:** Launchd's `KeepAlive=true` IS the watchdog. You don't need anything else.
+>
+> Read: **[docs/LESSONS_LEARNED_STABILITY.md](docs/LESSONS_LEARNED_STABILITY.md)** and **[docs/THE_11_COMMANDMENTS.md](docs/THE_11_COMMANDMENTS.md)**
+>
+> **TL;DR:** Simple > Clever. ONE gateway. Trust launchd. Don't build watchers to watch your watchers.
 
-**Fair warning:** This is not polished software. It's a collection of scripts, templates, and docs from a solo developer figuring this out in real time. Some of it is rough. Some of it will need adapting to your setup. But it works, most of the time, and when it doesn't, the monitoring layer catches it.
+---
+
+I've been running OpenClaw 24/7 for about two weeks now. It broke constantly at first. The gateway crashes at 3 AM, subagents die mid-task, rate limits hit when you least expect it.
+
+But here's what I learned: **most of the complexity I added made things worse, not better.**
+
+The stuff that actually works is simple:
+- ONE gateway with launchd `KeepAlive=true`
+- ONE daily cron that runs `openclaw doctor --fix` at 5 AM
+- That's basically it
+
+This repo contains both the complex stuff I tried (for learning) and the simple stuff that actually works. Start with the simple stuff.
+
+**Fair warning:** This is not polished software. It's a collection of scripts, templates, and docs from a solo developer figuring this out in real time.
 
 Official docs: [docs.openclaw.ai](https://docs.openclaw.ai/)
 
@@ -27,8 +48,9 @@ Then paste this to your bot:
 
 ## The self-healing loop
 
-Four layers, each watching the one below:
+> ⚠️ **UPDATE:** This section describes the complex approach I tried initially. **It's over-engineered.** See [LESSONS_LEARNED_STABILITY.md](docs/LESSONS_LEARNED_STABILITY.md) for what actually works.
 
+**What I thought I needed:**
 ```
 watchdog  →  meta-monitor  →  auto-doctor  →  weekly audit
  (5 min)      (watches         (deep health     (catches
@@ -36,12 +58,19 @@ watchdog  →  meta-monitor  →  auto-doctor  →  weekly audit
   alive)
 ```
 
-- **Watchdog** — Every 5 minutes. Gateway down? Restart it. Telegram dead? Flag it. Dumb and reliable.
-- **Meta-Monitor** — Watches the watchers. Your monitoring scripts will crash too. This catches that.
-- **Auto-Doctor** — Every 4 hours. Deep diagnostics, state save, context check. If context is dangerously high, triggers a safe restart.
-- **Weekly Audit** — Catches slow rot. Orphaned scripts, overlapping crons, stale state, secrets in git.
+**What actually works:**
+```
+launchd (KeepAlive=true)  →  5 AM cron (openclaw doctor --fix)
+     (auto-restart)              (daily maintenance)
+```
 
-Scripts: `scripts/watchdog.sh`, `scripts/meta_monitor.py`, `scripts/auto_doctor.py`
+That's it. Launchd IS the watchdog. You don't need scripts watching scripts.
+
+The scripts below are kept for reference/learning, but I recommend starting with just:
+1. Official launchd plist with `KeepAlive=true`
+2. One cron job at 5 AM: `openclaw doctor --fix`
+
+Scripts (archived for reference): `scripts/watchdog.sh`, `scripts/meta_monitor.py`, `scripts/auto_doctor.py`
 
 ### Beginner-friendly option: safe out-of-band watchdog (recommended)
 
