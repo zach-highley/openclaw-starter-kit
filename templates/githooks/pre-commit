@@ -1,0 +1,22 @@
+#!/bin/bash
+# pre-commit — optional hook template
+#
+# Purpose: require CHANGELOG.md updates when docs/ or scripts/ change.
+# Install (recommended, repo-local):
+#   mkdir -p .githooks
+#   cp templates/githooks/pre-commit .githooks/pre-commit
+#   chmod +x .githooks/pre-commit
+#   git config core.hooksPath .githooks
+#
+# Bypass (not recommended):
+#   SKIP_CHANGELOG_GUARD=1 git commit ...
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+if [[ -x "$REPO_ROOT/scripts/changelog_guard.sh" ]]; then
+  bash "$REPO_ROOT/scripts/changelog_guard.sh" --staged
+else
+  echo "WARN: scripts/changelog_guard.sh not found or not executable; skipping." >&2
+fi

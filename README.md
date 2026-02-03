@@ -201,6 +201,10 @@ See [CHANGELOG.md](CHANGELOG.md).
 
 Found something wrong? Have a pattern that saved your system? PRs and issues welcome.
 
+Guidelines:
+- If you change anything in `docs/` or `scripts/`, add a short entry under **[Unreleased]** in `CHANGELOG.md`.
+- Optional: enable the repo-local pre-commit hook template so you can’t forget (see `docs/CHANGELOG_GUARD.md`).
+
 ## License
 
 MIT.
