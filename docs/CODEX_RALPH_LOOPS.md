@@ -1,5 +1,20 @@
 # CODEX_RALPH_LOOPS.md — PRD + Checklist + Fresh-Context Implementation
 
+## The 95/5 Rule: Terminals Over Subagents
+
+**95% of work should run as terminals/CLIs (Codex CLI, Claude Code), not subagents.**
+
+Why:
+- Fresh context each iteration (amnesia is a feature)
+- PRD/checklist is source of truth, not agent memory
+- Less hallucination compounding
+- Visible via `ps aux | grep -E "(codex|claude)"`
+- Easy to kill/restart
+
+Use subagents only for pure research (5%).
+
+---
+
 This pattern is copied from the FelixCraftAI / Nat Eliason workflow.
 
 ## The problem

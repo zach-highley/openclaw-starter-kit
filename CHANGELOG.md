@@ -238,3 +238,7 @@ The new approach: Trust the platform. Launchd IS the watchdog. One cron for main
 ### Added
 - ADVANCED_PLAYBOOK: Added "The Felix Rule: Always Be Building" pattern
 
+
+### Changed
+- CODEX_RALPH_LOOPS: Added 95/5 rule (terminals over subagents)
+
