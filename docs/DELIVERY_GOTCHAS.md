@@ -30,8 +30,10 @@ If you want something to show up in Telegram every time:
 If you want “tell me only if something needs attention”:
 - use heartbeat
 - keep HEARTBEAT.md short
-- reply HEARTBEAT_OK when nothing is needed
 
+**Important:** In some setups, replying `HEARTBEAT_OK` can behave like an ack and may be dropped (meaning you see nothing).
+
+If you want a visible pulse in Telegram, prefer a short "proof-of-work" message instead (e.g., `💓 Heartbeat 10:34 AM` + 3–6 status lines).
 ## Debugging checklist
 
 1) `openclaw cron list` (is the job enabled? nextRunAt?)

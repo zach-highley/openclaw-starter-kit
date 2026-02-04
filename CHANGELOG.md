@@ -13,6 +13,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **Heartbeat-first architecture pattern** — Use heartbeat for operational checks (email, calendar, tasks), cron for scheduled reports. Per docs.openclaw.ai best practices.
 - **Creator Watch pattern** — Track other AI agents (like @FelixCraftAI) in twice-daily summaries to learn patterns
 - **💓 Heartbeat indicator** — Start heartbeat messages with 💓 emoji so humans know it's a pulse check, not a regular message
+- **Heartbeat reliability gotcha** — `HEARTBEAT_OK` can be invisible depending on delivery wiring; prefer visible proof-of-work heartbeats when you want a Telegram pulse
+- `docs/ADVANCED_PLAYBOOK.md` — production autonomy patterns (heartbeat proof-of-work, Nat-style one-click review links, MECE guardrails)
 
 ### Changed
 - **`docs/NIGHT_SHIFT.md`** — Complete rewrite with battle-tested patterns from real overnight AI operations:
