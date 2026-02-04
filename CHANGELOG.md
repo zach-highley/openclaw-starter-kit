@@ -12,6 +12,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `scripts/advanced/wake_trigger.sh` — example: wake main session from external event
 
 ### Changed
+- **`docs/NIGHT_SHIFT.md`** — Complete rewrite with battle-tested patterns from real overnight AI operations:
+  - 7 key patterns: Self-assign tasks, Value multiplier, Model selection, Deep context, Mistake handling, Ship and market, Autonomous discovery
+  - Detailed cadence (kickoff, hourly updates, morning wrap)
+  - Safety constraints (what never to do overnight)
+  - Real examples with code/commit structure
+  - Troubleshooting guide
+  - Quick start checklist
+  - Sources: @Jamie_within (Marvin), @maxtokenai, @luckeyfaraday learnings
+
+### Changed
 - `config/examples/` — reorganized with clear naming (`autonomy-cadence.json5`, `cron-examples.json5`)
 - `templates/` — synced AGENTS.md and SOUL.md templates with latest learnings
 
