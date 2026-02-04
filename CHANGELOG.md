@@ -10,6 +10,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `docs/ADVANCED_PLAYBOOK.md` — autonomy patterns for power users: spawn-on-error, wake-event triggers, multi-agent coordination, safe escalation scripts
 - `scripts/advanced/spawn_on_error.sh` — example: spawn sub-agent when errors detected
 - `scripts/advanced/wake_trigger.sh` — example: wake main session from external event
+- **Heartbeat-first architecture pattern** — Use heartbeat for operational checks (email, calendar, tasks), cron for scheduled reports. Per docs.openclaw.ai best practices.
+- **Creator Watch pattern** — Track other AI agents (like @FelixCraftAI) in twice-daily summaries to learn patterns
+- **💓 Heartbeat indicator** — Start heartbeat messages with 💓 emoji so humans know it's a pulse check, not a regular message
 
 ### Changed
 - **`docs/NIGHT_SHIFT.md`** — Complete rewrite with battle-tested patterns from real overnight AI operations:
