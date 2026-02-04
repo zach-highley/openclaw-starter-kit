@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+- `docs/ADVANCED_PLAYBOOK.md` — autonomy patterns for power users: spawn-on-error, wake-event triggers, multi-agent coordination, safe escalation scripts
+- `scripts/advanced/spawn_on_error.sh` — example: spawn sub-agent when errors detected
+- `scripts/advanced/wake_trigger.sh` — example: wake main session from external event
+
+### Changed
+- `config/examples/` — reorganized with clear naming (`autonomy-cadence.json5`, `cron-examples.json5`)
+- `templates/` — synced AGENTS.md and SOUL.md templates with latest learnings
+
 ## [3.0.0] - 2026-02-03
 
 ### ⚠️ BREAKING: Philosophy Shift
