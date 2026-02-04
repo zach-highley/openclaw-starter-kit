@@ -234,3 +234,7 @@ The new approach: Trust the platform. Launchd IS the watchdog. One cron for main
 
 ### Added
 - Initial release with beginner-friendly install guide and copy-paste bot integration
+
+### Added
+- ADVANCED_PLAYBOOK: Added "The Felix Rule: Always Be Building" pattern
+

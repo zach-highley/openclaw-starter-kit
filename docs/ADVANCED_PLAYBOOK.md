@@ -63,7 +63,30 @@ This keeps the human in control without blocking execution.
 
 ---
 
-## 5) MECE guardrails
+## 5) The Felix Rule: Always Be Building
+
+**Something should ALWAYS be building.** (Nat Eliason / FelixCraftAI pattern)
+
+Every heartbeat should verify work is actually running:
+1. **Subagents:** `sessions_list` — are any subagents alive?
+2. **Background processes:** `process list` — any exec sessions started?
+3. **Codex/Claude CLI:** `ps aux | grep -E "(codex|claude)"` — any coding agents running?
+
+**Heartbeat reporting:**
+```
+🔨 Building: [X] Codex | [X] Claude Code | [X] subagents | [X] bg procs
+```
+
+**If count is ZERO → FAILURE STATE:**
+- Violates "Always Be Building" commandment
+- Immediately start highest-value work from backlog
+- Don't ask, just execute
+
+**Critical insight:** Don't trust state files. Verify sessions/processes actually exist. A JSON file saying "IN_PROGRESS" means nothing if the process died.
+
+---
+
+## 6) MECE guardrails
 
 If you feel the system getting “clever” again:
 
