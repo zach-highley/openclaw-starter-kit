@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **💓 Heartbeat indicator** — Start heartbeat messages with 💓 emoji so humans know it's a pulse check, not a regular message
 - **Heartbeat reliability gotcha** — `HEARTBEAT_OK` can be invisible depending on delivery wiring; prefer visible proof-of-work heartbeats when you want a Telegram pulse
 - `docs/ADVANCED_PLAYBOOK.md` — production autonomy patterns (heartbeat proof-of-work, Nat-style one-click review links, MECE guardrails)
+- `docs/CODEX_RALPH_LOOPS.md` — PRD + checklist + fresh-context Codex CLI loops ("amnesia is a feature")
 
 ### Changed
 - **`docs/NIGHT_SHIFT.md`** — Complete rewrite with battle-tested patterns from real overnight AI operations:

@@ -4,7 +4,18 @@
 
 ## The Problem
 
-Every subagent spawn costs ~20,000 tokens of overhead before actual work begins. Spawning 5 subagents for 5 small tasks = 100K tokens of wasted overhead. One subagent doing all 5 = 20K overhead.
+Every subagent spawn costs ~20,000 tokens of overhead before actual work begins.
+
+Also, long-running subagent chains can accumulate context drift: compounding hallucinations and overconfident refactors.
+
+## Alternative for implementation work: Codex CLI Ralph loops
+For real code implementation, a more reliable pattern is:
+- PRD + checklist on disk
+- Codex CLI in `--full-auto`
+- fresh context each iteration (amnesia is a feature)
+
+See: `docs/CODEX_RALPH_LOOPS.md`.
+ Spawning 5 subagents for 5 small tasks = 100K tokens of wasted overhead. One subagent doing all 5 = 20K overhead.
 
 If you're spawning subagents like confetti, you're burning context on orchestration instead of work.
 
