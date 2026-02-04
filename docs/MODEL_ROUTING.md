@@ -2,19 +2,34 @@
 
 ## TL;DR
 
-**One brain, multiple specialists.** Keep Claude Opus as your primary conversational model, route coding to Codex, and always keep cross-provider fallbacks so you never get trapped in a single provider cooldown.
+**One brain, multiple specialists.** Route by task type: Codex for backend/architecture, Claude Opus for PM/planning/content, Claude Code for frontend/UI. Always keep cross-provider fallbacks so you never get trapped in a single provider cooldown.
+
+## The Rule (Feb 2026 Industry Consensus)
+
+From @Austen (211 likes, 55 replies):
+> "So… Codex for architecture backend, Claude for PM and front end?"
+
+This matches @FelixCraftAI's working pattern with @nateliason.
+
+| Task Type | Model | Why |
+|-----------|-------|-----|
+| **Architecture, backend, APIs, databases, infrastructure** | Codex MAX | Best for system design, code generation |
+| **PM work, planning, research, content, strategy** | Claude Opus | Best for reasoning, coordination, writing |
+| **Frontend, UI/UX, visual design, React/Next.js, CSS** | Claude Code | Best for design judgment, visual iteration |
+| **Pure research with no code** | Claude Opus (or subagent) | Memory context helps |
 
 ## Recommended Stack
 
 | Tier | Role | Model | When It's Used |
 |------|------|-------|----------------|
-| T0 | 🧠 Primary chat | Claude Opus (`anthropic/claude-opus-4-5`) | Strategy, reasoning, day-to-day conversation |
-| T1 | 💻 Code specialist | Codex (`openai-codex/gpt-5.2`) | Implementation, refactors, scripts |
+| T0 | 🧠 PM/Strategy | Claude Opus (`anthropic/claude-opus-4-5`) | Planning, research, content, conversation |
+| T0 | 💻 Backend/Arch | Codex (`openai-codex/gpt-5.2`) | Architecture, APIs, scripts, infrastructure |
+| T0 | 🎨 Frontend/UI | Claude Code (`claude-code`) | UI/UX, visual design, React, CSS |
 | T2 | 📡 Bulk/background | Gemini (`google-gemini-cli/gemini-3-pro-preview`) | Summaries, bulk processing, routine heartbeats |
 | T3 | ⚡ Cloud fallback | Kimi (`nvidia-nim/moonshotai/kimi-k2.5`) | When Anthropic/OpenAI are rate-limited |
 | T4 | 🏠 Local emergency | Ollama (`ollama/qwen2.5:14b`) | Offline or all cloud exhausted |
 
-**Explicit design choice:** this repo does **not** rely on Claude Sonnet. If you want Sonnet, add it yourself. The starter kit default is: *Opus always, then cross-provider fallbacks*.
+**Explicit design choice:** this repo does **not** rely on Claude Sonnet. If you want Sonnet, add it yourself. The starter kit default is: *Opus always for PM work, Codex for coding, cross-provider fallbacks*.
 
 ## Router Script
 

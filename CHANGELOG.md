@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Added
+- `docs/DOC_SYNC_CHECKLIST.md` — **Gating rule** for documentation sync. Before any push, check if ALL docs need updating, not just CHANGELOG.md. Includes quick audit script and trigger-to-doc mapping table.
 - `docs/ADVANCED_PLAYBOOK.md` — autonomy patterns for power users: spawn-on-error, wake-event triggers, multi-agent coordination, safe escalation scripts
 - `scripts/advanced/spawn_on_error.sh` — example: spawn sub-agent when errors detected
 - `scripts/advanced/wake_trigger.sh` — example: wake main session from external event
@@ -18,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `docs/CODEX_RALPH_LOOPS.md` — PRD + checklist + fresh-context Codex CLI loops ("amnesia is a feature")
 
 ### Changed
+- **`docs/MODEL_ROUTING.md`** — Updated with Feb 2026 industry consensus from @Austen (211 likes): "Codex for architecture backend, Claude for PM and front end". Added task-type routing table (backend → Codex, PM/planning → Claude Opus, frontend/UI → Claude Code). Matches @FelixCraftAI's working pattern.
 - **`docs/NIGHT_SHIFT.md`** — Complete rewrite with battle-tested patterns from real overnight AI operations:
   - 7 key patterns: Self-assign tasks, Value multiplier, Model selection, Deep context, Mistake handling, Ship and market, Autonomous discovery
   - Detailed cadence (kickoff, hourly updates, morning wrap)

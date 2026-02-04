@@ -21,6 +21,23 @@
 
 ## Key Concepts
 
+### Model Routing (Feb 2026 Update)
+From @Austen (industry consensus):
+- **Codex** → Architecture, backend, scripts, APIs, databases, infrastructure
+- **Claude Opus** → PM work, planning, research, content, strategy
+- **Claude Code** → Frontend, UI/UX, visual design, React/Next.js, CSS
+
+### Ralph Loops (Feb 2026 - Critical Pattern)
+Instead of using sub-agents for coding:
+1. Spawn **Codex CLI directly** in full-auto mode
+2. Wrap in **Ralph loops** with PRD checklist as source of truth
+3. Each iteration gets **completely fresh context** (discovers state from files + git, not memory)
+4. Validate against checklist: "Lies? Restart. Stalls? Restart. Dies? Restart."
+
+**Key insight:** "Amnesia is a feature. Fresh eyes every iteration means no compounding hallucinations."
+
+Felix ran 108 tasks across 3 branches in 4 hours using this pattern.
+
 ### Trust Ladder
 Graduated autonomy levels:
 1. Ask before everything
@@ -29,15 +46,28 @@ Graduated autonomy levels:
 4. Full autonomy with periodic check-ins
 
 ### Three-Layer Memory
-1. Ephemeral (conversation context)
-2. Session (daily logs)
-3. Persistent (MEMORY.md, long-term)
+1. **Knowledge graph** — people and projects (not just a flat file)
+2. **Daily notes** — timeline events
+3. **Thinking file** — how the human thinks
+
+One flat notes file doesn't cut it. You need something closer to how a real colleague learns you over months.
+
+### Routines
+- Morning checkins
+- Nightly memory extraction
+- Weekly synthesis (stale facts decay out)
+- **Nightly friction-fix**: scans day for friction → picks one thing → builds it overnight
 
 ### Daily Operating Rhythms
 - Morning check-in
 - Autonomous work periods
 - Evening summary
 - Overnight builds
+
+### Economic Agency Bottlenecks
+> "The agent-first business isn't limited by what AI can do. It's limited by what the world will let AI do."
+
+What blocks agents: identity in physical/financial world, not intelligence.
 
 ## How We Compare
 
