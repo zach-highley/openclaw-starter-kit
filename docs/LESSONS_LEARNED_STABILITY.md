@@ -84,3 +84,39 @@ If gateway dies:
 > — Peter Steinberger (OpenClaw creator)
 
 The same applies to monitoring. Don't build complex systems to watch complex systems. Build simple systems that don't need watching.
+
+---
+
+## Lesson: Always E2E Test Automation Before Trusting It (Feb 5, 2026)
+
+### The Incident
+Built a heartbeat-based autonomous work system (state machine: IDLE → BUILDING → REVIEWING → IDLE) that uses `codex exec` to run background coding tasks. Shipped it without testing.
+
+### What We Found When We Actually Tested
+Two critical bugs that would have caused permanent failure:
+
+1. **Wrong Codex command.** Used `codex --full-auto` (interactive TUI) instead of `codex exec --full-auto` (non-interactive batch mode). The interactive mode needs a PTY, outputs garbled escape codes, and **never exits**. The state machine would have been permanently stuck in BUILDING state.
+
+2. **Missing git repo requirement.** `codex exec` refuses to run outside a git repository. No error handling for this case.
+
+### The Fix
+- Changed command to `codex exec --full-auto`
+- Added `--skip-git-repo-check` documentation
+- Ran full E2E simulation: picked real task, launched Codex, polled process, reviewed output, committed, pushed, updated state
+
+### The Lesson
+> Don't assume automation works because you wrote it. The first real run IS the test. If your first heartbeat tick fails, every subsequent tick is wasted compute.
+
+**Testing checklist for any autonomous system:**
+- [ ] Can the background process actually launch? (PTY requirements, permissions)
+- [ ] Does it exit cleanly? (interactive vs batch mode)
+- [ ] Can you detect completion? (exit codes, process polling)
+- [ ] Are state transitions correct? (file writes, JSON schema)
+- [ ] Do notifications fire? (Telegram, email)
+- [ ] Does the full cycle complete? (IDLE → work → IDLE)
+
+## Lesson: No Watchers Watching Watchers (Feb 5, 2026)
+
+Added a 15-minute "auditor" cron to check if the heartbeat work loop was functioning. This was a watcher watching a watcher — a MECE violation. The heartbeat itself should be the auditor. If the heartbeat's rules are correct, no external monitor is needed. Removed the auditor immediately.
+
+> If you need a monitor to check your monitor, your monitor is broken.

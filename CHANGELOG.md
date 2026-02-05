@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added (Feb 5, 2026)
+- **Plan C: Heartbeat Work Orchestrator** pattern in `docs/CRON_HEARTBEAT_GUIDE.md` — heartbeat as brain, background exec as hands, state file as memory. Full state machine (IDLE → BUILDING → REVIEWING → IDLE).
+- **`codex exec` vs `codex --full-auto` comparison table** — critical distinction for anyone automating Codex CLI.
+- **Pre-flight audit checklist** for autonomous builds in heartbeat guide.
+- **E2E testing lesson** in `docs/LESSONS_LEARNED_STABILITY.md` — two critical bugs found in "completed" automation.
+- **No watchers watching watchers** lesson in stability docs.
+
 ### Added
 - `docs/DOC_SYNC_CHECKLIST.md` — **Gating rule** for documentation sync. Before any push, check if ALL docs need updating, not just CHANGELOG.md. Includes quick audit script and trigger-to-doc mapping table.
 - `docs/ADVANCED_PLAYBOOK.md` — autonomy patterns for power users: spawn-on-error, wake-event triggers, multi-agent coordination, safe escalation scripts
