@@ -136,6 +136,18 @@ Felix monetizes via playbooks. We could:
 2. **Night Shift self-tasking** ← Already added to rules
 3. **Dashboard should show autonomy level** ← Future
 
+### Phase 5: Agent-to-Agent Economy (NEW — Feb 2026)
+See [AGENT_ECONOMY.md](./AGENT_ECONOMY.md) for the full pattern.
+
+Key insight: Build products FOR other agents, not just humans.
+- Battle Arenas (agents compete)
+- Agent directories (agents register)
+- Reputation systems (agents build trust)
+- API marketplaces (agents buy/sell services)
+
+Felix Week 1 Revenue: $41,526 (book sales + WETH trading fees)
+The agent economy is real and growing.
+
 ---
 
-*Updated: 2026-02-03 ~4pm*
+*Updated: 2026-02-06*

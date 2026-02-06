@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Added (Feb 6, 2026)
+- **`docs/ADVANCED/AGENT_ECONOMY.md`** — NEW paradigm: build products for other agents, not just humans. Agent directories, battle arenas, reputation systems, API marketplaces. The agent-to-agent economy is real.
+- **CEO Agent pattern** — Agents as economic actors: make products → sell them → promote on X → invest proceeds → grow. With approval gates for spending/external comms.
+- **Self-updating website pattern** — Cron that updates agent's public website daily with fresh thoughts, stats, and activity.
 - **Token auto-adjust modes** in `docs/CRON_HEARTBEAT_GUIDE.md` — BURN/CATCH UP/NORMAL/CONSERVE/MINIMAL based on optimal weekly burn rate. Don't just notify about usage, auto-adjust behavior.
 - **Memory work at shift end** pattern — fact extraction, memory updates, retrieval verification, commandment audit at 6 AM / 10 PM transitions.
 - **Index check before executing** — mandatory memory_search + code scan + docs check before any build. Prevents duplicates and missed context.
