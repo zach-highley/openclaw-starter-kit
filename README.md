@@ -240,4 +240,4 @@ MIT — Do whatever you want with this. No warranty, no liability, no guarantees
 
 ---
 
-**Made with 🐸 and too much coffee by [@[TWITTER_HANDLE]](https://twitter.com/ZachHighley)**
+**Made with 🐸 and too much coffee by [@[TWITTER_HANDLE]](https://twitter.com/[TWITTER_HANDLE])**
