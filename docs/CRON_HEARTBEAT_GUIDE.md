@@ -150,6 +150,45 @@ REVIEWING → verify output, commit, update all tracking files, set IDLE
 4. Scope check — can it complete in one cycle?
 5. Route decision — backend (Codex) vs frontend (Claude Code) vs direct
 
+### Token auto-adjust (Feb 6, 2026)
+
+Calculate optimal burn rate and adjust behavior automatically:
+
+```
+Optimal weekly usage = (day_of_week / 7) × 100%
+Example: Wednesday (day 3) → optimal = 43%
+```
+
+| Rate vs Optimal | Mode | Behavior |
+|-----------------|------|----------|
+| Behind >15% | 🔥 BURN | Parallel Codex builds, ambitious tasks |
+| Behind 5-15% | ⚡ CATCH UP | Aggressive work, don't wait |
+| ±5% | ⚡ NORMAL | Standard operation |
+| Ahead >10% | 🐢 CONSERVE | Smaller tasks, build directly |
+| >95% used | ⏸️ MINIMAL | Only critical fixes |
+
+Don't just notify about token status — **auto-adjust behavior**.
+
+### Memory work at shift end
+
+At the end of each shift (night shift = 6 AM, day shift = 10 PM):
+
+1. Run fact extraction from today's session
+2. Update `memory/YYYY-MM-DD.md` with learnings
+3. Verify memory retrieval works (session_context_brief or equivalent)
+4. Run 12 Commandments audit checklist
+5. Document any failures and implement fixes
+
+### Index check before executing
+
+Before any build, scan for relevant context:
+
+1. `memory_search` for the task topic
+2. Check existing code (`grep`, `find`)
+3. Check docs index
+4. Verify state file reality
+5. Check if a skill already exists for this task
+
 ### Lessons learned the hard way
 - **Test before trusting.** We wrote a 150-line state machine and assumed it worked. The core command (`codex --full-auto`) was wrong. Would have permanently stuck the system.
 - **Dedup saves work.** Always check if a task was already completed before starting.

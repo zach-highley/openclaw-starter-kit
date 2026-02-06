@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added (Feb 6, 2026)
+- **Token auto-adjust modes** in `docs/CRON_HEARTBEAT_GUIDE.md` — BURN/CATCH UP/NORMAL/CONSERVE/MINIMAL based on optimal weekly burn rate. Don't just notify about usage, auto-adjust behavior.
+- **Memory work at shift end** pattern — fact extraction, memory updates, retrieval verification, commandment audit at 6 AM / 10 PM transitions.
+- **Index check before executing** — mandatory memory_search + code scan + docs check before any build. Prevents duplicates and missed context.
+- **Eight Sleep presence vs sleepStart fix** in habit tracking — if tracking "in bed by X", use presence start (when user got in bed), not sleepStart (when sleep began). Common bug.
+- **Streak calculation from start date** — don't rely on stale `currentStreak` counters. Always calculate `(today - streakStart).days` for accuracy.
+
+### Changed (Feb 6, 2026)
+- **Personality calibration lesson** in `templates/SOUL.md` — if the AI is too eager/accommodating, dial up the grumpy. User feedback: "British dry humor more biting and direct." The eager American intern persona is a failure mode.
+
 ### Added (Feb 5, 2026)
 - **Plan C: Heartbeat Work Orchestrator** pattern in `docs/CRON_HEARTBEAT_GUIDE.md` — heartbeat as brain, background exec as hands, state file as memory. Full state machine (IDLE → BUILDING → REVIEWING → IDLE).
 - **`codex exec` vs `codex --full-auto` comparison table** — critical distinction for anyone automating Codex CLI.
