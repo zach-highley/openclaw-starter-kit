@@ -26,7 +26,7 @@
 {
   "agents": {
     "defaults": {
-      "workspace": "/Users/you/my-custom-folder"
+      "workspace": "/path/to/custom-workspace"
     }
   }
 }

@@ -152,13 +152,16 @@ OpenClaw already ships a first-class gateway service and repair flow.
 
 This starter kit intentionally does **not** ship `install_*` launchd/systemd scripts — they rot fast and tend to spawn duplicate gateways.
 
-**Self-healing watchdog:**
+**Self-healing (v3.0 philosophy — Simple > Clever):**
 
-Copy `scripts/watchdog.sh` and `scripts/watchdog_learn.sh`. The watchdog runs 13 health checks every 5 minutes and has 4 escalation levels:
-1. Run `openclaw doctor --fix`
-2. Restart gateway
-3. Switch to fallback model
-4. Alert human (last resort)
+> ⚠️ **Don't build watchdogs.** Launchd/systemd IS the watchdog. Custom monitoring scripts fight each other and cause more problems than they solve. See `docs/INCIDENT_POSTMORTEM.md` for the full story.
+
+Instead:
+1. Use the official `openclaw doctor --fix` via a simple daily cron (5 AM)
+2. Let launchd/systemd KeepAlive handle restarts
+3. Trust the platform — one gateway, one service manager, that's it
+
+If you have existing watchdog scripts from an older setup, archive them. They're technical debt.
 
 **Security:**
 
@@ -231,9 +234,8 @@ scripts/
   model_router.py          — Intelligent model routing with degradation
   auto_update.py           — Optional weekly package updates (safe defaults)
   auto_cleanup.py          — Optional weekly cleanup (safe defaults)
-  watchdog.sh              — 13-check self-healing watchdog
-  watchdog_learn.sh        — Incident learning + root cause analysis
-  security_hound.py        — Learning security monitor
+  check_usage.py           — Token usage monitoring
+  model_router.py          — Smart model selection based on task
   meta_monitor.py          — Watches the watchers
   context_healer.py        — Context usage monitor (notification-only)
   emergency_lockdown.sh    — Break-glass emergency controls

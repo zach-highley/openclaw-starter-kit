@@ -19,7 +19,7 @@ It does **not**:
 - auto-reset sessions
 - run arbitrary self-healing experiments
 
-If you want the more advanced / aggressive version, see `scripts/watchdog.sh`.
+**Note (v3.0):** The "advanced watchdog" pattern has been deprecated. See `docs/INCIDENT_POSTMORTEM.md` for why — complex watchdog systems caused more downtime than they prevented. This simple OOB watchdog is the recommended approach.
 
 ---
 
