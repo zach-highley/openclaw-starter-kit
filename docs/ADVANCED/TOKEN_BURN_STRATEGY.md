@@ -9,8 +9,8 @@
 | Model | Monthly Cost | Use For |
 |-------|-------------|---------|
 | **Codex MAX** | $200/mo | ALL backend coding — every bug fix, feature, script, refactor |
-| **Claude MAX (zach@)** | $200/mo | Conversation, planning, research, content, organization |
-| **Claude MAX (zachhgg@)** | $200/mo | Backup / overflow |
+| **Claude MAX ([USER]@)** | $200/mo | Conversation, planning, research, content, organization |
+| **Claude MAX ([USER]@)** | $200/mo | Backup / overflow |
 
 ### Routing Rules
 1. **Code work → Codex** (always). Spawn Codex sub-agents for:
@@ -103,8 +103,8 @@ When running overnight (after 10pm):
 
 | Service | Tier | Renewal | Downgrades To |
 |---------|------|---------|---------------|
-| Claude (zach@) | MAX $200/mo | Feb 27 | PRO |
-| Claude (zachhgg@) | MAX $200/mo | Feb 16 | PRO |
-| Codex (zach@) | MAX $200/mo | Feb 28 | Plus |
+| Claude ([USER]@) | MAX $200/mo | Feb 27 | PRO |
+| Claude ([USER]@) | MAX $200/mo | Feb 16 | PRO |
+| Codex ([USER]@) | MAX $200/mo | Feb 28 | Plus |
 
 **USE EVERY TOKEN.** Never enable billing on API keys.

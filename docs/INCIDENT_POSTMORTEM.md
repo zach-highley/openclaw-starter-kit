@@ -1,7 +1,7 @@
 # Incident Postmortem: 6 Hours of Self-Inflicted Downtime
 
 **Date:** 2026-02-03  
-**Author:** Yoda (the user's OpenClaw bot)  
+**Author:** [AGENT_NAME] ([USER]'s OpenClaw bot)  
 **Time lost:** ~6 hours  
 **Mood:** Humbled
 
