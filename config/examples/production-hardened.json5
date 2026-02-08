@@ -1,0 +1,318 @@
+// production-hardened.json5
+// A real production config, sanitized. Replace placeholder values with your own.
+// Based on 355-item audit of every OpenClaw configuration option.
+//
+// Priority order: Security > Simplicity > Uptime > Automation > Memory
+
+{
+  // ═══════════════════════════════════════════
+  // LOGGING
+  // ═══════════════════════════════════════════
+  logging: {
+    level: "info",                          // "debug" is noisy, "warn" misses useful info
+    file: "/tmp/openclaw/openclaw.log",     // Separate from workspace
+    consoleLevel: "info",
+    consoleStyle: "pretty",
+    redactSensitive: "tools"                // Redact tool output in logs
+  },
+
+  // ═══════════════════════════════════════════
+  // AUTHENTICATION (Multi-Provider)
+  // ═══════════════════════════════════════════
+  auth: {
+    profiles: {
+      "anthropic:default": {
+        provider: "anthropic",
+        mode: "token"                       // Uses ANTHROPIC_API_KEY from .env
+      },
+      "openai-codex:default": {
+        provider: "openai-codex",
+        mode: "oauth"                       // Browser-based OAuth (usage-limited)
+      }
+      // OpenRouter: auto-detected from OPENROUTER_API_KEY in .env
+    }
+  },
+
+  // ═══════════════════════════════════════════
+  // AGENTS (Core Behavior)
+  // ═══════════════════════════════════════════
+  agents: {
+    defaults: {
+      // --- Model Chain (4-deep fallback) ---
+      model: {
+        primary: "anthropic/claude-opus-4-6",
+        fallbacks: [
+          "openai-codex/gpt-5.3-codex",
+          "openrouter/minimax/minimax-m2.1",
+          "openrouter/anthropic/claude-sonnet-4-5"
+        ]
+      },
+      imageModel: {
+        primary: "anthropic/claude-opus-4-6",
+        fallbacks: ["openai-codex/gpt-5.3-codex"]
+      },
+
+      // --- Model Aliases ---
+      models: {
+        "anthropic/claude-opus-4-6": {
+          alias: "opus",
+          params: { cacheRetention: "long" }  // Enable prompt caching
+        },
+        "openai-codex/gpt-5.3-codex": { alias: "codex" },
+        "openrouter/minimax/minimax-m2.1": { alias: "minimax" },
+        "openrouter/anthropic/claude-sonnet-4-5": { alias: "sonnet-or" }
+      },
+
+      // --- Workspace ---
+      workspace: "~/.openclaw/workspace",   // Default location
+      userTimezone: "America/New_York",     // Your timezone
+
+      // --- Memory Search (Hybrid Vector + Text) ---
+      memorySearch: {
+        enabled: true,
+        sources: ["memory", "sessions"],
+        provider: "gemini",                 // Free embeddings
+        model: "gemini-embedding-001",
+        query: {
+          maxResults: 8,
+          hybrid: {
+            enabled: true,
+            vectorWeight: 0.7,              // 70% semantic, 30% keyword
+            textWeight: 0.3,
+            candidateMultiplier: 4
+          }
+        },
+        cache: {
+          enabled: true,
+          maxEntries: 50000
+        }
+      },
+
+      // --- Context Pruning ---
+      contextPruning: {
+        mode: "cache-ttl",
+        ttl: "7d",
+        keepLastAssistants: 8,
+        softTrimRatio: 0.75,
+        hardClearRatio: 0.9,
+        minPrunableToolChars: 2000
+      },
+
+      // --- Compaction (Memory Flush) ---
+      compaction: {
+        mode: "safeguard",
+        memoryFlush: {
+          enabled: true,
+          prompt: "Write any lasting notes to memory/YYYY-MM-DD.md; reply with NO_REPLY if nothing to store.",
+          systemPrompt: "Session nearing compaction. Store durable memories now."
+        }
+      },
+
+      // --- Thinking & Verbosity ---
+      thinkingDefault: "high",              // Enable deep reasoning
+      verboseDefault: "on",                 // Full tool output visibility
+
+      // --- Timeouts ---
+      timeoutSeconds: 3600,                 // 1 hour (default is too short for long tasks)
+      maxConcurrent: 10,
+      subagents: { maxConcurrent: 10 },
+
+      // --- Heartbeat ---
+      heartbeat: {
+        every: "30m",                       // Minimum 30 min (5 min = $50/day!)
+        activeHours: {
+          start: "07:00",                   // Don't burn tokens while sleeping
+          end: "23:00"
+        },
+        target: "last",
+        ackMaxChars: 120
+      },
+
+      // --- Sandbox ---
+      sandbox: {
+        mode: "non-main",                   // Sandbox all non-main agents
+        workspaceAccess: "ro",              // Read-only for sandboxed agents
+        scope: "session"
+      }
+    },
+
+    // --- Agent Identity ---
+    list: [{
+      id: "main",
+      identity: {
+        name: "YourAgentName",
+        theme: "Your agent's vibe",
+        emoji: "🤖"
+      }
+    }]
+  },
+
+  // ═══════════════════════════════════════════
+  // TOOLS
+  // ═══════════════════════════════════════════
+  tools: {
+    web: {
+      search: {
+        enabled: true,
+        apiKey: "${BRAVE_API_KEY}"          // Brave Search (get key at brave.com)
+      },
+      fetch: { enabled: true }
+    },
+    elevated: {
+      enabled: true,
+      allowFrom: {
+        telegram: ["YOUR_TELEGRAM_ID"]      // Only you can approve elevated ops
+      }
+    }
+  },
+
+  // ═══════════════════════════════════════════
+  // MESSAGES
+  // ═══════════════════════════════════════════
+  messages: {
+    ackReaction: "👍",                      // React to show message received
+    ackReactionScope: "all"
+  },
+
+  // ═══════════════════════════════════════════
+  // COMMANDS (Locked Down)
+  // ═══════════════════════════════════════════
+  commands: {
+    native: "auto",
+    nativeSkills: "auto",
+    bash: false,                            // No shell via chat
+    config: false,                          // No config changes via chat
+    debug: false,                           // No debug commands
+    restart: false,                         // No restart via chat
+    useAccessGroups: true
+  },
+
+  // ═══════════════════════════════════════════
+  // APPROVALS
+  // ═══════════════════════════════════════════
+  approvals: {
+    exec: {
+      enabled: true,                        // Require approval for exec commands
+      mode: "both",                         // Dashboard + Telegram
+      targets: [{
+        channel: "telegram",
+        to: "YOUR_TELEGRAM_ID"
+      }]
+    }
+  },
+
+  // ═══════════════════════════════════════════
+  // SESSION
+  // ═══════════════════════════════════════════
+  session: {
+    reset: {
+      mode: "daily",
+      atHour: 4,                            // 4 AM local time
+      idleMinutes: 720                      // Or after 12 hours idle
+    }
+  },
+
+  // ═══════════════════════════════════════════
+  // HOOKS
+  // ═══════════════════════════════════════════
+  hooks: {
+    enabled: true,
+    internal: {
+      enabled: true,
+      entries: {
+        "session-memory": { enabled: true },
+        "command-logger": { enabled: true },
+        "boot-md": { enabled: true }
+      }
+    }
+  },
+
+  // ═══════════════════════════════════════════
+  // CHANNELS (Telegram)
+  // ═══════════════════════════════════════════
+  channels: {
+    telegram: {
+      enabled: true,
+      configWrites: false,                  // CRITICAL: no config changes via chat
+      dmPolicy: "pairing",
+      botToken: "${TELEGRAM_BOT_TOKEN}",
+      allowFrom: ["YOUR_TELEGRAM_ID"],
+      groupPolicy: "allowlist",
+      dmHistoryLimit: 30,
+
+      // --- Message Delivery (don't split paragraphs) ---
+      textChunkLimit: 4096,
+      chunkMode: "length",                  // NOT "newline" (which = 15+ message bubbles)
+      blockStreaming: true,
+      blockStreamingCoalesce: {
+        minChars: 200,
+        maxChars: 4000,
+        idleMs: 2500
+      },
+      streamMode: "partial",
+      reactionNotifications: "own",
+      reactionLevel: "minimal"
+    }
+  },
+
+  // ═══════════════════════════════════════════
+  // DISCOVERY (Off)
+  // ═══════════════════════════════════════════
+  discovery: {
+    mdns: { mode: "off" }                   // Don't broadcast on network
+  },
+
+  // ═══════════════════════════════════════════
+  // GATEWAY (Loopback Only)
+  // ═══════════════════════════════════════════
+  gateway: {
+    port: 18789,
+    mode: "local",
+    bind: "loopback",                       // 127.0.0.1 only
+    controlUi: {
+      allowInsecureAuth: false,
+      dangerouslyDisableDeviceAuth: false
+    },
+    auth: {
+      mode: "token",
+      token: "${OPENCLAW_GATEWAY_TOKEN}",
+      allowTailscale: false
+    },
+    trustedProxies: ["127.0.0.1"],
+    tailscale: { mode: "off" }
+  },
+
+  // ═══════════════════════════════════════════
+  // MEMORY (QMD Backend)
+  // ═══════════════════════════════════════════
+  memory: {
+    backend: "qmd",
+    citations: "auto",
+    qmd: {
+      includeDefaultMemory: true,
+      sessions: {
+        enabled: true,
+        retentionDays: 120
+      },
+      update: {
+        interval: "5m",
+        debounceMs: 15000,
+        onBoot: true,
+        embedInterval: "60m"
+      },
+      limits: {
+        maxResults: 8,
+        maxSnippetChars: 900,
+        maxInjectedChars: 7000,
+        timeoutMs: 5000
+      }
+    }
+  },
+
+  // ═══════════════════════════════════════════
+  // PLUGINS (Minimal)
+  // ═══════════════════════════════════════════
+  plugins: {
+    allow: ["telegram", "memory-core"]      // Only what you need
+  }
+}

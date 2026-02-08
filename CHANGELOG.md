@@ -6,6 +6,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Major Update (Feb 8, 2026) — 355-Item Audit
+
+#### Complete Rewrite
+- **README.md** completely rewritten with 4-layer structure:
+  - 🟢 Layer 1: Basic Uptime (install, keep alive, health checks)
+  - 🟡 Layer 2: Core Rules (security, config hygiene, commandments)
+  - 🔴 Layer 3: Advanced Config (models, memory, crons, streaming, sandboxing)
+  - ⚫ Layer 4: How I Actually Set It Up (sanitized real production config)
+- **`docs/THE_COMMANDMENTS.md`** updated from 11 → 11 refined commandments with anti-patterns table
+- **`docs/SECURITY_HARDENING.md`** completely rewritten with full 355-item audit knowledge, priority tiers, incident response checklist
+- **`docs/COMPLETE_SETUP_CHECKLIST.md`** — NEW: tick-off checklist distilled from the 355-item audit, organized by priority phase
+
+#### New Config Example
+- **`config/examples/production-hardened.json5`** — NEW: complete, annotated, battle-tested production config with every setting explained. Covers: auth, 4-model fallback chain, hybrid memory search, context pruning, compaction with memory flush, Telegram delivery fixes, security hardening, hooks, approvals, session management
+
+#### Key Fixes Documented
+- `chunkMode: "newline"` → `"length"` fix for Telegram (stops 15+ message bubble spam)
+- OpenRouter API key format (`OPENROUTER_API_KEY=sk-or-v1-...` prefix required)
+- Heartbeat minimum 30 min (user reported $50/day at 5-min interval)
+- mDNS discovery off by default (network broadcast risk)
+- Secrets in `.env` never in workspace markdown or HEARTBEAT.md
+- `configWrites: false` on all channels
+- Memory flush before compaction (prevents context loss)
+- ClawHub skill scanning warning (7.1% credential leak rate)
+
+#### Template Updates
+- **`templates/AGENTS.md`** — updated with refined commandments, CLI > sub-agents execution rule, trust ladder, communication rules
+
 ### Added (Feb 6, 2026)
 - **`docs/ADVANCED/AGENT_ECONOMY.md`** — NEW paradigm: build products for other agents, not just humans. Agent directories, battle arenas, reputation systems, API marketplaces. The agent-to-agent economy is real.
 - **CEO Agent pattern** — Agents as economic actors: make products → sell them → promote on X → invest proceeds → grow. With approval gates for spending/external comms.
