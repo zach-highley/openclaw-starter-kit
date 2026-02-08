@@ -292,3 +292,25 @@ The new approach: Trust the platform. Launchd IS the watchdog. One cron for main
 ### Changed
 - CODEX_RALPH_LOOPS: Added 95/5 rule (terminals over subagents)
 
+
+## [2026-02-08] Integration Expansion
+
+### Added
+- Stripe integration guide (API setup, revenue tracking, product catalog)
+- YouTube Data API v3 integration (channel stats, video analytics)
+- X/Twitter API integration (OAuth 1.0a + 2.0 + Bearer, posting, monitoring)
+- Google API key setup (24 APIs from single GCP project)
+- Gmail MECE label structure (46 labels for personal email filing)
+- Integration pulse in heartbeat (Stripe sales, YouTube stats, X mentions)
+- Research & learning automation in weekly summary cron
+
+### Changed
+- Morning Briefing cron now includes integration data refresh
+- Weekly Summary cron now includes research/learning from X, Reddit, HN
+- HEARTBEAT.md expanded with integration monitoring steps
+
+### Security
+- Full 16-commandment audit passed
+- .env audit: 15 keys, chmod 600, zero stray lines
+- No secrets in markdown files (grep-verified)
+- Gateway: loopback, mDNS off, configWrites false, exec=full
