@@ -28,7 +28,7 @@ From @Austen (industry consensus):
 - **Claude Code** → Frontend, UI/UX, visual design, React/Next.js, CSS
 
 ### Ralph Loops (Feb 2026 - Critical Pattern)
-Instead of using sub-agents for coding:
+Instead of using CLI terminals for coding:
 1. Spawn **Codex CLI directly** in full-auto mode
 2. Wrap in **Ralph loops** with PRD checklist as source of truth
 3. Each iteration gets **completely fresh context** (discovers state from files + git, not memory)
@@ -71,7 +71,7 @@ What blocks agents: identity in physical/financial world, not intelligence.
 
 ## How We Compare
 
-| Feature | FelixCraftAI | Yoda |
+| Feature | FelixCraftAI | YourBot |
 |---------|--------------|------|
 | SOUL.md | ✅ | ✅ |
 | IDENTITY.md | ✅ | ✅ |
@@ -100,7 +100,7 @@ Our openclaw-starter-kit is free + open source. Could be monetized if desired.
 ## Action Plan: FelixCraft-Style Capabilities
 
 ### Phase 1: Foundation (Already Done ✅)
-- [x] SOUL.md — Yoda personality
+- [x] SOUL.md — YourBot personality
 - [x] IDENTITY.md — Role definition
 - [x] MEMORY.md — Long-term memory
 - [x] memory/YYYY-MM-DD.md — Daily session logs
@@ -128,7 +128,7 @@ Like Felix, we should be able to:
 ### Phase 4: Content/Education Product
 Felix monetizes via playbooks. We could:
 - [ ] Package openclaw-starter-kit as paid tier
-- [ ] Create "How to Build Your Own Yoda" course
+- [ ] Create "How to Build Your Own AI Butler" course
 - [ ] Sell SOUL.md templates for different personas
 
 ### Immediate Actions

@@ -8,7 +8,7 @@
 
 I built a "reliability fortress" with multiple layers of monitoring:
 - Custom config guardian (auto-restore corrupted config)
-- Custom watchdog (check every 3 min, restart if down)
+- Custom watchdog (DEPRECATED — use launchd KeepAlive)
 - Reliability test suite (T1-T4 tests)
 - Meta-monitor (watch the watchers)
 

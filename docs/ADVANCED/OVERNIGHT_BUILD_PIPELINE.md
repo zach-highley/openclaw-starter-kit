@@ -1,4 +1,4 @@
-# Overnight Build Pipeline (Queue → Codex sub-agents → Results → Morning Telegram)
+# Overnight Build Pipeline (Queue → Codex CLI terminals → Results → Morning Telegram)
 
 **Goal:** while the user sleeps, Codex should be chewing through a prioritized queue of build tasks, producing real code/doc changes in the main workspace, and logging outcomes for review the next morning.
 

@@ -67,13 +67,13 @@ Fallback triggers when **all profiles for the primary provider** fail. It should
 - Rotate multiple Anthropic profiles if you have them
 - Fallback cross-provider only when truly necessary
 
-### Pattern 2: Coding subagents can have their own chain
+### Pattern 2: Coding CLI terminals can have their own chain
 
 ```json5
 {
   "agents": {
     "defaults": {
-      "subagents": {
+      "CLI terminals": {
         "model": {
           "primary": "openai-codex/gpt-5.2",
           "fallbacks": [

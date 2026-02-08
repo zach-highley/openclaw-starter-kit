@@ -17,9 +17,9 @@ default_branch = "main"
 # Used for git commits created by the autofix flow.
 # NOTE: GitHub issue comments will be authored by whichever account your GH token belongs to.
 # These values only affect commit metadata + the signature inside comments.
-git_name = "Yoda (automation bot)"
-git_email = "yoda-bot@users.noreply.github.com"
-comment_signature = "— Yoda (automation bot)"
+git_name = "Bot (automation)"
+git_email = "bot@users.noreply.github.com"
+comment_signature = "— Bot (automation)"
 
 [autofix]
 # Safety switch. If false, bot will NOT open PRs or commit anything.

@@ -37,17 +37,6 @@
       "heartbeat": {
         "every": "55m"
       },
-      "subagents": {
-        "maxConcurrent": 4,
-        "model": {
-          "primary": "openai-codex/gpt-5.2",
-          "fallbacks": [
-            "google-gemini-cli/gemini-3-pro-preview",
-            "nvidia-nim/moonshotai/kimi-k2.5",
-            "ollama/qwen2.5:14b"
-          ]
-        }
-      },
       "timeoutSeconds": 180
     }
   }

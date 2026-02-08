@@ -13,7 +13,7 @@
 | **Claude MAX ([USER]@)** | $200/mo | Backup / overflow |
 
 ### Routing Rules
-1. **Code work → Codex** (always). Spawn Codex sub-agents for:
+1. **Code work → Codex** (always). Spawn Codex CLI terminals for:
    - Bug fixes
    - New features
    - Script creation
@@ -71,8 +71,8 @@ codexbar usage --provider codex --format json
 - Morning: Review results, pick up where agents left off
 
 ### Max Concurrency
-- **Codex sub-agents:** 3 concurrent (per overnight_builder.py)
-- **Main session:** Can run parallel to sub-agents
+- **Codex CLI terminals:** 3 concurrent (per overnight_builder.py)
+- **Main session:** Can run parallel to CLI terminals
 - **Total:** Up to 4 "threads" of work
 
 ---

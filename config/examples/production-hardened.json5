@@ -115,7 +115,6 @@
       // --- Timeouts ---
       timeoutSeconds: 3600,                 // 1 hour (default is too short for long tasks)
       maxConcurrent: 10,
-      subagents: { maxConcurrent: 10 },
 
       // --- Heartbeat ---
       heartbeat: {

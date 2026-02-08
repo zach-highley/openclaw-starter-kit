@@ -84,7 +84,7 @@ Cut:
 |--------------|---------------------|
 | `meta_monitor.py` | `openclaw status --deep` |
 | `auto_doctor.py` | `openclaw doctor --non-interactive` |
-| `watchdog.sh` | OpenClaw built-in health checks |
+| (removed) | launchd KeepAlive handles restarts |
 | `session_monitor.py` | `openclaw sessions --json` |
 | `config_preflight.py` | `openclaw doctor --fix` |
 | `context_healer.py` | OpenClaw auto-compaction + memory flush |

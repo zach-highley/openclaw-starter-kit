@@ -134,15 +134,3 @@ Reference: https://docs.openclaw.ai/plugin
 
 ---
 
-## 7) Optional watchdog script (this repo)
-
-If you want an extra external check loop, this repo includes:
-- `scripts/watchdog.sh`
-
-It is designed to be **single-gateway-safe** (uses `openclaw gateway start/restart`,
-not `nohup openclaw gateway &`).
-
-To enable Telegram notifications from the watchdog, set:
-- `TELEGRAM_TARGET` (preferred) or `TELEGRAM_CHAT_ID`
-
-See: `docs/TELEGRAM_SETUP.md`

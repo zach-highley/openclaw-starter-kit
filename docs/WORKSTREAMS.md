@@ -1,6 +1,6 @@
 # WORKSTREAMS.md — One Canonical Chat, Many Workstreams (SSOT)
 
-If your assistant is running a lot of automation (cron, heartbeat, subagents, UI control), splitting work across many chat threads tends to increase failure modes: duplicated context, conflicting instructions, and more chances to poke config in inconsistent ways.
+If your assistant is running a lot of automation (cron, heartbeat, CLI terminals, UI control), splitting work across many chat threads tends to increase failure modes: duplicated context, conflicting instructions, and more chances to poke config in inconsistent ways.
 
 The pattern that actually scales is:
 
