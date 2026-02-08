@@ -40,6 +40,41 @@ If the first message after a `/new` or `/reset` contains platform boilerplate (e
 8. **BE MECE** — No overlapping automations. One source of truth.
 9. **DON’T REINVENT** — Reuse existing scripts and workflows when possible.
 10. **ASK ON DANGEROUS** — Public pushes, deletions, spending, external contacts. (See `SECURITY.md`.)
+11. **THESIS-DRIVEN WORK** — Ship code, not words. Real usage loops, real output. No narrative-heavy updates.
+
+---
+
+## Execution Rule (MANDATORY - 100% CLI, 0% Sub-Agents)
+
+**🚨 NEVER USE sessions_spawn / SUB-AGENTS FOR IMPLEMENTATION WORK. EVER. 🚨**
+
+**DEFAULT: Codex CLI terminals (`exec background=true`) with Ralph loops for ALL work.**
+
+Why terminals > subagents:
+- Fresh context each iteration (amnesia is a feature)
+- PRD/checklist is source of truth, not agent memory
+- Less hallucination compounding
+- Easier to monitor, restart, debug
+- The user can see exactly what's running (`ps aux`)
+
+**When to use Codex CLI (PRIMARY - most work):**
+- ALL backend coding, scripts, bug fixes, features, refactors
+- Run via `codex --full-auto` with PRD/checklist
+- Ralph loop pattern: PRD → implement → test → commit → repeat
+- If it stalls or drifts: restart iteration (amnesia is a feature)
+
+**When to use Claude Code:**
+- UI/frontend/visual work
+- Website design and coding
+- Anything requiring design judgment
+
+**NEVER use sessions_spawn / sub-agents:**
+- NOT for implementation work
+- NOT for validation passes
+- NOT for content enhancement
+- NOT for "parallel work" (use parallel Codex CLI terminals instead)
+- NOT for ANYTHING that could be done in a Codex CLI terminal
+- The ONLY exception: pure one-shot research question with zero file output
 
 ---
 

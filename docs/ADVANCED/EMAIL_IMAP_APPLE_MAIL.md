@@ -75,4 +75,22 @@ Run `python3 ~/openclaw-workspace/scripts/email_imap_audit.py` to check which la
 4. Test Smart Mailbox queries
 
 ---
+
+## Gmail Legacy Label Cleanup (Browser Automation)
+
+If the API fails to delete system labels or strange legacy labels (like those with non-breaking spaces), use this browser automation method:
+
+1. Open Gmail in Chrome.
+2. Open DevTools Console (Cmd+Option+J).
+3. Use a script to iterate through label elements and click delete:
+
+```javascript
+// Example snippet to find delete buttons
+// Warning: This clicks buttons! Use with extreme caution.
+const buttons = document.querySelectorAll('span.alP[role="link"]');
+// Iterate and click... (requires handling confirmation dialogs)
+```
+
+**Gotcha:** Gmail uses non-breaking spaces (char 160) between label names and counts. Standard regex matching might fail.
+
 *Created: 2026-02-03*
