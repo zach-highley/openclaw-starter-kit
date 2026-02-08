@@ -80,7 +80,7 @@ Use **launchd** for:
 
 Examples:
 - run `scripts/check_usage.py` every 30-60 min
-- run `scripts/subagent_watcher.py --json --mark-reported` every 5-15 min
+- run `scripts/CLI terminal_watcher.py --json --mark-reported` every 5-15 min
 - run `scripts/auto_doctor.py --fix --save-state` every 4 hours
 
 Why launchd is a big deal:
@@ -94,7 +94,7 @@ Why launchd is a big deal:
 
 A minimal, battle-tested baseline:
 
-- **Every 5-15 min (cron/launchd):** `scripts/subagent_watcher.py --json --mark-reported`
+- **Every 5-15 min (cron/launchd):** `scripts/CLI terminal_watcher.py --json --mark-reported`
 - **Every 30-60 min (cron/launchd):** `scripts/check_usage.py --json`
 - **Every 4 hours (cron/launchd):** `scripts/auto_doctor.py --fix --save-state`
 - **Daily (cron/launchd):** quick workspace audit (see `docs/WEEKLY_AUDIT_GUIDE.md`)
@@ -202,5 +202,5 @@ Before any build, scan for relevant context:
 > If you can replace a rule with an enforcement script, do it.
 
 - "Don't burn rate limits" → enforce with usage monitors + consolidated schedules.
-- "Don't lose completed work after restart" → enforce with `subagent_watcher.py`.
+- "Don't lose completed work after restart" → enforce with `CLI terminal_watcher.py`.
 - "Don't let monitoring stall" → enforce with meta-monitor + auto-doctor.

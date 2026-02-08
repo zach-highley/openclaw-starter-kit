@@ -223,7 +223,7 @@ def _build_prompt(item: Dict[str, Any]) -> str:
     spec = (item.get("spec") or "").strip()
     repo = (item.get("repo") or "workspace").strip()
 
-    # We want the sub-agent to *do work* in the workspace and then report.
+    # We want the CLI terminal to *do work* in the workspace and then report.
     # The orchestrator also computes commits/files independently.
     return (
         "You are Codex running an overnight build task in the user’s OpenClaw workspace.\n"

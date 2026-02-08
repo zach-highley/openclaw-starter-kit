@@ -99,7 +99,7 @@ With `mode: "on"`, anyone on your local network can discover your agent. This is
 }
 ```
 
-Sub-agents and isolated sessions get read-only workspace access and session-scoped sandboxing. Prevents a compromised sub-agent from writing to your workspace.
+Sub-agents and isolated sessions get read-only workspace access and session-scoped sandboxing. Prevents a compromised CLI terminal from writing to your workspace.
 
 ### 6. Elevated Command Restrictions
 

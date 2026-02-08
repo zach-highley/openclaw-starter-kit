@@ -1,6 +1,6 @@
 # Simplification Guide — Less Tools, More Product
 
-*"Don't waste your time on RAG, subagents, agents 2.0 or other things that are mostly just charade. Just talk to it."* — Peter Steinberger (OpenClaw creator)
+*"Don't waste your time on RAG, CLI terminals, agents 2.0 or other things that are mostly just charade. Just talk to it."* — Peter Steinberger (OpenClaw creator)
 
 ## The Problem
 

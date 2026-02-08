@@ -1,5 +1,33 @@
 # Changelog
 
+## [3.2] — 2026-02-08
+
+### Removed (Cleanup)
+- `tools/watchdog/` — Custom watchdogs violate Commandment #1 (use launchd/systemd KeepAlive)
+- `docs/THE_13_COMMANDMENTS.md` — Replaced by updated 16 Commandments
+- `docs/SUBAGENT_BEST_PRACTICES.md` — Sub-agents deprecated (Commandment #14: use CLI terminals)
+- `docs/SUBAGENT_TIMEOUT_GUIDE.md` — Same reason
+- `docs/WATCHDOG_OOB_SAFE.md` — Watchdogs deprecated
+- `docs/archive/` — Cleaned 5 stale/duplicate docs (watchdog concepts, monitors, sub-agent guides)
+- `scripts/archive/legacy-monitors/` — 12 deprecated monitor scripts
+- `scripts/fix_readme_typo.py` — One-off script, not a starter kit utility
+- `examples/` — Merged into `config/examples/` (MECE fix)
+
+### Changed
+- `docs/THE_COMMANDMENTS.md` — Updated from 13 → 16 Commandments
+- All docs/templates/scripts: replaced "sub-agent" → "CLI terminal", "watchdog" → "service manager"
+- `README.md` — Updated references to 16 Commandments
+- `BOT_INSTRUCTIONS.md` — Removed deprecated pattern references
+
+### Added
+- `docs/integrations.md` — Setup guide for Stripe, YouTube, X/Twitter, Gmail PubSub
+- Integration expansion changelog entry
+
+### Security
+- Full personal info scan: 0 leaked secrets, 0 personal identifiers
+- All config examples use placeholder values only
+- MECE verified: no duplicate folders or overlapping docs
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).

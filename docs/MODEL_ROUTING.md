@@ -16,7 +16,7 @@ This matches @FelixCraftAI's working pattern with @nateliason.
 | **Architecture, backend, APIs, databases, infrastructure** | Codex MAX | Best for system design, code generation |
 | **PM work, planning, research, content, strategy** | Claude Opus | Best for reasoning, coordination, writing |
 | **Frontend, UI/UX, visual design, React/Next.js, CSS** | Claude Code | Best for design judgment, visual iteration |
-| **Pure research with no code** | Claude Opus (or subagent) | Memory context helps |
+| **Pure research with no code** | Claude Opus (or CLI terminal) | Memory context helps |
 
 ## Recommended Stack
 

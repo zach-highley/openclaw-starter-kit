@@ -2,7 +2,7 @@
 
 ## The 95/5 Rule: Terminals Over Subagents
 
-**95% of work should run as terminals/CLIs (Codex CLI, Claude Code), not subagents.**
+**95% of work should run as terminals/CLIs (Codex CLI, Claude Code), not CLI terminals.**
 
 Why:
 - Fresh context each iteration (amnesia is a feature)
@@ -11,7 +11,7 @@ Why:
 - Visible via `ps aux | grep -E "(codex|claude)"`
 - Easy to kill/restart
 
-Use subagents only for pure research (5%).
+Use CLI terminals only for pure research (5%).
 
 ---
 

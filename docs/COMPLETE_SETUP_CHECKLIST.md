@@ -160,7 +160,7 @@
 
 ### Concurrency
 - [ ] `maxConcurrent: 10` (or appropriate for your usage)
-- [ ] `subagents.maxConcurrent: 10`
+- [ ] `CLI terminals.maxConcurrent: 10`
 
 ### Thinking & Verbosity
 - [ ] `thinkingDefault: "high"` (for best reasoning)

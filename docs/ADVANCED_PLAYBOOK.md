@@ -68,13 +68,13 @@ This keeps the human in control without blocking execution.
 **Something should ALWAYS be building.** (Nat Eliason / FelixCraftAI pattern)
 
 Every heartbeat should verify work is actually running:
-1. **Subagents:** `sessions_list` — are any subagents alive?
+1. **Subagents:** `sessions_list` — are any CLI terminals alive?
 2. **Background processes:** `process list` — any exec sessions started?
 3. **Codex/Claude CLI:** `ps aux | grep -E "(codex|claude)"` — any coding agents running?
 
 **Heartbeat reporting:**
 ```
-🔨 Building: [X] Codex | [X] Claude Code | [X] subagents | [X] bg procs
+🔨 Building: [X] Codex | [X] Claude Code | [X] CLI terminals | [X] bg procs
 ```
 
 **If count is ZERO → FAILURE STATE:**

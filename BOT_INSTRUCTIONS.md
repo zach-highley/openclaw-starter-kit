@@ -154,14 +154,14 @@ This starter kit intentionally does **not** ship `install_*` launchd/systemd scr
 
 **Self-healing (v3.0 philosophy — Simple > Clever):**
 
-> ⚠️ **Don't build watchdogs.** Launchd/systemd IS the watchdog. Custom monitoring scripts fight each other and cause more problems than they solve. See `docs/INCIDENT_POSTMORTEM.md` for the full story.
+> ⚠️ **Don't build service managers.** Launchd/systemd IS the service manager. Custom monitoring scripts fight each other and cause more problems than they solve. See `docs/INCIDENT_POSTMORTEM.md` for the full story.
 
 Instead:
 1. Use the official `openclaw doctor --fix` via a simple daily cron (5 AM)
 2. Let launchd/systemd KeepAlive handle restarts
 3. Trust the platform — one gateway, one service manager, that's it
 
-If you have existing watchdog scripts from an older setup, archive them. They're technical debt.
+If you have existing service manager scripts from an older setup, archive them. They're technical debt.
 
 **Security:**
 

@@ -45,7 +45,7 @@ done
 
 echo ""
 echo "=== Docs mentioning recent topics ==="
-for topic in "Codex" "Claude" "Ralph" "subagent" "heartbeat" "Felix"; do
+for topic in "Codex" "Claude" "Ralph" "CLI terminal" "heartbeat" "Felix"; do
   count=$(grep -rl "$topic" docs/ 2>/dev/null | wc -l | tr -d ' ')
   echo "$topic: $count docs"
 done

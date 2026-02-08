@@ -164,7 +164,7 @@ If `mdns.mode` is `"on"`, anyone on your LAN can discover your agent. Turn it of
   agents: {
     defaults: {
       sandbox: {
-        mode: "non-main",       // Sandbox all sub-agents
+        mode: "non-main",       // Sandbox all CLI terminals
         workspaceAccess: "ro",  // Read-only workspace for sandboxed agents
         scope: "session"        // Isolated per session
       }

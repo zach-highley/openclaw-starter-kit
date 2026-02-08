@@ -43,7 +43,7 @@ Our labels (from scripts/email_categorize.py):
 - Action/Respond, Action/Review, Action/Waiting, Action/Delegate
 - People/<Name>
 - Projects/<Name>
-- Work/McKinsey, Work/Consulting
+- Work/Employer, Work/Consulting
 - Financial/Banking, Financial/Investments, Financial/Taxes
 - Travel/Flights, Travel/Hotels, Travel/Reservations
 - Newsletters/<Name>

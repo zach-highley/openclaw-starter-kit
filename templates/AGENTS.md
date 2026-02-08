@@ -49,7 +49,7 @@ Sub-agents share context, accumulate hallucinations, and compound errors. CLI te
 - Bug fixes, refactors, features
 - Any implementation work
 
-**When to use sub-agents:**
+**When to use CLI terminals:**
 - Pure one-shot research with zero code output
 - That's it
 

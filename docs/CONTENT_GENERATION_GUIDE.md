@@ -1,10 +1,10 @@
 # Content Generation Guide — Using OpenClaw + Codex for Bulk Content
 
-How to use OpenClaw's sub-agent system to generate large volumes of structured educational content.
+How to use OpenClaw's CLI terminal system to generate large volumes of structured educational content.
 
 ## Overview
 
-This guide covers generating structured JSON content (deep dive articles, curriculum, reference materials) at scale using OpenClaw's sub-agent spawning with Codex (GPT-5.2).
+This guide covers generating structured JSON content (deep dive articles, curriculum, reference materials) at scale using OpenClaw's CLI terminal spawning with Codex (GPT-5.2).
 
 ## Architecture
 
@@ -19,7 +19,7 @@ Main Agent (Opus) — orchestrates, validates, merges
 ## Key Principles
 
 ### 1. Define Your Schema First
-Before generating, lock down the JSON schema. Every sub-agent needs the same contract.
+Before generating, lock down the JSON schema. Every CLI terminal needs the same contract.
 
 ```json
 {
@@ -38,7 +38,7 @@ Before generating, lock down the JSON schema. Every sub-agent needs the same con
 ```
 
 ### 2. Parallel Sub-Agent Dispatch
-Spawn one sub-agent per content category. Each generates 5 articles independently:
+Spawn one CLI terminal per content category. Each generates 5 articles independently:
 
 ```
 sessions_spawn({
@@ -49,7 +49,7 @@ sessions_spawn({
 ```
 
 ### 3. Validate Before Merging
-After sub-agents complete, validate:
+After CLI terminals complete, validate:
 - JSON parses correctly
 - Required fields present
 - Section count (12-16 per article)
@@ -58,7 +58,7 @@ After sub-agents complete, validate:
 - Sources are real, traceable works
 
 ### 4. Fact-Check Critical Content
-Spawn a separate fact-check sub-agent for high-stakes content:
+Spawn a separate fact-check CLI terminal for high-stakes content:
 - Quote verification
 - Source existence
 - Technical accuracy
@@ -115,7 +115,7 @@ git add -A && git commit -m "content: add 10 new deep dives"
 
 ## Tips
 
-- **Bundle related work**: One sub-agent per 5 articles is efficient. Fewer spawns = less overhead.
+- **Bundle related work**: One CLI terminal per 5 articles is efficient. Fewer spawns = less overhead.
 - **Provide existing article IDs**: Tell agents what already exists to avoid duplicates.
 - **Use outlines for complex topics**: Generate outlines first, then expand in a second pass.
 - **Multi-pass for philosophy/dense content**: Some topics need section-by-section expansion.
