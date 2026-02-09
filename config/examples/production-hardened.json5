@@ -89,9 +89,13 @@
       },
 
       // --- Context Pruning ---
+      // CRITICAL: ttl must be SHORT (e.g. "5m"). A long ttl like "7d" means
+      // pruning never fires → tool results accumulate → context fills → death spiral.
+      // The ttl controls "only prune if last Anthropic call is older than this."
+      // With daily session resets, anything over ~1h effectively disables pruning.
       contextPruning: {
         mode: "cache-ttl",
-        ttl: "7d",
+        ttl: "5m",                          // Default. DO NOT set to days/weeks.
         keepLastAssistants: 8,
         softTrimRatio: 0.75,
         hardClearRatio: 0.9,
@@ -108,9 +112,19 @@
         }
       },
 
-      // --- Thinking & Verbosity ---
+      // --- Thinking, Verbosity & Autonomy ---
       thinkingDefault: "high",              // Enable deep reasoning
       verboseDefault: "on",                 // Full tool output visibility
+      elevatedDefault: "full",              // Max autonomy: exec on host, auto-approve
+
+      // --- Block Streaming (agent-level defaults) ---
+      blockStreamingDefault: "on",          // Progressive output (also set per-channel)
+      blockStreamingBreak: "text_end",      // Stream chunks as they complete
+      blockStreamingChunk: {
+        minChars: 200,
+        maxChars: 3500,
+        breakPreference: "paragraph"
+      },
 
       // --- Timeouts ---
       timeoutSeconds: 3600,                 // 1 hour (default is too short for long tasks)
@@ -170,7 +184,21 @@
   // ═══════════════════════════════════════════
   messages: {
     ackReaction: "👍",                      // React to show message received
-    ackReactionScope: "all"
+    ackReactionScope: "all",
+    // --- Inbound Debouncing (batch rapid messages) ---
+    inbound: {
+      debounceMs: 3000,                     // Wait 3s for more messages before processing
+      byChannel: {
+        telegram: 3000
+      }
+    },
+    // --- Queue (how to handle messages while agent is busy) ---
+    queue: {
+      mode: "collect",                      // Coalesce queued messages into one followup
+      debounceMs: 1500,                     // Wait 1.5s before starting followup turn
+      cap: 25,                              // Max queued messages
+      drop: "summarize"                     // Summarize overflow instead of dropping
+    }
   },
 
   // ═══════════════════════════════════════════
@@ -182,7 +210,7 @@
     bash: false,                            // No shell via chat
     config: false,                          // No config changes via chat
     debug: false,                           // No debug commands
-    restart: false,                         // No restart via chat
+    restart: true,                          // Allow self-restart (needed for config reload)
     useAccessGroups: true
   },
 
