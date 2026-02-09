@@ -176,7 +176,7 @@ At the end of each shift (night shift = 6 AM, day shift = 10 PM):
 1. Run fact extraction from today's session
 2. Update `memory/YYYY-MM-DD.md` with learnings
 3. Verify memory retrieval works (session_context_brief or equivalent)
-4. Run 12 Commandments audit checklist
+4. Run 14 Commandments audit checklist
 5. Document any failures and implement fixes
 
 ### Index check before executing

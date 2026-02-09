@@ -4,16 +4,16 @@ How to use OpenClaw's CLI terminal system to generate large volumes of structure
 
 ## Overview
 
-This guide covers generating structured JSON content (deep dive articles, curriculum, reference materials) at scale using OpenClaw's CLI terminal spawning with Codex (GPT-5.2).
+This guide covers generating structured JSON content (deep dive articles, curriculum, reference materials) at scale using OpenClaw's CLI terminal spawning with Codex.
 
 ## Architecture
 
 ```
 Main Agent (Opus) — orchestrates, validates, merges
-├── Sub-Agent 1 (Codex) — Category A: 5 articles
-├── Sub-Agent 2 (Codex) — Category B: 5 articles
-├── Sub-Agent 3 (Codex) — Category C: 5 articles
-└── Sub-Agent 4 (Codex) — Fact-check / QA
+├── CLI Terminal 1 (Codex) — Category A: 5 articles
+├── CLI Terminal 2 (Codex) — Category B: 5 articles
+├── CLI Terminal 3 (Codex) — Category C: 5 articles
+└── CLI Terminal 4 (Codex) — Fact-check / QA
 ```
 
 ## Key Principles
@@ -37,15 +37,13 @@ Before generating, lock down the JSON schema. Every CLI terminal needs the same 
 }
 ```
 
-### 2. Parallel Sub-Agent Dispatch
+### 2. Parallel CLI Terminal Dispatch
 Spawn one CLI terminal per content category. Each generates 5 articles independently:
 
-```
-sessions_spawn({
-  task: "Generate 5 articles about [CATEGORY]...",
-  label: "category-batch",
-  model: "Codex"
-})
+```bash
+# In OpenClaw, use exec with background=true for each batch:
+codex --full-auto -m gpt-5.3-codex \
+  "Generate 5 articles about [CATEGORY]. Write to /tmp/category-batch.json. Schema: ..."
 ```
 
 ### 3. Validate Before Merging
@@ -86,36 +84,32 @@ For 20 articles across 4 categories: ~$1.20-1.40 total.
 ## Common Pitfalls
 
 1. **Output truncation**: Very long articles may be cut off. Use `--max-tokens` or split into smaller batches.
-2. **Schema drift**: Sub-agents may deviate from schema. Include a sample article in the prompt.
-3. **Hallucinated sources**: Always verify academic citations exist. Spawn a fact-check agent.
-4. **Inconsistent formatting**: Some agents use string arrays for sections instead of {heading, content} objects. Normalize in the merge step.
+2. **Schema drift**: CLI terminals may deviate from schema. Include a sample article in the prompt.
+3. **Hallucinated sources**: Always verify academic citations exist. Spawn a fact-check terminal.
+4. **Inconsistent formatting**: Some terminals use string arrays for sections instead of {heading, content} objects. Normalize in the merge step.
 
 ## Example Workflow
 
 ```bash
-# 1. Spawn content agents (parallel)
-# In OpenClaw:
-sessions_spawn("Generate 5 Health articles...", label="health-batch")
-sessions_spawn("Generate 5 Finance articles...", label="finance-batch")
+# 1. Spawn content terminals (parallel, using exec background=true)
+codex --full-auto -m gpt-5.3-codex "Generate 5 Health articles. Write to /tmp/health-batch.json"
+codex --full-auto -m gpt-5.3-codex "Generate 5 Finance articles. Write to /tmp/finance-batch.json"
 
-# 2. Wait for completion (check sessions_list)
+# 2. Wait for completion (check process list)
 
-# 3. Extract from session transcripts
-python3 extract_articles.py --session-id <id> --output articles.json
+# 3. Validate
+python3 validate_schema.py --input /tmp/health-batch.json
 
-# 4. Validate
-python3 validate_schema.py --input articles.json
+# 4. Merge into existing data
+python3 merge_articles.py --existing deepdives.json --new /tmp/health-batch.json
 
-# 5. Merge into existing data
-python3 merge_articles.py --existing deepdives.json --new articles.json
-
-# 6. Commit
+# 5. Commit
 git add -A && git commit -m "content: add 10 new deep dives"
 ```
 
 ## Tips
 
 - **Bundle related work**: One CLI terminal per 5 articles is efficient. Fewer spawns = less overhead.
-- **Provide existing article IDs**: Tell agents what already exists to avoid duplicates.
+- **Provide existing article IDs**: Tell terminals what already exists to avoid duplicates.
 - **Use outlines for complex topics**: Generate outlines first, then expand in a second pass.
 - **Multi-pass for philosophy/dense content**: Some topics need section-by-section expansion.
