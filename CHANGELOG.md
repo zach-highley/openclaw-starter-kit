@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.3] — 2026-02-10
+
+### Added
+- **Commandment #15: DELIVER ON PROMISES** — If you say you'll do it, have a cron/script/system ensuring it happens. Promises without enforcement are lies.
+- **Mistake Log system** — `templates/mistakes.md` template for logging errors with root cause, fix, and verification. Same mistake twice = CRITICAL.
+- **No AI Slop design guide** — `docs/NO_AI_SLOP_DESIGN.md` with checklist and principles for clean UI design. If it looks like AI made it, redesign.
+- **push_all_repos.sh** — Script to push ALL repos every time, never manually. Enforces Commandment #15.
+
+### Changed
+- **Commandments updated 14 → 15** — `docs/THE_COMMANDMENTS.md` now includes #15 and the Mistake Log section.
+
+### Lessons from Production (2026-02-10)
+- Terminal death requires immediate action (refire within 60 seconds, don't sit idle)
+- "Push all repos" means CHECK all repos, not just the ones with dirty trees
+- Creating a fix tool is not enough — you must USE it automatically every time
+- Apologising for mistakes without creating systems to prevent them is worthless
+
 ## [3.2] — 2026-02-08
 
 ### Removed (Cleanup)
