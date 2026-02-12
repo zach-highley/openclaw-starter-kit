@@ -648,7 +648,7 @@ Full example: [config/examples/production-hardened.json5](config/examples/produc
 │   ├── work_loop.json
 │   └── ...
 │
-├── templates/             # Build templates (PRD, sprint specs)
+├── templates/             # Build templates (PRD, sprint specs, Codex PRD)
 └── research/              # Deep-dive research cache
 ```
 
@@ -687,6 +687,7 @@ Working config examples for common setups.
 - **[BEGINNER_START_HERE.md](docs/BEGINNER_START_HERE.md)** — First steps
 - **[SECURITY_HARDENING.md](docs/SECURITY_HARDENING.md)** — Full security guide
 - **[CONFIG_HYGIENE.md](docs/CONFIG_HYGIENE.md)** — Config best practices
+- **[CODEX_BEST_PRACTICES.md](docs/CODEX_BEST_PRACTICES.md)** — OpenAI Shell+Skills+Compaction tips (10 tips, 3 patterns, PRD template)
 - **[CRON_HEARTBEAT_GUIDE.md](docs/CRON_HEARTBEAT_GUIDE.md)** — When to use what
 - **[MODEL_FAILOVER_GUIDE.md](docs/MODEL_FAILOVER_GUIDE.md)** — Multi-model setup
 - **[TELEGRAM_SETUP.md](docs/TELEGRAM_SETUP.md)** — Telegram configuration
@@ -698,7 +699,7 @@ Working config examples for common setups.
 Active scripts, advanced examples, and archived legacy monitors (kept for learning).
 
 ### `templates/` — Workspace Files
-AGENTS.md, SOUL.md, USER.md, HEARTBEAT.md — customize for your setup.
+AGENTS.md (with steipete principles + Codex PRD rules), SOUL.md, USER.md, HEARTBEAT.md, codex_prd_template.md — customize for your setup.
 
 ---
 

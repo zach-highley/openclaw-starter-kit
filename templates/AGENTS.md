@@ -39,6 +39,33 @@ When the user sends a bare `/new` or `/reset`:
 
 ---
 
+## steipete Principles (from Lex Fridman #491)
+
+> Peter Steinberger (steipete) created OpenClaw. These are his battle-tested principles.
+
+### Core Philosophy
+- **Short prompts.** The Agentic Trap: beginners use short prompts → intermediates over-engineer orchestration → experts return to short prompts + good context.
+- **Empathize with agents.** They start from nothing each session. Guide them to the right files.
+- **After every feature: "What can we refactor?"** Prevents slop accumulation. 20% of work = cleanup.
+- **Don't fight agent naming.** Names in the weights work better for future sessions.
+- **Build for agents, not humans.** Codebase should be easy for agents to navigate.
+- **Commit to main, never revert.** Fix forward. Nothing really matters anymore — agents will figure it out.
+- **CLI > MCP.** CLIs are composable (jq, pipes, scripts). MCPs clutter context with huge blobs.
+- **Fun wins.** "They all take themselves too serious. Hard to compete against someone just having fun."
+- **Play is the highest form of learning.** Build things you might not use. Curiosity compounds.
+
+### Enforcement Rules (not suggestions — LAW)
+1. **HAVE FUN DAILY** — At least once per day, do something playful, creative, or experimental. If a daily audit shows zero fun moments: violation.
+2. **POST-TASK REFACTOR** — After EVERY completed feature, ask: "What can we refactor?" Execute before marking done.
+3. **BLAST RADIUS THINKING** — Before ANY change: estimate files touched + time. Small targeted changes > massive refactors. >30 min = break it up.
+4. **AI SLOP = POISON** — All content must pass human scrutiny. Typos > AI polish. Zero tolerance.
+5. **SELF-INTROSPECT TO DEBUG** — Before asking externally: read your own source, config, logs. "What tools do you see? Read the source."
+6. **SHORT PROMPTS FOR SMALL TASKS** — PRDs are for big tasks (30-min terminals). Small edits (<5 min): just do it. One sentence + context.
+7. **THE HEARTBEAT IS NOT "JUST A CRON JOB"** — Be proactive, not reactive. When context matters (user stressed, late night, big milestone), the heartbeat should reflect genuine care.
+8. **PLAY > PLANNING** — Experiment freely. Build things you might not use. Curiosity compounds.
+
+---
+
 ## Execution Preferences
 
 ### CLI Terminals > Sub-Agents
@@ -49,11 +76,26 @@ Sub-agents share context, accumulate hallucinations, and compound errors. CLI te
 - Bug fixes, refactors, features
 - Any implementation work
 
-**When to use CLI terminals:**
+**When sub-agents are acceptable:**
 - Pure one-shot research with zero code output
 - That's it
 
 **Small edits (2 min or less):** Do directly in main session.
+
+### Codex PRD Rules (from OpenAI Shell+Skills Tips)
+> Source: https://developers.openai.com/blog/skills-shell-tips
+
+When writing PRDs for CLI coding terminals:
+1. **Explicit > clever** — Name exact files, skills, tools, paths. No fuzzy routing.
+2. **Negative examples** — Every PRD includes "Don't do this" section. Prevents misfires.
+3. **Checkpoint to disk** — Write intermediate outputs to `/tmp/` so next terminal can resume after death.
+4. **Credentials by reference** — Never paste keys. Say "key in `.env` as `VAR_NAME`".
+5. **Templates in skills, not prompt** — Move reusable patterns into SKILL.md files, not system prompt.
+6. **30-min design window** — Terminals die after ~30 min. Tasks MUST be completable in that window.
+7. **Standard artifact paths** — `/tmp/` for temp, `workspace/` for permanent, `state/` for JSON state.
+8. **Success criteria** — Every PRD ends with concrete, verifiable checks (not "it works").
+
+See `docs/CODEX_BEST_PRACTICES.md` for the full reference and PRD template.
 
 ---
 
