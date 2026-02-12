@@ -123,3 +123,66 @@ Always specify checkpoint files so work survives terminal death.
 ## Anti-Patterns (Don't Do This)
 - Don't [specific thing to avoid]
 ```
+
+---
+
+## Skill Evaluation Pipeline
+
+### Deterministic Pass First
+- Run scripted evals with JSON traces (`codex exec --json`) and score observed behavior, not only final text.
+- Grade event order explicitly (tool call sequence, file creation order, install/build/test ordering).
+- Include negative controls in prompt sets (`should_trigger=false`) to catch false-positive skill invocation.
+- Keep eval datasets as living assets (CSV/JSONL). Add each production miss as a new case.
+
+### Rubric + Efficiency Pass
+- Use structured schemas (`--output-schema`) for qualitative grading (style, conventions, safety language).
+- Track efficiency regressions: token usage, command thrash, and unnecessary tool invocations.
+- Require clean-repo checks (`git status --porcelain` empty unless task expects diffs).
+- Add permission regression checks: task should pass without escalated permissions unless explicitly required.
+- Gate release on behavior evidence, not only final artifact quality; process regressions are production regressions.
+
+---
+
+## Skill Metadata + Governance
+- Use skill kill switches in config (`[[skills.config]] ... enabled = false`) for rapid rollback.
+- Control invocation policy (`allow_implicit_invocation`) for high-risk skills.
+- Declare skill tool dependencies in metadata so capability boundaries are explicit.
+- Enforce unique skill naming to avoid duplicate-name ambiguity across directories.
+- Discovery precedence warning: duplicate names can both surface in retrieval; namespace skills intentionally.
+- Symlinked skill folders are supported; use them for monorepo skill sharing when helpful.
+- For production contracts, prefer deterministic prompts that explicitly name the skill ("Use the <skill> skill").
+
+---
+
+## Hosted vs Local Runtime
+
+| Runtime | Temp Artifact Boundary | Notes |
+|---------|------------------------|-------|
+| Local Codex CLI | `/tmp/` | Default for local workspace |
+| Hosted shell containers | `/mnt/data` | Preferred handoff boundary for hosted runs |
+
+- Keep artifact paths environment-aware in PRDs; do not hardcode one path convention for all harnesses.
+- Two-layer allowlists: request-level network domains must be a strict subset of org-level policy or the run should fail fast.
+- Use domain-scoped secret injection (`domain_secrets`) in hosted settings so models never see raw credentials.
+
+---
+
+## Prompt + Harness Anti-Patterns
+- Do not force preambles/status chatter in API harness prompts; let the harness/UI own progress streaming.
+- Mid-rollout updates in Codex-Max are harness behavior, not reliably promptable model behavior.
+- Prefer shell command schema as a single string for tool performance in custom harnesses.
+- For parallel tool loops, preserve deterministic event pairing (`function_call` -> `function_call_output`).
+- Do not conflate local CLI conversational norms with hosted API prompt architecture.
+
+---
+
+## Advanced Harness Notes
+- Compaction API flow: after long runs, call `/responses/compact`, persist returned continuation payload, and resume with compacted context.
+- ZDR/hosted compaction can return `encrypted_content`; treat it as opaque handoff state, not model-visible plaintext.
+- Tool wrapper truncation policy: cap oversized tool responses (10k-token class) with balanced head/tail retention.
+
+---
+
+## AGENTS Layering Note
+- AGENTS instructions merge by directory order; later scopes override earlier scopes.
+- Document override precedence in each repo to prevent accidental policy conflicts.

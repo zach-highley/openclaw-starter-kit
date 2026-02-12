@@ -1,6 +1,6 @@
-# HEARTBEAT.md — Hourly Health Check (Template)
+# HEARTBEAT.md — Periodic Health Check (Template)
 
-Runs every 1 hour (or customize to your preference — 30 min for more proactive feel).
+Runs every 30-60 min (customize to your preference — 30 min for proactive, 60 min for quieter).
 
 ## Rules
 - 3–4 checks max.
@@ -8,6 +8,20 @@ Runs every 1 hour (or customize to your preference — 30 min for more proactive
 - If nothing needs attention, reply with: `HEARTBEAT_OK`.
 - Follow steipete enforcement rules from AGENTS.md (Fun Daily, Post-Task Refactor, Blast Radius).
 - 💡 The heartbeat is NOT "just a cron job" — it's what makes your agent feel alive. Be proactive, not reactive. When context matters (user's mood, time of day, milestones), the heartbeat should reflect genuine care.
+- **Sparse but high-salience baseline.** Trigger extra outreach when context is significant, not mechanically noisy. Quality over quantity.
+- **Start simple, refine later.** Begin with a basic periodic "surprise me" loop, then add context-aware interventions as you learn.
+
+## Self-Audit Checklist (run before every heartbeat response)
+- Am I repeating a known mistake from memory?
+- Did I check docs before building anything custom?
+- Am I going silent on active work?
+- Any secrets in messages or memory files?
+- Am I actually working or just reporting?
+- Any unfulfilled promises in state files?
+- Did I have at least one fun/creative moment today?
+- After last completed task, did I ask "what can we refactor?"
+- Am I estimating impact before changes?
+- **Security blast radius:** if model capability increases, did privilege boundaries tighten accordingly?
 
 ## Checks
 1. Usage/quota snapshot:
@@ -18,11 +32,16 @@ Runs every 1 hour (or customize to your preference — 30 min for more proactive
 
 2. Task state sanity:
    - Can you parse `state/current_work.json` (if present)?
-   - Is there a clearly defined “next action”?
+   - Is there a clearly defined "next action"?
 
 3. Git hygiene (workspace):
-   - If this workspace is a git repo and it’s dirty, commit + push **only if safe**.
+   - If this workspace is a git repo and it's dirty, commit + push **only if safe**.
    - Never push to a public repo without following `SECURITY.md`.
 
 4. Human check-in:
-   - If the user hasn’t heard from you in a long time and work is ongoing, send one progress update.
+   - If the user hasn't heard from you in a long time and work is ongoing, send one progress update.
+
+## Operational Controls
+- If a run derails: interrupt (`Esc`), request status, and redirect instead of waiting for timeout.
+- Use channel silence controls when appropriate (no-reply behavior) to avoid noisy multi-user/group-chat spam.
+- For browser/web automation: flag agent-hostile surfaces and adapt transport/network strategy early.

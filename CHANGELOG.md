@@ -1,5 +1,43 @@
 # Changelog
 
+## [3.4] — 2026-02-12
+
+### Added — Lex Fridman #491 Deep Audit (130 insights integrated)
+
+Full deep audit of the steipete (Peter Steinberger) interview on Lex Fridman #491 plus 4 OpenAI Codex blog posts. 130 total insights extracted, 72 integrated as new material across templates and docs.
+
+**templates/AGENTS.md:**
+- 9 new steipete Core Philosophy items: question-pattern diagnostics, project slop vs model regression, core vs plugin discipline, friction-threshold automation, ecosystem over language taste, web hostility, security-before-simplicity, authenticity beats polish
+- 7 new Enforcement Rules (#9-#15): secure defaults, private canary testing, contributor onramp, community topic boundaries, soul-change visibility, personal agent ≠ coding terminal, agent account labeling
+- New "Execution Hardening" section: CWD verification, context pressure intervention, image context first, interrupt as normal control
+- New "Model Routing Safety" section: security minimum tier, 7-day adaptation window, tier-normalized benchmarks
+- 4 new Safety rules: hostile rename operations, legacy redirect preservation, sandbox/allowlist baseline, prompt-UX local scope
+
+**templates/SOUL.md:**
+- 3 new Soul traits: anti-fearmongering, builder identity over labels, experience optimization
+- 2 new Writing Style rules: evidence-first model regression claims, human prose rule
+- New "Design & Frontend Rules" section: no AI slop checklist, delight as editorial work, personality onboarding, API validation
+
+**templates/HEARTBEAT.md:**
+- Sparse/high-salience baseline behavior
+- Self-audit checklist (10 items including security blast radius)
+- 3 operational controls: interrupt/redirect, channel silence, web-hostility adaptation
+
+**docs/CODEX_BEST_PRACTICES.md:**
+- New section: Skill Evaluation Pipeline (deterministic evals + rubric/efficiency pass)
+- New section: Skill Metadata + Governance (kill switches, invocation policy, namespace collision)
+- New section: Hosted vs Local Runtime (artifact boundaries, allowlist fail-fast, domain-scoped secrets)
+- New section: Prompt + Harness Anti-Patterns (5 patterns)
+- New section: Advanced Harness Notes (compaction API, encrypted content, truncation policy)
+- New section: AGENTS Layering Note (merge order, override precedence)
+
+### Sources
+- Lex Fridman #491 — Peter Steinberger (steipete), OpenClaw creator. 4-hour interview, full transcript analyzed.
+- OpenAI Blog: Skills, Shell, and Compaction Tips
+- OpenAI Blog: Evaluating Skills
+- OpenAI Codex Skills Reference
+- OpenAI Codex Prompting Guide
+
 ## [3.3] — 2026-02-10
 
 ### Added
