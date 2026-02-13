@@ -24,6 +24,10 @@ For actual documentation: [docs.openclaw.ai](https://docs.openclaw.ai/)
 
 ---
 
+> [!TIP]
+> **Get More**
+> If this starter kit helped, I put together deeper paid resources at [eric.zhighley.com](https://eric.zhighley.com): the **$9.99 Setup Guide**, **AI Prompt Pack**, and the **Full Bundle**.
+
 ## How This Guide Is Organized
 
 | Layer | What | Who it's for |
@@ -720,6 +724,17 @@ AGENTS.md (with steipete principles + Codex PRD rules), SOUL.md, USER.md, HEARTB
 - **GitHub:** [github.com/openclaw/openclaw](https://github.com/openclaw/openclaw)
 - **Discord:** [discord.com/invite/clawd](https://discord.com/invite/clawd)
 - **Skills hub:** [clawhub.com](https://clawhub.com) (⚠️ scan skills with mcp-scan before installing, 7.1% have credential leaks per community audit)
+
+---
+
+## Resources
+
+- [OpenClaw docs](https://docs.openclaw.ai/)
+- [OpenClaw Discord](https://discord.com/invite/clawd)
+- [Eric ZHighley product catalog](https://eric.zhighley.com)
+- [The Healthy Man newsletter](https://thehealthymandaily.com)
+
+<!-- Suggested GitHub topics: openclaw, ai-agent, automation, personal-assistant -->
 
 ---
 

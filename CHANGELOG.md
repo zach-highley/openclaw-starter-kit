@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.5] — 2026-02-12
+
+### Added — Growth & Distribution Mechanics
+
+- Added a tasteful "Get More" callout near the top of `README.md` linking to `eric.zhighley.com` and highlighting the Setup Guide, AI Prompt Pack, and Full Bundle.
+- Added a new `Resources` section in `README.md` with links to docs, Discord, product catalog, and The Healthy Man newsletter.
+- Added distribution-ready content pack in `distribution/`:
+  - `twitter-thread.md` (6-post technical thread with CTA)
+  - `reddit-post.md` (title + body for r/selfhosted/r/artificial)
+  - `hackernews-post.md` (Show HN title + engineering-focused body)
+  - `linkedin-post.md` (professional automation angle)
+- Added GitHub topics suggestion comment to `README.md` for discoverability (`openclaw`, `ai-agent`, `automation`, `personal-assistant`).
+
 ## [3.4] — 2026-02-12
 
 ### Added — Lex Fridman #491 Deep Audit (130 insights integrated)
