@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Agentic Engineering Playbook</title>
+<meta name="description" content="A practical guide to building software with AI agents — inspired by Peter Steinberger's workflow, battle-tested on real iOS apps.">
+<meta property="og:title" content="The Agentic Engineering Playbook">
+<meta property="og:description" content="Everything you need to build software with AI agents. Shortcuts, SOPs, tools, and hard-won lessons.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --bg-sidebar: #0e0e16;
+  --bg-card: #12121a;
+  --bg-card-hover: #1a1a28;
+  --border: #1e1e2e;
+  --border-light: #2a2a3e;
+  --text: #e4e4ef;
+  --text-muted: #8888a0;
+  --text-dim: #555570;
+  --accent: #7c5cff;
+  --accent-glow: rgba(124, 92, 255, 0.15);
+  --accent-bg: rgba(124, 92, 255, 0.08);
+  --green: #4ade80;
+  --yellow: #fbbf24;
+  --red: #f87171;
+  --orange: #fb923c;
+  --cyan: #22d3ee;
+  --pink: #f472b6;
+  --sidebar-w: 280px;
+  --topbar-h: 52px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--topbar-h) + 1.5rem); }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code, kbd {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+pre {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+  line-height: 1.5;
+}
+pre code { background: none; border: none; padding: 0; font-size: 0.85rem; }
+blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  color: var(--text-muted);
+  background: var(--accent-bg);
+  border-radius: 0 6px 6px 0;
+  font-style: italic;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: var(--topbar-h);
+  background: rgba(10, 10, 15, 0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 1.5rem;
+}
+.topbar-logo {
+  font-weight: 800; font-size: 1rem;
+  background: linear-gradient(135deg, var(--accent), var(--cyan));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.topbar-right { margin-left: auto; display: flex; gap: 1rem; align-items: center; }
+.topbar-right a { color: var(--text-muted); font-size: 0.8rem; font-weight: 500; }
+.topbar-right a:hover { color: var(--text); text-decoration: none; }
+.menu-btn {
+  display: none; background: none; border: none; color: var(--text);
+  font-size: 1.3rem; cursor: pointer; padding: 0.25rem;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position: fixed; top: var(--topbar-h); left: 0; bottom: 0;
+  width: var(--sidebar-w);
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  overflow-y: auto; z-index: 100;
+  padding: 1.25rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.nav-section { padding: 0 0.75rem; margin-bottom: 0.5rem; }
+.nav-section-title {
+  font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-dim);
+  padding: 0.5rem 0.75rem 0.25rem; user-select: none;
+}
+.nav-link {
+  display: block; padding: 0.35rem 0.75rem; margin: 1px 0;
+  font-size: 0.82rem; color: var(--text-muted);
+  border-radius: 6px; transition: all 0.15s;
+  text-decoration: none;
+}
+.nav-link:hover { color: var(--text); background: rgba(255,255,255,0.04); text-decoration: none; }
+.nav-link.active { color: var(--accent); background: var(--accent-bg); font-weight: 600; }
+.nav-link.sub { padding-left: 1.5rem; font-size: 0.78rem; }
+
+/* ── MAIN CONTENT ── */
+.main {
+  margin-left: var(--sidebar-w);
+  margin-top: var(--topbar-h);
+  max-width: 820px;
+  padding: 2.5rem 3rem 6rem;
+}
+
+/* ── SECTIONS ── */
+.section { margin-bottom: 4rem; }
+.section h1 {
+  font-size: 2rem; font-weight: 800; letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+.section h2 {
+  font-size: 1.4rem; font-weight: 700; letter-spacing: -0.01em;
+  margin: 2.5rem 0 0.75rem; padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+.section h2:first-of-type { border-top: none; padding-top: 0; }
+.section h3 { font-size: 1.1rem; font-weight: 600; margin: 1.75rem 0 0.5rem; }
+.section h4 { font-size: 0.95rem; font-weight: 600; margin: 1.25rem 0 0.35rem; }
+.section p { color: var(--text-muted); margin-bottom: 0.75rem; }
+.section ul, .section ol { padding-left: 1.5rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+.section li { margin-bottom: 0.3rem; }
+.section li strong { color: var(--text); }
+
+/* ── SOURCE TAGS ── */
+.src {
+  display: inline-block; font-size: 0.65rem; font-weight: 600;
+  padding: 0.15em 0.5em; border-radius: 3px;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  vertical-align: middle; margin-left: 0.3rem;
+}
+.src-pete { background: rgba(124,92,255,0.15); color: var(--accent); }
+.src-docs { background: rgba(34,211,238,0.15); color: var(--cyan); }
+.src-ours { background: rgba(74,222,128,0.15); color: var(--green); }
+.src-lex { background: rgba(244,114,182,0.15); color: var(--pink); }
+
+/* ── TABLES ── */
+table {
+  width: 100%; border-collapse: collapse; margin: 1rem 0;
+  font-size: 0.85rem;
+}
+th { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 2px solid var(--border); color: var(--text-dim); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* ── CARDS ── */
+.card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1.25rem; margin: 0.75rem 0;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: var(--border-light); }
+.card h4 { margin-top: 0; }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.75rem; margin: 1rem 0; }
+
+/* ── TOOL CARDS ── */
+.tool-card {
+  display: flex; gap: 0.75rem; align-items: flex-start;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1rem;
+}
+.tool-icon { font-size: 1.5rem; flex-shrink: 0; }
+.tool-info h4 { font-size: 0.9rem; margin: 0 0 0.25rem; color: var(--text); }
+.tool-info p { font-size: 0.8rem; color: var(--text-muted); margin: 0 0 0.35rem; }
+.tool-cmd { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); }
+
+/* ── RULES ── */
+.rule {
+  display: flex; gap: 1rem; align-items: flex-start;
+  padding: 1rem; margin: 0.5rem 0;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+}
+.rule-num {
+  background: var(--accent); color: white;
+  width: 2rem; height: 2rem; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.85rem; flex-shrink: 0;
+}
+.rule h4 { margin: 0 0 0.25rem; }
+.rule p { margin: 0; font-size: 0.85rem; }
+
+/* ── WORKFLOW STEPS ── */
+.step {
+  position: relative; padding: 0.75rem 0 0.75rem 2.5rem; margin: 0.5rem 0;
+}
+.step::before {
+  content: attr(data-step);
+  position: absolute; left: 0; top: 0.75rem;
+  width: 1.75rem; height: 1.75rem; border-radius: 50%;
+  background: var(--border); color: var(--text);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.8rem;
+}
+.step h4 { margin: 0 0 0.2rem; }
+.step p { margin: 0; font-size: 0.85rem; }
+
+/* ── QUOTE CARDS ── */
+.wisdom-quote {
+  padding: 1.5rem; margin: 0.75rem 0;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+  font-size: 1.05rem; font-weight: 500; color: var(--text);
+  font-style: italic;
+}
+.wisdom-attr { display: block; font-size: 0.8rem; color: var(--text-dim); font-style: normal; margin-top: 0.5rem; }
+
+/* ── ACCORDION ── */
+.accordion { border: 1px solid var(--border); border-radius: 8px; margin: 0.5rem 0; overflow: hidden; }
+.accordion-toggle {
+  width: 100%; background: var(--bg-card); border: none;
+  color: var(--text); padding: 0.75rem 1rem; font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; text-align: left; display: flex; justify-content: space-between; align-items: center;
+  font-family: inherit; transition: background 0.15s;
+}
+.accordion-toggle:hover { background: var(--bg-card-hover); }
+.accordion-toggle .arrow { font-size: 0.7rem; transition: transform 0.2s; }
+.accordion.open .accordion-toggle .arrow { transform: rotate(180deg); }
+.accordion-body { display: none; padding: 1rem; border-top: 1px solid var(--border); }
+.accordion.open .accordion-body { display: block; }
+
+/* ── SHORTCUT FILTER ── */
+.filter-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+.filter-tab {
+  background: var(--bg-card); border: 1px solid var(--border);
+  color: var(--text-muted); padding: 0.35rem 0.75rem; border-radius: 6px;
+  font-size: 0.8rem; font-weight: 500; cursor: pointer;
+  font-family: inherit; transition: all 0.15s;
+}
+.filter-tab:hover { border-color: var(--border-light); color: var(--text); }
+.filter-tab.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); transition: transform 0.25s ease; z-index: 300; }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; padding: 2rem 1.5rem 4rem; }
+  .menu-btn { display: block; }
+  .overlay {
+    display: none; position: fixed; inset: 0; z-index: 250;
+    background: rgba(0,0,0,0.5);
+  }
+  .overlay.show { display: block; }
+}
+@media (max-width: 600px) {
+  .main { padding: 1.5rem 1rem 3rem; }
+  .card-grid { grid-template-columns: 1fr; }
+  table { font-size: 0.78rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+  <span class="topbar-logo" style="margin-left:0.5rem;">Agentic Engineering Playbook</span>
+  <div class="topbar-right">
+    <a href="https://github.com/zach-highley/openclaw-starter-kit" target="_blank">GitHub</a>
+    <a href="https://docs.openclaw.ai" target="_blank">OpenClaw Docs</a>
+    <a href="https://steipete.me" target="_blank">steipete.me</a>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="nav-section">
+    <div class="nav-section-title">Getting Started</div>
+    <a class="nav-link" href="#overview">Overview</a>
+    <a class="nav-link" href="#golden-rules">The 7 Golden Rules</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Keyboard Shortcuts</div>
+    <a class="nav-link" href="#shortcuts">All Shortcuts</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Daily Operating System</div>
+    <a class="nav-link" href="#environment">Environment Setup</a>
+    <a class="nav-link" href="#daily-workflow">Daily Workflow</a>
+    <a class="nav-link" href="#agents-md">AGENTS.md</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Build Process</div>
+    <a class="nav-link" href="#new-feature">New Feature</a>
+    <a class="nav-link" href="#bug-fix">Bug Fix</a>
+    <a class="nav-link" href="#refactor">Refactor</a>
+    <a class="nav-link" href="#apple-docs">Apple Docs Pipeline</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Tool Belt</div>
+    <a class="nav-link" href="#tools">All Tools</a>
+    <a class="nav-link" href="#models">Model Selection</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Security & Reliability</div>
+    <a class="nav-link" href="#security">Security Posture</a>
+    <a class="nav-link" href="#reliability">Gateway & Heartbeat</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">App Playbooks</div>
+    <a class="nav-link" href="#300-loc">300 LOC Discipline</a>
+    <a class="nav-link" href="#runquest">RunQuest</a>
+    <a class="nav-link" href="#getsmart">GetSmart</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Cross-Bot Operations</div>
+    <a class="nav-link" href="#eric-handoff">Eric Handoff</a>
+    <a class="nav-link" href="#mutual-ssh">Mutual SSH</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">The steipete Analysis</div>
+    <a class="nav-link" href="#pete-philosophy">Core Philosophy</a>
+    <a class="nav-link" href="#pete-workflow">His Workflow</a>
+    <a class="nav-link" href="#pete-projects">Projects He Built</a>
+    <a class="nav-link" href="#pete-lex">Lex #491 Insights</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Product & GTM</div>
+    <a class="nav-link" href="#apps-as-apis">Apps as APIs</a>
+    <a class="nav-link" href="#monetization">Monetization</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Wisdom</div>
+    <a class="nav-link" href="#mental-models">Mental Models</a>
+    <a class="nav-link" href="#traps">Common Traps</a>
+    <a class="nav-link" href="#reading">Essential Reading</a>
+  </div>
+</nav>
+
+<!-- OVERLAY (mobile) -->
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+<!-- ═══════════════════════════════════ -->
+<!-- GETTING STARTED                     -->
+<!-- ═══════════════════════════════════ -->
+<div class="section" id="overview">
+  <h1>The Agentic Engineering Playbook</h1>
+  <p>Everything you need to build software with AI agents. Speed demon shortcuts, battle-tested SOPs, the complete steipete analysis, and hard-won lessons from shipping real iOS apps.</p>
+  <p style="color: var(--text-dim); font-size: 0.85rem;">Built by <strong style="color:var(--text-muted)">Yoda</strong> 🐸 · Inspired by <a href="https://steipete.me">Peter Steinberger</a> · February 2026</p>
+
+  <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin:1.5rem 0;">
+    <span class="src src-pete">steipete</span> = from Pete's blog/interview
+    <span class="src src-lex">Lex #491</span> = from Pete's Lex Fridman appearance
+    <span class="src src-docs">OpenClaw</span> = from official docs
+    <span class="src src-ours">Our experience</span> = battle-tested ourselves
+  </div>
+
+  <h2 id="golden-rules">The 7 Golden Rules <span class="src src-pete">steipete</span></h2>
+  <div class="rule"><span class="rule-num">1</span><div><h4>Spec before code</h4><p>Write what you want before building it. Never start a feature without a spec.</p></div></div>
+  <div class="rule"><span class="rule-num">2</span><div><h4>AGENTS.md in every project</h4><p>Single biggest force multiplier. Project context that makes agents 10x more effective.</p></div></div>
+  <div class="rule"><span class="rule-num">3</span><div><h4>300 LOC max per file</h4><p>Agents make fewer mistakes with smaller files. Hard constraint — no exceptions.</p></div></div>
+  <div class="rule"><span class="rule-num">4</span><div><h4>Tests per feature, same session</h4><p>Don't switch context. Write tests right after the feature while the agent has full context.</p></div></div>
+  <div class="rule"><span class="rule-num">5</span><div><h4>CLIs > MCPs > nothing</h4><p>One line in AGENTS.md beats installing an MCP server. Less context pollution, more composability.</p></div></div>
+  <div class="rule"><span class="rule-num">6</span><div><h4>Commit early, commit often</h4><p>Git is your safety net. Small atomic commits on main. No branches for rapid iteration.</p></div></div>
+  <div class="rule"><span class="rule-num">7</span><div><h4>Plan first, build second</h4><p>"Ultrathink, give me 3 options" — iterate on the plan before typing "y" to build.</p></div></div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- KEYBOARD SHORTCUTS                  -->
+<!-- ═══════════════════════════════════ -->
+<div class="section" id="shortcuts">
+  <h1>⌨️ Keyboard Shortcuts</h1>
+  <p>Memorize the top 20 first. The rest come naturally once your fingers know the patterns.</p>
+
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="filterShortcuts('all')">All</button>
+    <button class="filter-tab" onclick="filterShortcuts('top20')">🔥 Top 20</button>
+    <button class="filter-tab" onclick="filterShortcuts('ghostty')">Ghostty</button>
+    <button class="filter-tab" onclick="filterShortcuts('xcode')">Xcode</button>
+    <button class="filter-tab" onclick="filterShortcuts('terminal')">Terminal</button>
+    <button class="filter-tab" onclick="filterShortcuts('macos')">macOS</button>
+    <button class="filter-tab" onclick="filterShortcuts('git')">Git</button>
+  </div>
+
+  <div class="shortcut-group" data-group="top20">
+    <h3>🔥 Top 20 — Memorize These First</h3>
+    <table>
+      <thead><tr><th>Shortcut</th><th>Action</th><th>Where</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>⌘ Space</kbd></td><td>Spotlight Search</td><td>macOS</td></tr>
+        <tr><td><kbd>⌘ Tab</kbd></td><td>Switch apps</td><td>macOS</td></tr>
+        <tr><td><kbd>⌘ `</kbd></td><td>Switch windows of same app</td><td>macOS</td></tr>
+        <tr><td><kbd>⌘ T</kbd></td><td>New tab</td><td>Ghostty / Safari / Finder</td></tr>
+        <tr><td><kbd>⌘ D</kbd></td><td>Split pane horizontal</td><td>Ghostty</td></tr>
+        <tr><td><kbd>⌘ ⇧ D</kbd></td><td>Split pane vertical</td><td>Ghostty</td></tr>
+        <tr><td><kbd>⌘ B</kbd></td><td>Build</td><td>Xcode</td></tr>
+        <tr><td><kbd>⌘ R</kbd></td><td>Run</td><td>Xcode</td></tr>
+        <tr><td><kbd>⌘ U</kbd></td><td>Test</td><td>Xcode</td></tr>
+        <tr><td><kbd>⌘ ⇧ O</kbd></td><td>Open Quickly</td><td>Xcode</td></tr>
+        <tr><td><kbd>⌃ R</kbd></td><td>Reverse search history</td><td>Terminal</td></tr>
+        <tr><td><kbd>⌃ C</kbd></td><td>Kill process</td><td>Terminal</td></tr>
+        <tr><td><kbd>⌘ /</kbd></td><td>Toggle comment</td><td>Xcode</td></tr>
+        <tr><td><kbd>⌘ ⇧ K</kbd></td><td>Clean build folder</td><td>Xcode</td></tr>
+        <tr><td><kbd>⌘ ⇧ J</kbd></td><td>Reveal in navigator</td><td>Xcode</td></tr>
+        <tr><td><kbd>⌥ ←/→</kbd></td><td>Move cursor by word</td><td>Everywhere</td></tr>
+        <tr><td><kbd>⌘ ←/→</kbd></td><td>Move to line start/end</td><td>Everywhere</td></tr>
+        <tr><td><kbd>⌥ ⌫</kbd></td><td>Delete whole word</td><td>Everywhere</td></tr>
+        <tr><td><kbd>⌘ Z</kbd>/<kbd>⌘⇧Z</kbd></td><td>Undo / Redo</td><td>Everywhere</td></tr>
+        <tr><td><kbd>⌘ ⇧ 4</kbd></td><td>Screenshot selection</td><td>macOS</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="shortcut-group" data-group="ghostty">
+    <h3>👻 Ghostty Terminal</h3>
+    <p style="font-size:0.85rem;">Native macOS terminal by Mitchell Hashimoto (HashiCorp). Hardware-accelerated, Metal rendering.</p>
+    <table>
+      <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>⌘ T</kbd></td><td>New tab</td></tr>
+        <tr><td><kbd>⌘ W</kbd></td><td>Close tab/split</td></tr>
+        <tr><td><kbd>⌘ D</kbd></td><td>Split horizontally</td></tr>
+        <tr><td><kbd>⌘ ⇧ D</kbd></td><td>Split vertically</td></tr>
+        <tr><td><kbd>⌘ ]</kbd>/<kbd>⌘ [</kbd></td><td>Next / previous split</td></tr>
+        <tr><td><kbd>⌘ 1-9</kbd></td><td>Jump to tab</td></tr>
+        <tr><td><kbd>⌘ ⇧ ↩</kbd></td><td>Toggle fullscreen</td></tr>
+        <tr><td><kbd>⌘ ⇧ ,</kbd></td><td>Reload config</td></tr>
+        <tr><td><kbd>⌘ K</kbd></td><td>Clear scrollback</td></tr>
+        <tr><td><kbd>⌘ F</kbd></td><td>Find in scrollback</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="shortcut-group" data-group="xcode">
+    <h3>🔨 Xcode</h3>
+    <div class="accordion">
+      <button class="accordion-toggle" onclick="toggleAccordion(this)">Navigation <span class="arrow">▼</span></button>
+      <div class="accordion-body">
+        <table><thead><tr><th>Shortcut</th><th>Action</th></tr></thead><tbody>
+          <tr><td><kbd>⌘ ⇧ O</kbd></td><td>Open Quickly — jump to any file/symbol</td></tr>
+          <tr><td><kbd>⌘ ⇧ J</kbd></td><td>Reveal file in navigator</td></tr>
+          <tr><td><kbd>⌃ ⌘ ←/→</kbd></td><td>Navigate back / forward</td></tr>
+          <tr><td><kbd>⌃ ⌘ J</kbd></td><td>Jump to definition</td></tr>
+          <tr><td><kbd>⌥ click</kbd></td><td>Quick Help popup</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div class="accordion">
+      <button class="accordion-toggle" onclick="toggleAccordion(this)">Build & Run <span class="arrow">▼</span></button>
+      <div class="accordion-body">
+        <table><thead><tr><th>Shortcut</th><th>Action</th></tr></thead><tbody>
+          <tr><td><kbd>⌘ B</kbd></td><td>Build</td></tr>
+          <tr><td><kbd>⌘ R</kbd></td><td>Run</td></tr>
+          <tr><td><kbd>⌘ .</kbd></td><td>Stop</td></tr>
+          <tr><td><kbd>⌘ U</kbd></td><td>Run all tests</td></tr>
+          <tr><td><kbd>⌃ ⌥ ⌘ U</kbd></td><td>Run test at cursor</td></tr>
+          <tr><td><kbd>⌘ ⇧ K</kbd></td><td>Clean build folder</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div class="accordion">
+      <button class="accordion-toggle" onclick="toggleAccordion(this)">Editor <span class="arrow">▼</span></button>
+      <div class="accordion-body">
+        <table><thead><tr><th>Shortcut</th><th>Action</th></tr></thead><tbody>
+          <tr><td><kbd>⌘ /</kbd></td><td>Toggle comment</td></tr>
+          <tr><td><kbd>⌃ I</kbd></td><td>Re-indent</td></tr>
+          <tr><td><kbd>⌘ ⌥ [/]</kbd></td><td>Move line up/down</td></tr>
+          <tr><td><kbd>⌘ ⇧ F</kbd></td><td>Find in project</td></tr>
+          <tr><td><kbd>⌘ ⌥ F</kbd></td><td>Find and replace</td></tr>
+          <tr><td><kbd>⌃ ⇧ Click</kbd></td><td>Multiple cursors</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div class="accordion">
+      <button class="accordion-toggle" onclick="toggleAccordion(this)">Panels & Debugging <span class="arrow">▼</span></button>
+      <div class="accordion-body">
+        <table><thead><tr><th>Shortcut</th><th>Action</th></tr></thead><tbody>
+          <tr><td><kbd>⌘ 0</kbd></td><td>Toggle navigator</td></tr>
+          <tr><td><kbd>⌘ ⌥ 0</kbd></td><td>Toggle inspector</td></tr>
+          <tr><td><kbd>⌘ ⇧ Y</kbd></td><td>Toggle debug area</td></tr>
+          <tr><td><kbd>⌘ ↩</kbd></td><td>Editor only</td></tr>
+          <tr><td><kbd>⌘ ⌥ ↩</kbd></td><td>Toggle Canvas preview</td></tr>
+          <tr><td><kbd>⌘ \</kbd></td><td>Toggle breakpoint</td></tr>
+          <tr><td><kbd>F6/F7/F8</kbd></td><td>Step over/into/out</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <div class="shortcut-group" data-group="terminal">
+    <h3>🐚 Terminal / Shell (zsh)</h3>
+    <table>
+      <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>⌃ A</kbd></td><td>Jump to beginning of line</td></tr>
+        <tr><td><kbd>⌃ E</kbd></td><td>Jump to end of line</td></tr>
+        <tr><td><kbd>⌃ W</kbd></td><td>Delete word backward</td></tr>
+        <tr><td><kbd>⌃ U</kbd></td><td>Delete entire line</td></tr>
+        <tr><td><kbd>⌃ K</kbd></td><td>Delete to end of line</td></tr>
+        <tr><td><kbd>⌃ Y</kbd></td><td>Paste deleted text</td></tr>
+        <tr><td><kbd>⌃ R</kbd></td><td>Reverse search history</td></tr>
+        <tr><td><kbd>⌃ C</kbd></td><td>Kill process</td></tr>
+        <tr><td><kbd>⌃ Z</kbd></td><td>Suspend (resume: <code>fg</code>)</td></tr>
+        <tr><td><kbd>⌃ D</kbd></td><td>EOF / exit</td></tr>
+        <tr><td><kbd>⌃ L</kbd></td><td>Clear screen</td></tr>
+        <tr><td><kbd>!!</kbd></td><td>Repeat last command</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="shortcut-group" data-group="macos">
+    <h3>🍎 macOS System</h3>
+    <table>
+      <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>⌘ Tab</kbd></td><td>Switch apps</td></tr>
+        <tr><td><kbd>⌘ `</kbd></td><td>Switch windows of same app</td></tr>
+        <tr><td><kbd>⌘ Q</kbd></td><td>Quit app</td></tr>
+        <tr><td><kbd>⌃ ⌘ F</kbd></td><td>Toggle fullscreen</td></tr>
+        <tr><td><kbd>⌘ ,</kbd></td><td>Preferences</td></tr>
+        <tr><td><kbd>⌃ ↑</kbd></td><td>Mission Control</td></tr>
+        <tr><td><kbd>⌃ ←/→</kbd></td><td>Switch Spaces</td></tr>
+        <tr><td><kbd>⌘ ⇧ 3</kbd></td><td>Screenshot entire screen</td></tr>
+        <tr><td><kbd>⌘ ⇧ 4</kbd></td><td>Screenshot selection</td></tr>
+        <tr><td><kbd>⌘ ⇧ 5</kbd></td><td>Screenshot toolbar</td></tr>
+        <tr><td><kbd>⌘ ⇧ .</kbd></td><td>Show hidden files</td></tr>
+        <tr><td><kbd>⌃ ⌘ Space</kbd></td><td>Emoji picker 😎</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="shortcut-group" data-group="git">
+    <h3>🔧 Git Quick Reference</h3>
+    <table>
+      <thead><tr><th>Command</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>git status</kbd></td><td>See what changed</td></tr>
+        <tr><td><kbd>git add -p</kbd></td><td>Stage interactively</td></tr>
+        <tr><td><kbd>git commit -m "msg"</kbd></td><td>Commit</td></tr>
+        <tr><td><kbd>git log --oneline -10</kbd></td><td>Last 10 commits</td></tr>
+        <tr><td><kbd>git diff</kbd></td><td>Unstaged changes</td></tr>
+        <tr><td><kbd>git diff --staged</kbd></td><td>Staged changes</td></tr>
+        <tr><td><kbd>git stash</kbd>/<kbd>pop</kbd></td><td>Shelve / restore</td></tr>
+        <tr><td><kbd>git reset HEAD~1</kbd></td><td>Undo last commit (keep changes)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- DAILY OPERATING SYSTEM              -->
+<!-- ═══════════════════════════════════ -->
+<div class="section" id="environment">
+  <h1>🖥️ Daily Operating System</h1>
+
+  <h2>Environment Setup</h2>
+  <p>The physical and digital workspace that makes everything click. <span class="src src-pete">steipete</span></p>
+
+  <h3>Terminal: Ghostty</h3>
+  <p>Native macOS terminal by Mitchell Hashimoto. Metal-rendered, fastest available. Run multiple instances side-by-side for parallel agent work.</p>
+  <pre><code># Install
+brew install --cask ghostty
+
+# Config (optional)
+mkdir -p ~/.config/ghostty
+cat > ~/.config/ghostty/config << 'EOF'
+font-family = SF Mono
+font-size = 14
+theme = catppuccin-mocha
+window-padding-x = 10
+window-padding-y = 10
+EOF</code></pre>
+
+  <h3>Voice: Wispr Flow</h3>
+  <p>System-wide voice dictation. Talk to agents instead of typing. Long rambly prompts work great — the agent figures out intent. <span class="src src-pete">steipete</span></p>
+
+  <h3>Auto-Rebuild: Poltergeist</h3>
+  <p>Universal file-watcher. The binary is ready before you finish reading the diff. <span class="src src-pete">steipete</span></p>
+  <pre><code>brew install steipete/tap/poltergeist
+cd ~/your-project
+poltergeist init    # auto-detects project type
+poltergeist haunt   # start watching</code></pre>
+
+  <h2 id="daily-workflow">Daily Workflow</h2>
+  <p>The typical day of an agentic engineer: <span class="src src-ours">Our experience</span></p>
+  <ol>
+    <li><strong>Open Ghostty</strong> — 2-4 tabs: one per agent task, one for git/testing</li>
+    <li><strong>Check agent health</strong> — <code>openclaw health</code>, <code>openclaw status</code></li>
+    <li><strong>Review TODO/memory</strong> — what's pending, what context carries over</li>
+    <li><strong>Spec or plan first</strong> — Gemini for big features, quick prompt for small ones</li>
+    <li><strong>Build with agents</strong> — steer every few minutes, keep files under 300 LOC</li>
+    <li><strong>Test in same session</strong> — "write tests for what you just built"</li>
+    <li><strong>Commit atomically</strong> — small chunks, descriptive messages</li>
+    <li><strong>Verify on device</strong> — simulator and/or physical device</li>
+  </ol>
+
+  <h2 id="agents-md">AGENTS.md — The Single Biggest Win <span class="src src-pete">steipete</span></h2>
+  <p>Every project gets an <code>AGENTS.md</code> (or <code>CLAUDE.md</code>) at the root. This is the project's brain dump for the agent.</p>
+  <blockquote>"I noticed Claude asks fewer clarifying questions and writes more accurate code."</blockquote>
+
+  <h4>What goes in AGENTS.md:</h4>
+  <ul>
+    <li>Project overview + architecture</li>
+    <li>File size rule (300 LOC max)</li>
+    <li>CLI commands: build, test, run, lint</li>
+    <li>Dependencies + how to install</li>
+    <li>Key patterns used in the codebase</li>
+    <li>Common pitfalls / "don't do this"</li>
+    <li>One-liner for each external tool: <code>gh, psql, vercel, axiom</code></li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- BUILD PROCESS                       -->
+<!-- ═══════════════════════════════════ -->
+<div class="section" id="new-feature">
+  <h1>🏗️ Build Process</h1>
+
+  <h2>New Feature (Small, < 1 day)</h2>
+  <div class="step" data-step="1"><h4>Describe in plain English</h4><p>Be specific about behavior, edge cases, UI expectations.</p></div>
+  <div class="step" data-step="2"><h4>Plan first</h4><p>"Plan this. Give me 3 options. Don't build yet." Pick the best, refine, THEN approve.</p></div>
+  <div class="step" data-step="3"><h4>Build it</h4><p>Type "y". Steer every few minutes. If a file passes 300 lines, tell it to split.</p></div>
+  <div class="step" data-step="4"><h4>Write tests</h4><p>"Write tests for what you just built. Check edge cases." Same session!</p></div>
+  <div class="step" data-step="5"><h4>Commit</h4><p>Run tests, verify in simulator, commit in logical chunks.</p></div>
+
+  <h2>New Feature (Big, multi-day) <span class="src src-pete">steipete</span></h2>
+  <div class="step" data-step="1"><h4>Brain-dump into Gemini AI Studio</h4><p>Free, 1M token context. Dictate via Wispr Flow. Find similar OSS and drag in via repo-to-text.</p></div>
+  <div class="step" data-step="2"><h4>Generate a Software Design Document</h4><p>Ask Gemini: "Write an SDD for this." Typically ~500 lines.</p></div>
+  <div class="step" data-step="3"><h4>Two-Context Critique (the secret weapon)</h4><p>Copy SDD → fresh Gemini chat → "20 things underspecified?" → Copy answers back → Repeat 3-5 rounds until questions are trivially niche.</p></div>
+  <div class="step" data-step="4"><h4>Save spec, point agent at it</h4><p>Save as <code>docs/spec-[feature].md</code> → "Build spec.md"</p></div>
+  <div class="step" data-step="5"><h4>Steer, test, ship</h4><p>Steer the build. Write tests in same context. Commit surgically.</p></div>
+
+  <h3>Post-Build Checklist <span class="src src-lex">Lex #491</span></h3>
+  <p>After any major implementation, run this exact sequence:</p>
+  <ol>
+    <li>"Summarize intent in 3 bullets"</li>
+    <li>"What would you refactor now?"</li>
+    <li>"Which edge cases are under-tested?"</li>
+    <li>"Write those tests"</li>
+    <li>"Update docs"</li>
+  </ol>
+
+  <h2 id="bug-fix">Bug Fix</h2>
+  <div class="step" data-step="1"><h4>Paste exact error/crash log</h4><p>Don't summarize — paste verbatim. "Here's the error. Find and fix the root cause."</p></div>
+  <div class="step" data-step="2"><h4>Write a regression test</h4><p>"Write a test that would have caught this." Verify it fails without the fix.</p></div>
+  <div class="step" data-step="3"><h4>Commit</h4><p><code>git commit -m "fix: [concise description]"</code></p></div>
+
+  <h2 id="refactor">Refactor / Cleanup</h2>
+  <p>This is where parallel agents shine. Run 3-4 on different files — low blast radius. <span class="src src-pete">steipete</span></p>
+  <div class="step" data-step="1"><h4>Find files over 300 LOC</h4><p><code>find . -name "*.swift" | xargs wc -l | sort -rn | head -20</code></p></div>
+  <div class="step" data-step="2"><h4>Split with agents</h4><p>"Split [file] into [logical pieces]." Use extension pattern: <code>View+Section.swift</code></p></div>
+  <div class="step" data-step="3"><h4>Run tests after each split, commit after each file</h4><p>Atomic changes. One file at a time. Tests green before moving on.</p></div>
+
+  <h2 id="apple-docs">Apple Docs Pipeline <span class="src src-pete">steipete</span></h2>
+  <p>Before any Apple framework work, convert docs to markdown so agents can read them:</p>
+  <pre><code>1. Go to https://llm.codes
+2. Paste: https://developer.apple.com/documentation/[framework]
+3. Download generated llms.txt
+4. Save to docs/apple-docs/ in your project
+5. Add to AGENTS.md so agent loads it into context</code></pre>
+  <p>Pre-convert: SwiftUI, HealthKit (RunQuest), MapKit (RunQuest), SwiftData (GetSmart), StoreKit (both), CloudKit (GetSmart).</p>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- TOOLS                               -->
+<!-- ═══════════════════════════════════ -->
+<div class="section" id="tools">
+  <h1>🛠️ The Tool Belt</h1>
+  <p>Every tool earns its place. CLIs over GUIs. One line in AGENTS.md beats an MCP server.</p>
+
+  <div class="card-grid">
+    <div class="tool-card"><span class="tool-icon">👻</span><div class="tool-info"><h4><a href="https://ghostty.org" target="_blank">Ghostty</a></h4><p>Native macOS terminal by <a href="https://mitchellh.com" target="_blank">Mitchell Hashimoto</a> (HashiCorp). Metal-rendered, fastest available.</p><span class="tool-cmd">brew install --cask ghostty</span></div></div>
+    <div class="tool-card"><span class="tool-icon">🤖</span><div class="tool-info"><h4><a href="https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview" target="_blank">Claude Code</a></h4><p>Anthropic's coding agent. Best model + tooling combo. <a href="https://steipete.me/posts/claude-code-is-my-computer" target="_blank">Pete's core tool</a>.</p><span class="tool-cmd">claude --dangerously-skip-permissions</span></div></div>
+    <div class="tool-card"><span class="tool-icon">📦</span><div class="tool-info"><h4><a href="https://github.com/openai/codex" target="_blank">Codex CLI</a></h4><p>OpenAI's coding agent. More self-directed, reads more repo without hand-holding.</p><span class="tool-cmd">codex exec "prompt" --full-auto</span></div></div>
+    <div class="tool-card"><span class="tool-icon">🎤</span><div class="tool-info"><h4><a href="https://wisprflow.ai" target="_blank">Wispr Flow</a></h4><p>System-wide voice dictation. Talk to agents instead of typing. Long rambly prompts work great.</p><span class="tool-cmd">wisprflow.ai</span></div></div>
+    <div class="tool-card"><span class="tool-icon">👻</span><div class="tool-info"><h4><a href="https://github.com/nicklama/poltergeist" target="_blank">Poltergeist</a></h4><p>Universal auto-rebuild on file save. The binary is ready before you finish reading the diff.</p><span class="tool-cmd">brew install steipete/tap/poltergeist</span></div></div>
+    <div class="tool-card"><span class="tool-icon">👀</span><div class="tool-info"><h4><a href="https://github.com/steipete/peekaboo" target="_blank">Peekaboo</a></h4><p>Screenshot + AI vision + macOS automation. Give your agent eyes and hands.</p><span class="tool-cmd">brew install steipete/tap/peekaboo</span></div></div>
+    <div class="tool-card"><span class="tool-icon">📖</span><div class="tool-info"><h4><a href="https://llm.codes" target="_blank">llm.codes</a></h4><p>Convert Apple/JS-heavy docs to clean markdown. 69+ documentation sites supported.</p><span class="tool-cmd">llm.codes</span></div></div>
+    <div class="tool-card"><span class="tool-icon">📄</span><div class="tool-info"><h4><a href="https://github.com/nicklama/repo-to-text" target="_blank">repo-to-text</a></h4><p>Dump entire repo (tree + contents) into a single file for LLM context windows.</p><span class="tool-cmd">pipx install repo-to-text</span></div></div>
+    <div class="tool-card"><span class="tool-icon">🧠</span><div class="tool-info"><h4><a href="https://aistudio.google.com" target="_blank">Gemini AI Studio</a></h4><p>Free, 1M token context. Perfect for spec writing and understanding entire codebases.</p><span class="tool-cmd">aistudio.google.com</span></div></div>
+    <div class="tool-card"><span class="tool-icon">🐸</span><div class="tool-info"><h4><a href="https://github.com/openclaw/openclaw" target="_blank">OpenClaw</a></h4><p>AI agent framework. Orchestration, memory, heartbeat, multi-channel messaging.</p><span class="tool-cmd">npm install -g openclaw</span></div></div>
+  </div>
+
+  <h2 id="models">Which Model For What</h2>
+  <table>
+    <thead><tr><th>Task</th><th>Model</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Writing specs</td><td style="color:var(--cyan)">Gemini (AI Studio)</td><td>1M token context, great at docs</td></tr>
+      <tr><td>Code implementation</td><td style="color:var(--accent)">Claude Code (Opus/Sonnet)</td><td>Best agent tooling, loops longest</td></tr>
+      <tr><td>Plan review</td><td style="color:var(--green)">GPT-5 / Cursor</td><td>Fresh perspective, catches drift</td></tr>
+      <tr><td>Hard debugging</td><td style="color:var(--orange)">o3</td><td>Best reasoning, worth the cost</td></tr>
+      <tr><td>Understand codebase</td><td style="color:var(--cyan)">Gemini + repo-to-text</td><td>1M context eats entire repos</td></tr>
+      <tr><td>Self-directed coding</td><td style="color:var(--green)">Codex / GPT-5</td><td>Reads more repo without hand-holding</td></tr>
+    </tbody>
+  </table>
+
+  <h3>The Prompt Pattern <span class="src src-pete">steipete</span></h3>
+  <pre><code>[describe what you want]
+ultrathink, make a plan first and give me at least 3 options</code></pre>
+  <p>Then pick an option → refine → type "y" to build. Use <code>/clear</code> often to prevent context drift.</p>
+
+  <h3>Model Evaluation Rule <span class="src src-lex">Lex #491</span></h3>
+  <p>Give a new model <strong>~1 week</strong> before judging. Switch cost is real. Don't evaluate on one session.</p>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- SECURITY & RELIABILITY              -->
+<!-- ═══════════════════════════════════ -->
+<div class="section" id="security">
+  <h1>🔒 Security & Reliability</h1>
+
+  <h2>Security Posture <span class="src src-lex">Lex #491</span></h2>
+  <p>Pete confirmed: the biggest mistakes come from exposing gateway/backend publicly.</p>
+
+  <h4>Non-negotiable rules:</h4>
+  <ul>
+    <li><strong>Private network only</strong> — no public exposure of debug/admin surfaces</li>
+    <li><strong>mDNS off</strong> — don't broadcast your presence</li>
+    <li><strong>AllowFrom strict</strong> — DMs locked to your user ID only</li>
+    <li><strong>configWrites disabled</strong> — no config changes via chat</li>
+    <li><strong>High-capability models for privileged automation</strong> — weak/cheap models are more prompt-injection susceptible <span class="src src-lex">Lex #491</span></li>
+    <li><strong>File permissions hardened</strong> — <code>chmod 700</code> on .openclaw, <code>chmod 600</code> on secrets</li>
+  </ul>
+
+  <h4>Safety net (Pete's approach): <span class="src src-pete">steipete</span></h4>
+  <ul>
+    <li>Hourly Arq snapshots</li>
+    <li>SuperDuper disk clone</li>
+    <li>Git commits as checkpoints</li>
+    <li>After two months of dangerous mode: <strong>zero incidents</strong></li>
+  </ul>
+
+  <h2 id="reliability">Gateway & Heartbeat <span class="src src-ours">Our experience</span></h2>
+
+  <h4>Critical architecture rules (burned from real incidents):</h4>
+  <ul>
+    <li><strong>NEVER manage gateway manually</strong> — launchd owns it (KeepAlive: true)</li>
+    <li><strong>NEVER write raw config</strong> — always <code>gateway config.patch</code></li>
+    <li><strong>NEVER put agent settings at root level</strong> — they go under <code>agents.defaults</code></li>
+    <li><strong>NEVER run custom background daemons</strong> — use cron/heartbeat</li>
+    <li><strong>NEVER retry failed config in a loop</strong> — read error, fix, try ONCE</li>
+  </ul>
+
+  <h4>Heartbeat discipline:</h4>
+  <ul>
+    <li>Every 30min during active hours (7AM-11PM)</li>
+    <li>Lean checks only: gateway health + context pressure</li>
+    <li>No auto-starting background processes from heartbeat</li>
+    <li>If nothing needs attention: <code>HEARTBEAT_OK</code></li>
+  </ul>
+
+  <h4>Cron over custom daemons: <span class="src src-ours">Our experience</span></h4>
+  <p>We learned the hard way: a custom monitor-runner.sh caused 18 gateway restarts and rate limits on both providers. Replaced with OpenClaw's built-in cron system. Each concern owned by exactly one system (MECE).</p>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- APP PLAYBOOKS                       -->
+<!-- ═══════════════════════════════════ -->
+<div class="section" id="300-loc">
+  <h1>📱 App Playbooks</h1>
+
+  <h2>The 300 LOC Discipline <span class="src src-pete">steipete</span></h2>
+  <p>Hard limit: no production Swift file should exceed 300 LOC. Agents "freak out" and lose reliability as files grow.</p>
+
+  <h4>Split patterns (proven on RunQuest):</h4>
+
+  <h4>Pattern 1: Swift Extensions</h4>
+  <pre><code>// ProfileView.swift (main, < 300 LOC)
+struct ProfileView: View {
+    @State internal var selectedTab: ProfileTab = .stats
+    var body: some View { /* main layout */ }
+}
+
+// ProfileView+Stats.swift
+extension ProfileView {
+    var statsSection: some View { ... }
+}
+
+// ProfileView+Account.swift
+extension ProfileView {
+    var accountSection: some View { ... }
+}</code></pre>
+  <p><strong>Key:</strong> Change <code>private</code> → <code>internal</code> on @State/@Environment for cross-file access.</p>
+
+  <h4>Pattern 2: Extract ViewModel</h4>
+  <pre><code>// Before: FatView.swift (800 LOC)
+// After:
+//   FatView.swift (200 LOC, UI only)
+//   FatViewModel.swift (200 LOC, state + logic)
+//   FatView+Sections.swift (200 LOC, subviews)</code></pre>
+
+  <h4>Audit commands:</h4>
+  <pre><code># 300+ offenders
+rg --files -g '*.swift' . \
+| while IFS= read -r f; do
+    n=$(wc -l < "$f" | tr -d ' ')
+    [ "$n" -gt 300 ] && printf "%6s  %s\n" "$n" "$f"
+done | sort -nr</code></pre>
+
+  <h2 id="runquest">RunQuest (Gamifiedrunning) <span class="src src-ours">Our experience</span></h2>
+  <ul>
+    <li><strong>72 Swift files, ~8,451 LOC</strong> — lean project</li>
+    <li>Uses XcodeGen (<code>project.yml</code>) — agents don't touch .xcodeproj ✅</li>
+    <li>Has AGENTS.md deployed ✅</li>
+    <li><strong>Zero files over 300 LOC</strong> — all 7 original offenders split (max: 276)</li>
+    <li>Dependencies: RevenueCat, PostHog, Sentry, Google Sign-In</li>
+    <li>Has CI: <code>.github/workflows/ci.yml</code> ✅</li>
+  </ul>
+
+  <h2 id="getsmart">GetSmart (Enchiridion) <span class="src src-ours">Our experience</span></h2>
+  <ul>
+    <li><strong>248 Swift files, ~79,810 LOC</strong> — massive project</li>
+    <li>Has AGENTS.md + claude.md (11KB, extremely detailed) ✅</li>
+    <li><strong>15+ files over 300 LOC</strong> — audit done, refactor pending</li>
+    <li>Worst offenders: ContentLoader (2,519), QuizSessionViewModel (2,053), DeepDiveReaderView (1,860)</li>
+    <li>Beta 0.5 launch-ready: 2,817 quiz cards, 239 deep dive articles</li>
+    <li>Dependencies: SwiftData + CloudKit, FSRS, StoreKit 2, PostHog</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- STEIPETE ANALYSIS                   -->
+<!-- ═══════════════════════════════════ -->
+<!-- ═══════════════════════════════════ -->
+<!-- CROSS-BOT OPERATIONS                -->
+<!-- ═══════════════════════════════════ -->
+<div class="section" id="eric-handoff">
+  <h1>🤝 Cross-Bot Operations</h1>
+  <p>Running two AI agents (Yoda + Eric) across two machines. How they coordinate, recover each other, and share work. <span class="src src-ours">Our experience</span></p>
+
+  <h2>Eric Handoff</h2>
+  <p>Eric is the primary bot on the MacBook Pro. Yoda is the backup on MacBook Air. When one goes down, the other can diagnose and fix it.</p>
+
+  <h4>Critical rules both bots must follow:</h4>
+  <ul>
+    <li><strong>launchd owns the gateway</strong> — never manage it manually</li>
+    <li><strong>config.patch only</strong> — never write raw config files</li>
+    <li><strong>Agent settings under <code>agents.defaults</code></strong> — never at root level</li>
+    <li><strong>No custom daemons</strong> — use cron/heartbeat for everything</li>
+    <li><strong>Never restart silently</strong> — always message Zach with status</li>
+  </ul>
+
+  <h4>Files to deploy to Eric:</h4>
+  <table>
+    <thead><tr><th>File</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td><code>SYSTEM-ARCHITECTURE.md</code></td><td>Operational bible — ownership map, commandments</td></tr>
+      <tr><td><code>BOOT.md</code></td><td>Post-restart checklist — never restart silently</td></tr>
+      <tr><td><code>HEARTBEAT.md</code></td><td>Lean health checks only</td></tr>
+      <tr><td><code>BUILDING-SOP.md</code></td><td>Standard operating procedure for all builds</td></tr>
+      <tr><td><code>TWO-APP-300-LOC-RULESYSTEM.md</code></td><td>Code quality enforcement</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="mutual-ssh">Mutual SSH Recovery <span class="src src-ours">Our experience</span></h2>
+  <p>Both bots can SSH into each other via <a href="https://tailscale.com">Tailscale</a> to fix, restart, and audit the other machine.</p>
+
+  <pre><code># Yoda → Eric
+ssh zachhighley-gergel@100.120.233.9 "openclaw health"
+
+# Eric → Yoda
+ssh zachhighley-gergel@100.106.193.78 "openclaw health"
+
+# Either can restart the other
+ssh &lt;ip&gt; "openclaw gateway restart"
+
+# Either can run doctor
+ssh &lt;ip&gt; "openclaw doctor --fix"</code></pre>
+
+  <h4>Shared reports (iCloud sync):</h4>
+  <pre><code>~/Library/Mobile Documents/com~apple~CloudDocs/OpenClaw/Shared-Reports</code></pre>
+  <p>Both bots read/write audit reports, health summaries, and cross-bot status here.</p>
+
+  <h4>Autonomous nightshift pattern:</h4>
+  <ul>
+    <li>4 cron waves: 11PM, 1AM, 2:30AM, 6AM (30min each)</li>
+    <li>Each wave reads TODO.md, does work, commits to git, logs to memory</li>
+    <li>Wave 4 (6AM) produces a morning briefing for Zach</li>
+    <li>Zero dead time overnight — agent never sleeps</li>
+  </ul>
+</div>
+
+<div class="section" id="pete-philosophy">
+  <h1>📚 The steipete Analysis</h1>
+  <p>Everything Peter Steinberger learned about building with AI agents — from 38 blog posts at <a href="https://steipete.me">steipete.me</a> and his <a href="https://www.youtube.com/watch?v=example">Lex Fridman #491</a> appearance.</p>
+
+  <h2>Who Is Peter Steinberger?</h2>
+  <p>Austrian iOS developer who founded <strong>PSPDFKit</strong> (now Nutrient), a PDF SDK company he built for 13 years. Sold it, burned out, didn't touch a computer for 3 years. Rediscovered his passion through AI agents in late 2024. Built dozens of tools. Created <strong>OpenClaw</strong>. Joined <strong>OpenAI</strong> in February 2026.</p>
+  <blockquote>"Right now, we are at an incredible crossroads in technology. AI is moving so fast and is changing the way we work."</blockquote>
+
+  <h2>Core Philosophy: Claude Code Is My Computer <span class="src src-pete">steipete</span></h2>
+  <blockquote>"What I actually got was a universal computer interface that happens to run in text."</blockquote>
+  <p>He runs Claude Code with <code>--dangerously-skip-permissions</code>. His alias: <code>alias cc="claude --dangerously-skip-permissions"</code></p>
+
+  <h4>What he uses it for daily:</h4>
+  <ul>
+    <li>Ship content: "Convert ~40 posts from Jekyll to MDX" — done in 20 min</li>
+    <li>Extract features: "Extract this into a Swift package" — creates package, tests, docs</li>
+    <li>Ship code: Hasn't typed <code>git commit -m</code> in weeks</li>
+    <li>Clean the OS: "Hide recent apps in the Dock" — Claude knows the incantations</li>
+    <li>Set up machines: Pointed Claude at a backup disk → new machine in under an hour</li>
+  </ul>
+
+  <h2 id="pete-workflow">His Exact Workflow (Aug 2025) <span class="src src-pete">steipete</span></h2>
+  <table>
+    <thead><tr><th>Layer</th><th>Tool</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Terminal</td><td>Ghostty</td><td>Native, not Electron. Fastest.</td></tr>
+      <tr><td>Primary Agent</td><td>Claude Code</td><td>Dangerous mode, multiple instances</td></tr>
+      <tr><td>Code Viewing</td><td>VS Code</td><td>For reading, not writing</td></tr>
+      <tr><td>Reviews</td><td>Cursor + GPT-5</td><td>Fresh perspective on plans</td></tr>
+      <tr><td>Voice</td><td>Wispr Flow</td><td>Dictation → Claude</td></tr>
+      <tr><td>Monitor</td><td>Dell 40" ultrawide</td><td>4 agents visible at once</td></tr>
+    </tbody>
+  </table>
+  <p><strong>What he doesn't use:</strong> Git worktrees, MCP servers ("removed my last one"), sub-agents, Warp terminal.</p>
+  <blockquote>"Less is more. Pick services that have CLIs. Agents can use them, one line in CLAUDE.md is enough."</blockquote>
+
+  <h3>Multiple Terminals at Once</h3>
+  <blockquote>"When I'm not refactoring I usually run 1-2 agents; for cleanup/tests/UI work ~4 seems to be the sweet spot."</blockquote>
+  <ul>
+    <li>While one agent thinks, switch to another and give it the next task</li>
+    <li>Parallel streams: tests in one, feature in another, docs in a third</li>
+    <li>Pick non-overlapping areas of the codebase</li>
+  </ul>
+
+  <h3>Spec-First Development</h3>
+  <ol>
+    <li><strong>Research</strong> — Paste ideas into Gemini AI Studio. Find similar OSS via repo-to-text.</li>
+    <li><strong>Generate SDD</strong> — Gemini converts ideas into a ~500 line Software Design Document.</li>
+    <li><strong>Two-Context Critique</strong> — Copy SDD → fresh chat → "20 things underspecified?" → Copy back → Repeat 3-5 rounds.</li>
+    <li><strong>Build</strong> — Save as <code>docs/spec.md</code>, open Claude Code: "Build spec.md"</li>
+  </ol>
+
+  <h3>Testing Philosophy</h3>
+  <ul>
+    <li><strong>Tests AFTER the feature</strong> — "Agents are great at back-filling tests once the shape exists"</li>
+    <li><strong>Same context</strong> — "Adding tests per feature is much better than trying to add them at the end"</li>
+    <li><strong>Tests are MORE important with agents</strong> — "You can't trust them. They'll eventually break stuff."</li>
+  </ul>
+  <p><strong>Proof:</strong> VibeMeter — 28,599 LOC, 86% test coverage, 628 test methods. Built in 3 days.</p>
+
+  <h3>MCP vs CLI</h3>
+  <blockquote>"Even removed my last MCP, since Claude sometimes would go off spinning up Playwright unasked when it could simply read the code."</blockquote>
+  <p>Pete built 5+ MCPs → removed ALL of them. CLIs produce less noise, less context pollution.</p>
+
+  <h2 id="pete-projects">Projects He Built <span class="src src-pete">steipete</span></h2>
+  <ul>
+    <li><strong>VibeTunnel</strong> — Browser terminal. 4,012 → 147,226 LOC in one month. 2,842 commits.</li>
+    <li><strong>Poltergeist</strong> — Universal file-watcher, auto-rebuild.</li>
+    <li><strong>VibeMeter</strong> — macOS menu bar AI tracker. 28,599 LOC, 86% coverage. 3 days.</li>
+    <li><strong>Peekaboo</strong> — Screenshot + AI vision for agents.</li>
+    <li><strong>llm.codes</strong> — Convert docs to markdown. "Didn't write a single line of TypeScript."</li>
+    <li><strong>stats.store</strong> — Privacy-first analytics. Built in 6 hours.</li>
+    <li><strong>OpenClaw</strong> — AI agent framework.</li>
+  </ul>
+
+  <h3>Self-Hosting Verdict</h3>
+  <p><strong>"No. It's not worth it."</strong> 8xH200 GPUs ($15/hour = $11k/month). Hosted was slightly faster. Monthly spend: ~$600-800.</p>
+  <blockquote>"The productivity multiplier is so absurd that arguing about the cost is like complaining about the price of coffee while billing $200/hour."</blockquote>
+
+  <h2 id="pete-lex">Lex #491 Key Insights <span class="src src-lex">Lex #491</span></h2>
+  <ul>
+    <li><strong>The Agentic Trap</strong> — Over-orchestrating with 18+ slash commands. Return to short, high-intent prompts once the agent understands.</li>
+    <li><strong>Intent check first</strong> — "Do you understand the intent of this change?" before building.</li>
+    <li><strong>Post-build refactor loop</strong> — "What would you refactor now?" + edge-case tests + docs.</li>
+    <li><strong>Model evaluation horizon</strong> — Give a new model ~1 week before judging.</li>
+    <li><strong>Security posture matters</strong> — Private network, avoid weak models for privileged tasks.</li>
+    <li><strong>Apps become APIs</strong> — Agent-native world favors API-first, automation-friendly products.</li>
+    <li><strong>"Builder" > "Programmer"</strong> — Role transformation, not elimination.</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- PRODUCT & GTM                       -->
+<!-- ═══════════════════════════════════ -->
+<div class="section" id="apps-as-apis">
+  <h1>💰 Product & GTM</h1>
+
+  <h2>Apps Become APIs <span class="src src-lex">Lex #491</span></h2>
+  <p>Pete's strongest business thesis: many app categories lose direct UX primacy. Agent-native world favors API-first and automation-friendly products.</p>
+  <ul>
+    <li>Keep features composable — services, not just UI flows</li>
+    <li>Preserve clean service boundaries and automation hooks</li>
+    <li>Think about how an agent would use your app's functionality</li>
+    <li>Internal APIs are a feature, even if users never see them</li>
+  </ul>
+
+  <h2 id="monetization">Monetization Strategy <span class="src src-ours">Our experience</span></h2>
+  <ul>
+    <li><strong>RevenueCat</strong> for subscription management (both apps)</li>
+    <li><strong>StoreKit 2</strong> for native paywalls</li>
+    <li><strong>PostHog</strong> for analytics and feature flags</li>
+    <li><strong>Sentry</strong> for crash reporting</li>
+    <li>Agent-built features ship faster → faster iteration on pricing/packaging</li>
+    <li>Use agents to analyze user feedback emails and extract feature requests</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- WISDOM                              -->
+<!-- ═══════════════════════════════════ -->
+<div class="section" id="mental-models">
+  <h1>🧘 Mental Models & Wisdom</h1>
+
+  <h2>Quotes That Survived</h2>
+  <div class="wisdom-quote">"English is the new programming language"<span class="wisdom-attr">— the spec matters more than the implementation language</span></div>
+  <div class="wisdom-quote">"20x is not an understatement"<span class="wisdom-attr">— but it requires discipline and experience to get there</span></div>
+  <div class="wisdom-quote">"It's not about the AI being smart, it's about being smart about the AI"<span class="wisdom-attr">— Mario Zechner</span></div>
+  <div class="wisdom-quote">"Less is more"<span class="wisdom-attr">— fewer tools, smaller files, cleaner context</span></div>
+  <div class="wisdom-quote">"It is a tool. You work with it."<span class="wisdom-attr">— Peter Steinberger</span></div>
+  <div class="wisdom-quote">"If you are a really good engineer, it's rocket fuel. If you don't know what you're doing, you still cannot build this."<span class="wisdom-attr">— Peter Steinberger</span></div>
+
+  <h2 id="traps">Common Traps <span class="src src-pete">steipete</span> <span class="src src-lex">Lex #491</span></h2>
+  <div class="card-grid">
+    <div class="card"><h4>🚫 Context Pollution</h4><p>Don't waste context on MCP tool output. CLIs produce less noise.</p></div>
+    <div class="card"><h4>🧪 Late Testing</h4><p>Don't try to add tests in a separate session. Same context catches bugs.</p></div>
+    <div class="card"><h4>📁 Giant Files</h4><p>Don't let files grow past 300 LOC. Agents make more mistakes in large files.</p></div>
+    <div class="card"><h4>🔄 Context Drift</h4><p>Use /clear frequently. Long sessions accumulate stale context.</p></div>
+    <div class="card"><h4>🤖 The Agentic Trap</h4><p>Over-orchestrating with 18+ slash commands. Short prompts after intent is clear.</p></div>
+    <div class="card"><h4>😵 Burnout</h4><p>"AI was supposed to save time, yet I work more than ever." Set boundaries.</p></div>
+  </div>
+
+  <h2 id="reading">Essential Reading</h2>
+  <ul>
+    <li><strong><a href="https://steipete.me" target="_blank">steipete.me</a></strong> — 38 blog posts on agentic engineering</li>
+    <li><strong><a href="https://steipete.me/posts/how-i-use-claude-code-by-philipp-spiess" target="_blank">"How I Use Claude Code"</a></strong> by Philipp Spiess — practical workflow tips, /clear often</li>
+    <li><strong><a href="https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview" target="_blank">"Claude Code Best Practices"</a></strong> by Anthropic — the official guide: Explore→Plan→Code→Commit</li>
+    <li><strong><a href="https://badlogicgames.com/prompts-are-code/" target="_blank">"Prompts are Code"</a></strong> by Mario Zechner — treat prompts as code, .md/.json as state on disk</li>
+    <li><strong><a href="https://www.youtube.com/watch?v=fwcHp8SHWUU" target="_blank">"Agentic Coding"</a></strong> by Armin Ronacher (video, 37 min) — terminal > editor, context is king</li>
+    <li><strong><a href="https://github.com/steipete/agent-rules" target="_blank">steipete/agent-rules</a></strong> — open-source CLAUDE.md templates, Apple docs, configs</li>
+    <li><strong><a href="https://badlogicgames.com/mcp-vs-cli/" target="_blank">"MCP vs CLI"</a></strong> by Mario Zechner — data-driven comparison showing CLIs usually win</li>
+    <li><strong><a href="https://newsletter.pragmaticengineer.com/p/the-creator-of-clawd-i-ship-code" target="_blank">"I Ship Code I Don't Read"</a></strong> — Pragmatic Engineer interview with Pete</li>
+    <li><strong><a href="https://docs.openclaw.ai" target="_blank">OpenClaw Docs</a></strong> — official documentation</li>
+    <li><strong><a href="https://deepwiki.com" target="_blank">DeepWiki</a></strong> — understand any GitHub codebase instantly</li>
+    <li><strong><a href="https://repo2txt.simplebasedomain.com/" target="_blank">repo2txt</a></strong> — web version of repo-to-text (no install needed)</li>
+  </ul>
+</div>
+
+<!-- FOOTER -->
+<footer style="margin-top:4rem; padding:2rem 0; border-top:1px solid var(--border); text-align:center;">
+  <p style="font-size:1.5rem; margin-bottom:0.75rem;">🐸</p>
+  <p style="color:var(--text-muted); font-size:0.85rem;">Built by <strong>Yoda</strong> — an AI agent running on <a href="https://github.com/openclaw/openclaw">OpenClaw</a></p>
+  <p style="color:var(--text-dim); font-size:0.8rem; margin-top:0.35rem;">Inspired by <a href="https://steipete.me">Peter Steinberger</a> · February 2026 · The Claw Is The Law</p>
+</footer>
+
+</div><!-- .main -->
+
+<script>
+function toggleAccordion(btn) { btn.parentElement.classList.toggle('open'); }
+
+function filterShortcuts(group) {
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.shortcut-group').forEach(g => {
+    g.style.display = (group === 'all' || g.dataset.group === group) ? '' : 'none';
+  });
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+
+// Active nav tracking
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-80px 0px -70% 0px' });
+
+document.querySelectorAll('[id]').forEach(el => {
+  if (document.querySelector(`.nav-link[href="#${el.id}"]`)) observer.observe(el);
+});
+
+// Close sidebar on mobile link click
+document.querySelectorAll('.nav-link').forEach(a => {
+  a.addEventListener('click', () => {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('show');
+  });
+});
+</script>
+</body>
+</html>
