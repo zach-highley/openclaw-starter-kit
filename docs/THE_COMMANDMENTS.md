@@ -63,6 +63,17 @@ If you say you'll do it, have a cron/script/system ensuring it actually happens.
 
 ---
 
+## Mandatory Execution Gates (Applied Every Task)
+These are tactical enforcement gates that sit underneath the commandments:
+1. **Short prompts** for small tasks
+2. **Blast radius** estimate before edits
+3. **CLI-first** execution by default
+4. **Post-task refactor** before completion
+
+If any gate is skipped, the task is not complete.
+
+---
+
 ## The Mistake Log
 
 Every mistake gets logged in `memory/mistakes.md` with:

@@ -39,6 +39,14 @@ When the user sends a bare `/new` or `/reset`:
 
 ---
 
+## ✅ Mandatory Execution Gate (every task, no exceptions)
+1. **SHORT PROMPTS** — Use short prompts for small tasks. PRDs only for larger, multi-step work.
+2. **BLAST RADIUS** — Before edits, estimate file count + duration. If large, split scope first.
+3. **CLI-FIRST** — Prefer CLI/tooling flows before UI/manual paths unless UI is strictly required.
+4. **POST-TASK REFACTOR** — Before marking done, run one cleanup/refactor pass.
+
+If any gate is skipped, the task is not complete.
+
 ## steipete Principles (from Lex Fridman #491)
 
 > Peter Steinberger (steipete) created OpenClaw. These are his battle-tested principles.
@@ -78,6 +86,7 @@ When the user sends a bare `/new` or `/reset`:
 13. **SOUL CHANGES NEED VISIBILITY** — Self-modification of personality/rules is allowed only with explicit user-visible notice.
 14. **PERSONAL AGENT ≠ CODING TERMINAL** — Life-ops chat and deep coding flows are separate operational modes. Don't conflate them.
 15. **AGENT ACCOUNT LABELING** — Any automated/public agent identity must be clearly marked as agent-operated.
+16. **CLI-FIRST IS MANDATORY** — For ops, maintenance, and implementation, choose CLI workflows first. Use browser/UI only when CLI is unavailable or unsafe.
 
 ---
 
