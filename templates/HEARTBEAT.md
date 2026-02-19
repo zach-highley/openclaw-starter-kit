@@ -11,6 +11,14 @@ Runs every 30-60 min (customize to your preference — 30 min for proactive, 60 
 - **Sparse but high-salience baseline.** Trigger extra outreach when context is significant, not mechanically noisy. Quality over quantity.
 - **Start simple, refine later.** Begin with a basic periodic "surprise me" loop, then add context-aware interventions as you learn.
 
+## Minimal 4-Step Baseline (good default)
+1. Gateway + channel health (`openclaw health`)
+2. Context pressure check (`session_status`)
+3. Memory file exists for today
+4. Cron health (`cron list`, alert on errors)
+
+If all healthy and no action needed: `HEARTBEAT_OK`
+
 ## Self-Audit Checklist (run before every heartbeat response)
 - Am I repeating a known mistake from memory?
 - Did I check docs before building anything custom?

@@ -1,5 +1,34 @@
 # Changelog
 
+## [4.0] — 2026-02-18
+
+### Added — Back to Basics Recovery Architecture
+
+- Added `docs/BACK_TO_BASICS_V4.md` with a stabilization-first operating model:
+  - freeze triggers first,
+  - simplify loops,
+  - restore baseline,
+  - scale up deliberately.
+- Added `docs/OPENCLAW_CONCEPTS_PASS_2026-02-18.md` with a complete concepts-doc pass checklist and integrated outcomes.
+
+### Template Upgrades
+
+- `templates/AGENTS.md`
+  - Added **Coding & Terminal Rules (SACRED)**
+  - Added **Session Discipline**
+  - Added refreshed **Critical Rules** and **Telegram Communication Style**
+- `templates/SOUL.md`
+  - Added explicit Telegram formatting section (single dense message default, max two on overflow)
+  - Added optional personality spice guidance (humor/slang/multilingual flavor without slop)
+- `templates/HEARTBEAT.md`
+  - Added practical **Minimal 4-Step Baseline** for high-signal heartbeat behavior
+
+### Why this matters
+
+- Moves the starter kit toward incident-resistant operation.
+- Encodes the “back to basics” playbook that recovered a drifting autonomous setup in one pass.
+- Makes backup-bot/rescue-bot patterns easier to adopt without automation bloat.
+
 ## [3.5] — 2026-02-12
 
 ### Added — Growth & Distribution Mechanics

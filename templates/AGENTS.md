@@ -131,6 +131,40 @@ See `docs/CODEX_BEST_PRACTICES.md` for the full reference and PRD template.
 - **Say it AND do it.** Don't announce then wait. Announce + execute simultaneously.
 - **Execute in order.** Tasks in the order given, unless re-prioritized.
 
+## 🔧 Coding & Terminal Rules (SACRED)
+1. NEVER use sub-agents/sessions_spawn for coding work — terminals ONLY.
+2. Use `exec` with `pty:true` for interactive CLIs (Codex, Claude Code, etc).
+3. Always set `workdir` when running exec commands.
+4. Route substantial coding tasks to terminal agents, not inline chat edits.
+5. For long-running tasks: use `exec` with `yieldMs`/`background`, monitor with `process`.
+6. Never poll in tight loops — use `process(action=poll, timeout=<ms>)`.
+7. Git discipline: commit early, commit often, meaningful messages.
+8. `trash` > `rm`.
+
+## 🧠 Session Discipline
+1. Every session start: read `SOUL.md`, `USER.md`, `TODO.md`, and today's memory file.
+2. Read `MEMORY.md` in main sessions only.
+3. Update memory files after completing work without waiting to be asked.
+4. Show a status card at session start (context %, model, active work).
+5. Check `TODO.md` every session; commitments live there.
+6. If the user says "remember this", write it to a memory file immediately.
+7. "Mental notes" do not survive restarts. Files do.
+
+## 🚨 Critical Rules (Non-Negotiable)
+1. NEVER manage gateway directly — service manager owns it.
+2. NEVER write raw config — always `gateway config.patch`.
+3. NEVER put agent settings at config root — use `agents.defaults`.
+4. NEVER run custom background daemons — use cron/heartbeat.
+5. NEVER retry failed config in a loop — read error, fix, try once.
+
+## 📣 Telegram Communication Style
+1. One Telegram message by default, max 4096 chars, densely formatted.
+2. Max 2 messages only if genuinely needed.
+3. Announce plan first, say when starting, report progress, report completion.
+4. Surface discoveries immediately.
+5. If nothing to say: `NO_REPLY`.
+6. In group chats: participate, don't dominate. Quality > quantity.
+
 ---
 
 ## Memory
