@@ -15,5 +15,4 @@ The main takeaway: reliability came from removing complexity, not adding another
 
 If you’re building with OpenClaw, I’d appreciate a star and your feedback.
 
-For people who want deeper implementation packs (Setup Guide, AI Prompt Pack, Full Bundle):
-https://eric.zhighley.com
+If you deploy this, I’d love to hear what held up and what broke.

@@ -29,12 +29,15 @@
 - Encodes the “back to basics” playbook that recovered a drifting autonomous setup in one pass.
 - Makes backup-bot/rescue-bot patterns easier to adopt without automation bloat.
 
+### Removed
+
+- Removed paid-resource/ad callouts from `README.md` and distribution copy to keep the public repo documentation-only.
+
 ## [3.5] — 2026-02-12
 
 ### Added — Growth & Distribution Mechanics
 
-- Added a tasteful "Get More" callout near the top of `README.md` linking to `eric.zhighley.com` and highlighting the Setup Guide, AI Prompt Pack, and Full Bundle.
-- Added a new `Resources` section in `README.md` with links to docs, Discord, product catalog, and The Healthy Man newsletter.
+- Added a new `Resources` section in `README.md` with links to OpenClaw docs and Discord.
 - Added distribution-ready content pack in `distribution/`:
   - `twitter-thread.md` (6-post technical thread with CTA)
   - `reddit-post.md` (title + body for r/selfhosted/r/artificial)

@@ -17,4 +17,4 @@ Engineering choices behind it:
 
 The goal is operational stability over novelty. I included failures and incident lessons, not just ideal configs.
 
-Optional paid extensions are listed at https://eric.zhighley.com for people who want extra templates and workflows.
+If useful, I’d love feedback on where this fails in real deployments.

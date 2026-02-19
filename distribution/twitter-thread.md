@@ -33,6 +33,3 @@ Claude + Codex + OpenRouter fallback, QMD memory, Brave search, Telegram channel
 
 6. If you run OpenClaw, star the repo so more builders find it:
 https://github.com/zach-highley/openclaw-starter-kit
-
-If you want the paid add-ons (Setup Guide, AI Prompt Pack, Full Bundle), they’re here:
-https://eric.zhighley.com

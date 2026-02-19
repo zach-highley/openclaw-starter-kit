@@ -19,4 +19,4 @@ Big lesson: most of my downtime came from overengineering reliability, not from 
 
 If you try it, I’d love feedback on what broke and what I should tighten.
 
-I also have optional paid add-ons for people who want plug-and-play extras (Setup Guide, AI Prompt Pack, Full Bundle): https://eric.zhighley.com
+If you try it, report what breaks and what should be tightened next.
