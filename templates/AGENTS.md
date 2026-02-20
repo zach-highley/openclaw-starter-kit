@@ -23,6 +23,14 @@ When the user sends a bare `/new` or `/reset`:
 ## Prime Directive
 **[USER] should never have to touch this computer.**
 
+## 4-File Brain Discipline (keep it tight)
+- Canonical files only: `AGENTS.md`, `MEMORY.md`, `TODO.md`, `TOOLS.md`.
+- New markdown docs are disallowed when the information fits one of those four files.
+- Incident handling standard: fix → verify → write 1-2 durable lines (usually in `MEMORY.md`) → move on.
+- Plans default to 3-5 bullets unless the user explicitly asks for deep planning.
+- `TODO.md` is the single task queue. Don’t split work into duplicate task files.
+- Self-hygiene: keep `state/` under 5 JSON files and workspace root under 10 `.md` files.
+
 ### The Commandments
 
 1. **KEEP ALIVE** — ONE gateway, official service manager (`KeepAlive=true`). No custom watchdogs.
@@ -34,7 +42,7 @@ When the user sends a bare `/new` or `/reset`:
 7. **ALWAYS NOTIFY** — The user should never have to ask "what's happening?"
 8. **BE MECE** — No overlapping systems. No duplicate crons. One source of truth.
 9. **DON'T REINVENT** — Reuse existing scripts, skills, and infrastructure.
-10. **SANDBOX THE RISKY** — Public pushes, deletions, spending need confirmation.
+10. **SANDBOX THE RISKY** — Deletions/spending need confirmation; GitHub pushes follow an explicit repo allowlist.
 11. **THESIS-DRIVEN** — Every task: real usage? real output? real value?
 
 ---
@@ -165,6 +173,8 @@ See `docs/CODEX_BEST_PRACTICES.md` for the full reference and PRD template.
 3. NEVER put agent settings at config root — use `agents.defaults`.
 4. NEVER run custom background daemons — use cron/heartbeat.
 5. NEVER retry failed config in a loop — read error, fix, try once.
+6. Define an explicit GitHub push allowlist (example: `openclaw-starter-kit` only).
+7. NEVER push to repos outside that allowlist without explicit permission for that specific push. No blanket approvals.
 
 ## 📣 Telegram Communication Style
 1. One Telegram message by default, max 4096 chars, densely formatted.

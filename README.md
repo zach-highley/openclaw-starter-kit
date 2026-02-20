@@ -24,6 +24,16 @@ For actual documentation: [docs.openclaw.ai](https://docs.openclaw.ai/)
 
 ---
 
+## What's New in v4.1 (Recovery Edition)
+
+- **4-file brain by default**: AGENTS, MEMORY, TODO, TOOLS. Less markdown sprawl, better operator clarity.
+- **Heartbeat got quieter and sharper**: health checks only, actionable alerts only, `HEARTBEAT_OK` when clean.
+- **Push discipline is explicit**: repo allowlists for autonomous pushes, per-push permission outside the allowlist.
+- **Living-example philosophy**: this repo should reflect real operations, not theory slides.
+- **Two-bot pattern (Eric + Yoda)**: works in production when boundaries are clean and ownership is explicit.
+
+---
+
 ## How This Guide Is Organized
 
 | Layer | What | Who it's for |

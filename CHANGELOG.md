@@ -1,5 +1,16 @@
 # Changelog
 
+
+## [4.1] — 2026-02-19
+
+### Recovery day, but make it useful
+- Killed a gnarly restart-churn pattern by simplifying ops: one gateway owner, tighter heartbeat scope, less chatter.
+- Updated templates to a cleaner 4-file brain discipline so new installs don’t drown in markdown sprawl.
+- Reworked heartbeat template to health checks first, alerts only when something is actually wrong.
+- Added repo-scoped push guardrails in AGENTS template: explicit allowlists beat “sure, push it everywhere.”
+- Refreshed README to surface the new “living example” philosophy and two-bot (Eric + Yoda) operating pattern.
+- Big lesson: systems get reliable when you remove cleverness, not when you pile on more automation theatre.
+
 ## [4.0] — 2026-02-18
 
 ### Added — Back to Basics Recovery Architecture
