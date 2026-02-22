@@ -1,6 +1,31 @@
 # Changelog
 
 
+## [4.2] — 2026-02-22
+
+### Builder Mode Edition
+
+**The theme:** your agent should be earning its keep while you sleep — not just keeping the lights on.
+
+#### What changed
+
+- **Idle Builder Mode added to HEARTBEAT template** — if the user has been idle for 60+ minutes and all health checks pass, the agent auto-selects a task from `TODO.md` and executes it. No prompting required. One clear message on completion.
+- **Antelope Filter added to AGENTS template** — every autonomous task must pass three gates: does it compound? is it revenue-linked? is it a week+ of real work? No to any = skip it. Eliminates the "busy work spiral" failure mode.
+- **Anti-decay rule** — if 3 consecutive autonomous waves are housekeeping-only, the agent is forced to pick a real project next. Tracked in `state/`.
+- **Priority order made explicit and enforced** — Revenue-generating → Visible shipping → Research → Fun/experimental. Not a suggestion, part of the task selection logic.
+- **NO_REPLY discipline documented and hardened** — `NO_REPLY` must be the full message, never appended to real content. HEARTBEAT_OK treated the same way.
+- **HEARTBEAT_OK protocol** — fully silent healthy heartbeats. The user only hears from the heartbeat when something breaks or ships. Messaging policy table added to template.
+- **Pro Plan model guidance** — Opus is ideal; Sonnet is an acceptable fallback on budget plans. Don't fight the plan tier. Update your config accordingly.
+- **README v4.2 section added** — all the above explained in plain English.
+
+#### Why this matters
+
+v4.1 made heartbeat quiet. v4.2 makes the agent useful during quiet time. The two complement each other:  
+quiet heartbeat + idle builder = a bot that doesn't spam AND actually ships things.
+
+The antelope filter is the most important thing in this release. Without it, autonomous agents drift into housekeeping spirals — reorganizing files, adjusting crons, rewriting docs — and call it "maintenance." With it, you get real compounding work.
+
+
 ## [4.1] — 2026-02-19
 
 ### Recovery day, but make it useful

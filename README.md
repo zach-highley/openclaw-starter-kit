@@ -24,13 +24,23 @@ For actual documentation: [docs.openclaw.ai](https://docs.openclaw.ai/)
 
 ---
 
+## What's New in v4.2 (Builder Mode Edition)
+
+- **Idle Builder Mode**: after 60 minutes of user silence, the agent auto-selects a task from `TODO.md` and starts working. No prompting required.
+- **Antelope Filter**: before picking any task, the agent asks three questions — does this compound? is it revenue-linked? does it take a week+ to build? No to any = skip it, pick something that matters.
+- **HEARTBEAT_OK protocol**: healthy heartbeats are fully silent. The agent replies with exactly `HEARTBEAT_OK` and nothing is sent to the user. You only hear from the heartbeat when something is broken or shipped.
+- **Anti-decay rule**: if 3 consecutive autonomous waves are housekeeping-only (no real project shipped), the agent is forced to pick a real project next. Prevents busy-work spirals.
+- **Priority ordering explicit**: Revenue-generating → Visible shipping → Research → Fun/experimental. Enforced at task selection, not just mentioned in docs.
+- **NO_REPLY discipline**: when there is nothing to say, the agent sends `NO_REPLY` (exact string only, full message). No filler, no "let me know if you need anything."
+- **Pro Plan reality check**: Opus is the ideal model for autonomous work. On a Pro plan, Sonnet is an acceptable substitute — update your config accordingly and don't fight it.
+
 ## What's New in v4.1 (Recovery Edition)
 
 - **4-file brain by default**: AGENTS, MEMORY, TODO, TOOLS. Less markdown sprawl, better operator clarity.
 - **Heartbeat got quieter and sharper**: health checks only, actionable alerts only, `HEARTBEAT_OK` when clean.
 - **Push discipline is explicit**: repo allowlists for autonomous pushes, per-push permission outside the allowlist.
 - **Living-example philosophy**: this repo should reflect real operations, not theory slides.
-- **Two-bot pattern (Eric + Yoda)**: works in production when boundaries are clean and ownership is explicit.
+- **Two-bot pattern**: works in production when boundaries are clean and ownership is explicit.
 
 ---
 
@@ -320,6 +330,8 @@ Guide: [docs/CRON_HEARTBEAT_GUIDE.md](docs/CRON_HEARTBEAT_GUIDE.md)
 # 🔴 Layer 3: Advanced Config
 
 ## Model Routing & Fallback Chains
+
+**Plan tier matters.** Opus is the best model for autonomous reasoning, personality, and complex tasks. If you're on a Pro plan, Sonnet is a perfectly acceptable primary — don't burn free time fighting plan limits. Update your config to reflect reality, not aspiration.
 
 Don't rely on a single model. Configure fallbacks so your agent stays alive when one provider has issues:
 
