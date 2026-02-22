@@ -637,42 +637,59 @@ Full example: [config/examples/production-hardened.json5](config/examples/produc
 
 ## My Workspace Structure
 
+Keep this lean. The more files you have, the more context you burn every session.
+
 ```
 ~/.openclaw/workspace/
-├── AGENTS.md              # Operating rules (loaded every session)
+│
+│   ── CORE (loaded every session, loaded into system prompt)
+├── AGENTS.md              # Operating rules
 ├── SOUL.md                # Personality & voice
 ├── USER.md                # About the human
 ├── IDENTITY.md            # Quick identity card
 ├── MEMORY.md              # Long-term curated memory
-├── BOOT.md                # Gateway startup tasks
-├── HEARTBEAT.md           # Periodic tasks (keep minimal)
+├── HEARTBEAT.md           # Health checks + idle builder rules
 ├── TOOLS.md               # Environment-specific notes
-├── GUIDE.md               # Setup reference
+├── TODO.md                # Single task queue (antelopes only)
 │
-├── docs/
-│   ├── BACKLOG_MASTER.md  # Priority work queue
-│   └── WORKSTREAMS.md     # Active development tracks
+│   ── REFERENCE (not loaded automatically)
+├── BUILD_IDEAS.md         # Antelope candidates (detailed version of TODO)
+├── BOOT.md                # Gateway startup task (loaded by hook, not session)
 │
+│   ── MEMORY (daily logs — write, don't load)
 ├── memory/
-│   ├── YYYY-MM-DD.md      # Daily logs
-│   ├── PALA/              # Projects, Actions, Learnings, Archives
-│   ├── incidents.md       # Incident log
-│   └── self-review.md     # Behavioral patterns
+│   └── YYYY-MM-DD.md      # One file per day. Timestamped variants OK.
 │
-├── scripts/               # 16 executable scripts
-│   ├── check_usage.py     # Usage monitoring
+│   ── DOCS (reference only — not injected into prompts)
+├── docs/
+│   ├── EMAIL_SYSTEM.md    # Email pipeline reference
+│   └── CODEX_BEST_PRACTICES.md
+│
+│   ── SCRIPTS (active utilities only — archive dead ones)
+├── scripts/
+│   ├── check_usage.py
 │   ├── daily_5am_maintenance.sh
-│   ├── git_push_guard.sh
-│   └── ...
+│   ├── email_triage.py
+│   └── openclaw_config_backup.sh
 │
-├── state/                 # Machine-queryable JSON state
-│   ├── current_work.json
-│   ├── work_loop.json
-│   └── ...
+│   ── STATE (machine-readable, not human-readable)
+├── state/
+│   └── heartbeat_state.json
 │
-├── templates/             # Build templates (PRD, sprint specs, Codex PRD)
-└── research/              # Deep-dive research cache
+│   ── ARCHIVE (dead scripts/docs — not deleted, not active)
+└── archive/
+    ├── scripts/           # Archived scripts (X, watchdogs, one-offs)
+    └── docs/              # Archived docs (processed transcripts, stale guides)
 ```
+
+**Rules for the workspace:**
+- Root `.md` files: max 10. If you're adding an 11th, you're creating sprawl.
+- `docs/` is reference only. If a doc hasn't been read in 2 weeks, archive it.
+- `scripts/` is active utilities only. Archive anything you haven't run in a month.
+- `archive/` is the graveyard. Things go in, nothing comes out (unless you explicitly need it).
+- **Don't delete — archive.** The archive is free. Deleted context is gone forever.
+- Big processed files (transcripts, PDFs) go to `archive/docs/` after extraction. Don't keep the source.
+- `state/` is machine JSON only. If you're writing human prose there, it belongs in `memory/`.
 
 ## My Cron Schedule (6 Jobs)
 
