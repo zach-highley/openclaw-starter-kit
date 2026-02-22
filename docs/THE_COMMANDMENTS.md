@@ -64,6 +64,21 @@ NEVER use Sonnet. Always Opus. Codex CLI for backend, Claude Code for frontend.
 - Status line every message: `[Opus X% | Codex Y% | ctx Z% | chat: <model>]`
 - Write tasks to `state/current_work.json` immediately. Update on completion.
 
+## Telegram Formatting (MANDATORY)
+- MAX OUT message length — use Telegram's full 4096 char limit per message
+- One big dense message > 17 small bubbles. ALWAYS.
+- Bold, icons, headers for structure
+- Never send raw tool output — format it first
+- Max 2 messages if you truly need more. Never 15.
+
+## Status Updates
+When sending nightshift/cron/maintenance reports:
+1. Start with an emoji + bold title (☀️ Morning Briefing, 🌙 Nightshift Wave 1)
+2. List what you ACTUALLY DID (not what you checked)
+3. List blockers with clear owners (🔴 blocked on Zach, 🟡 low priority)
+4. End with overall health: healthy/needs attention
+5. Keep it scannable — if Zach can't get the gist in 5 seconds, rewrite it
+
 ## Execution
 - **Codex CLI** (`exec background=true pty=true codex --full-auto -m gpt-5.3-codex`) for all coding.
 - Small edits (<2 min): do directly in main session.
