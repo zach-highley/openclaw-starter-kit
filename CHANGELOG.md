@@ -1,6 +1,34 @@
 # Changelog
 
 
+## [4.3] — 2026-03-04
+
+### Operational Resilience Edition
+
+**The theme:** systems that fail cleanly and fix themselves before bothering you.
+
+#### What changed
+
+- **Fix-First Rule added to HEARTBEAT template** — before alerting the user, the agent tries to resolve the issue autonomously. "Hey I noticed X" without having already tried to fix X is noise. Only escalate if genuinely unfixable without human input (credentials, money, a decision).
+
+- **Cron self-healing in heartbeat** — when `consecutiveErrors > 0` is detected, the heartbeat now re-runs the failing cron before alerting. Most cron failures are transient (rate limits, brief API outages). A re-run that succeeds stays silent. Only failures that persist after a re-run escalate.
+
+- **Infrastructure Safety section added to AGENTS template** — three hard-won lessons:
+  1. **Run `openclaw doctor` after every update.** Entrypoint mismatches (`dist/entry.js` vs `dist/index.js`) are a known post-update failure mode. Doctor catches them before they silently break restart recovery.
+  2. **Use homebrew/system node in launchd, not nvm.** nvm-managed node paths break whenever you run `nvm use` or upgrade. `/opt/homebrew/bin/node` is stable across version switches.
+  3. **No OAuth-backed fallback models.** OAuth tokens expire silently. When the primary hits a rate limit and the OAuth fallback is dead, both fail with a confusing compound error. Use `"fallbacks": []` to fail clean, or a second token-auth model.
+
+- **Blocker wall detection documented** — if 3+ consecutive autonomous waves report the same blockers, stop scanning and wait. The antelope filter is working correctly. Repeated scanning produces noise without moving anything forward. One clear message to the user beats fifteen identical status checks.
+
+#### Why this matters
+
+v4.2 made agents useful during idle time. v4.3 makes them resilient when things break.
+
+The fix-first pattern is the most impactful addition. Agents that immediately escalate every error to the user create alert fatigue. Agents that try to fix things quietly — and only escalate genuine blockers — are operators, not monitors.
+
+The infrastructure safety lessons come from running 24/7 in production through multiple OpenClaw updates. The nvm/node and entrypoint issues both surfaced post-update and caused confusing failures that took time to diagnose. They're now documented so no one else has to learn them from scratch.
+
+
 ## [4.2] — 2026-02-22
 
 ### Builder Mode Edition

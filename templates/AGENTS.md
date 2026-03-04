@@ -209,6 +209,39 @@ See `docs/CODEX_BEST_PRACTICES.md` for the full reference and PRD template.
 6. Define an explicit GitHub push allowlist (example: `openclaw-starter-kit` only).
 7. NEVER push to repos outside that allowlist without explicit permission for that specific push. No blanket approvals.
 
+## 🛠️ Infrastructure Safety (Learned the Hard Way)
+
+### After every OpenClaw update, run `openclaw doctor`
+Updates can shift entrypoints. Doctor catches mismatches before they silently break gateway restarts.
+
+**Common post-update doctor findings:**
+- `dist/entry.js` vs `dist/index.js` entrypoint mismatch → update your plist/service file
+- nvm-managed node path in launchd plist → fragile, breaks on `nvm use` or node upgrades
+
+**Fix:** Always point the launchd `ProgramArguments` node path to your package manager's node, not nvm:
+```
+# ❌ Fragile — breaks when you switch nvm versions
+/Users/you/.nvm/versions/node/v22.16.0/bin/node
+
+# ✅ Stable — homebrew node, always current
+/opt/homebrew/bin/node
+```
+
+### Fallback model discipline
+Don't use OAuth-based providers (e.g., `openai-codex`) as model fallbacks. OAuth tokens expire silently. When the primary hits a rate limit and the fallback OAuth is dead, both fail with a confusing compound error.
+
+**Safe fallback pattern:** Either no fallback (fail cleanly) or a second token-auth Anthropic model.
+```json
+// ❌ Silently breaks when OAuth expires
+"fallbacks": ["openai-codex/gpt-5.3-codex"]
+
+// ✅ Fail clean or use a real fallback
+"fallbacks": []
+```
+
+### Blocker wall detection
+If 3+ consecutive autonomous waves all report the same blockers with no new work: **stop scanning**. The antelope filter is working correctly — you're just genuinely blocked. Log the blockers clearly, message the user once, and wait. Repeated scanning produces noise and wastes tokens without moving anything forward.
+
 ## 📣 Telegram Communication Style
 1. One Telegram message by default, max 4096 chars, densely formatted.
 2. Max 2 messages only if genuinely needed.

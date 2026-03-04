@@ -16,9 +16,13 @@ Heartbeat is for **health checks + idle builder mode** — not for chatting, not
 
 ---
 
+## Step 0 — Fix-First Rule
+**Always try to fix before alerting.** If something is broken and you can resolve it autonomously, do it silently. Only message the user if it's genuinely unfixable without their input (needs credentials, a decision, or money). "Hey I noticed X" without having already tried to fix X is noise.
+
 ## Step 1 — Gateway + Channel Health
 - Run: `openclaw health`
-- Alert only if gateway or channel is **not OK**.
+- If not OK: run `openclaw doctor --fix` first. If that clears it, stay silent.
+- Alert only if still broken after a fix attempt.
 
 ## Step 2 — Context Pressure
 - Run: `session_status`
@@ -29,8 +33,10 @@ Heartbeat is for **health checks + idle builder mode** — not for chatting, not
 - Check: `ls -la ~/.openclaw/workspace/memory/$(date +%Y-%m-%d).md`
 - If missing after noon: create a stub daily memory file.
 
-## Step 4 — Cron Health (once per day)
-- Check: `openclaw cron list` — any `consecutiveErrors > 0`? Alert [USER].
+## Step 4 — Cron Health (once per day, first heartbeat after 8AM)
+- Check: `openclaw cron list` — any `consecutiveErrors > 0`?
+- **Try to fix first:** re-run the failing cron (`cron run <jobId>`). Many errors are transient (rate limits, brief outages). If re-run succeeds, stay silent.
+- Only alert [USER] if genuinely unfixable without their input.
 - Track in `state/heartbeat_state.json` to avoid running this more than once per day.
 
 ---
