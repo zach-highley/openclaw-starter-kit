@@ -1,6 +1,35 @@
 # Changelog
 
 
+## [4.4] — 2026-03-12
+
+### Operational Hygiene Edition
+
+**The theme:** small lessons that burn you exactly once — if you write them down.
+
+#### What changed
+
+- **DM allowlist auto-recovery** — if Telegram DMs go silent after an upgrade, run `openclaw doctor`. It auto-restores missing `allowFrom` entries. No manual config edit needed. Added to BOT-HEALTH-CHECKS.md post-upgrade checklist.
+
+- **MEMORY.md capacity management** — memory files have a practical ~12,000 char limit. Add a Synthesis cron step: check size, trim stale entries when >90% full. Bloated memory files cause context pressure and degrade autonomous reasoning quality. Trimming is not data loss — it's curation.
+
+- **Backup verification command** — `openclaw backup verify <path>` is valid. `openclaw backup list` is NOT (returns an error). When verifying backups in crons or heartbeats, use `verify`, not `list`.
+
+- **Cron scheduling windows (stable pattern)** — production-proven layout for a 10-cron nightshift pipeline:
+  - Waves 1–3: 11PM, 1AM, 2:30AM ET
+  - Memory Review: 4:30AM → Synthesis: 4:45AM → Health Audit: 5:00AM → Maintenance: 5:30AM → Morning Briefing: 6:00AM
+  - Leave 90-min gaps between intensive waves; avoid 8–9:30PM ET (conflicts with peak LLM load)
+  - One-off scheduling anomalies (gateway restarts, etc.) self-resolve; don't rebuild the schedule over a single bad run.
+
+- **Secrets audit cadence** — run `openclaw secrets audit` after each major update. New config fields (e.g., `gateway.auth.token`) may be newly flagged. Migration to managed secrets requires user sign-off; document findings, don't auto-migrate.
+
+#### Why this matters
+
+These are the kind of lessons that don't make headlines — they just waste 45 minutes if you don't know them. DM allowlist regeneration, backup command naming, cron window collision — none of these are obvious, but all of them have burned real operators running 24/7 pipelines.
+
+The MEMORY.md capacity rule is the one that compounds: a bloated memory file slowly degrades every autonomous decision that reads it. Trim early, trim often.
+
+
 ## [4.3] — 2026-03-04
 
 ### Operational Resilience Edition

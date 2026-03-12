@@ -1,4 +1,4 @@
-# Bot health checks (OpenClaw) — keep the Gateway boring
+# Bot health checks (OpenClaw) - keep the Gateway boring
 
 This repo is a **starter kit**, not the source of truth.
 For canonical behavior and config schema, always defer to:
@@ -20,7 +20,7 @@ openclaw status --deep
 openclaw health --json
 ```
 
-If health is failing, don’t guess — run doctor.
+If health is failing, don't guess - run doctor.
 
 ```bash
 openclaw doctor
@@ -30,7 +30,7 @@ openclaw doctor
 
 ## 2) Updates (safe path)
 
-If you installed via npm/pnpm, you can update via npm OR via OpenClaw’s update
+If you installed via npm/pnpm, you can update via npm OR via OpenClaw's update
 command.
 
 Recommended:
@@ -75,7 +75,7 @@ Reference: https://docs.openclaw.ai/gateway/multiple-gateways
 
 ## 4) Telegram sanity checks
 
-- Make sure you know the **numeric chat id** you’re delivering to (DM user id or
+- Make sure you know the **numeric chat id** you're delivering to (DM user id or
   group id like `-100…`).
 - The message CLI requires **--target**:
 
@@ -84,6 +84,20 @@ openclaw message send --channel telegram --target "-1001234567890" --message "pi
 ```
 
 More: `docs/TELEGRAM_SETUP.md` and https://docs.openclaw.ai/channels/telegram
+
+**DMs go silent after an upgrade?** Run `openclaw doctor`. It auto-restores missing `allowFrom` entries in your agent config. This is the most common cause of silent Telegram after an update — no manual config edit required.
+
+---
+
+## 7) Backup verification
+
+```bash
+openclaw backup create
+openclaw backup verify <path>   # ✅ valid
+# openclaw backup list           # ❌ does not exist — use verify
+```
+
+Store backup paths in your maintenance cron rather than relying on a list command.
 
 ---
 
@@ -106,7 +120,7 @@ Recommended default (Telegram-friendly):
 
 ---
 
-## 6) Memory plugin (don’t break schema)
+## 6) Memory plugin (don't break schema)
 
 Memory is **Markdown on disk** + optional memory search. The default memory
 plugin (memory-core) is bundled and is usually enabled by default.
